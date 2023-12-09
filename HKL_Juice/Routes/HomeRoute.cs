@@ -11,11 +11,16 @@ namespace HKL_Juice.Routes
     {
         public HomeRoute(ApplicationDbContext dbContext)
         {
-            Get("/", parameters =>
-            {
+            /*Get("/", parameters => {
 
 
                 return View["index.cshtml"];
+            }
+            );*/
+            Get("/", parameters => {
+
+
+                return View["home.cshtml"];
             }
             );
         }

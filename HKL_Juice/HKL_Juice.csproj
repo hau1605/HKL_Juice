@@ -279,10 +279,17 @@
     <Content Include="Content\js\plugin.js" />
     <Content Include="Content\js\popper.min.js" />
     <Content Include="Content\js\slider-setting.js" />
-    <None Include="Views\about.cshtml" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Content Include="Views\about.cshtml" />
     <None Include="Views\contact.cshtml" />
     <None Include="Views\index.cshtml" />
-    <None Include="Views\juice.cshtml" />
+    <Content Include="Views\juice.cshtml" />
+    <Content Include="Content\Site.css" />
+    <Content Include="Views\Layout.cshtml" />
+    <Content Include="Views\home.cshtml" />
     <None Include="Views\testimonial.cshtml" />
     <Content Include="Web.config" />
   </ItemGroup>
@@ -290,12 +297,19 @@
     <Compile Include="ApplicationDbContext.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Routes\ContactRoute.cs" />
+    <Compile Include="Routes\ImonialRoute.cs" />
+    <Compile Include="Routes\JuiceRoute.cs" />
     <Compile Include="Routes\AboutRoute.cs" />
     <Compile Include="Routes\HomeRoute.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <Content Include="Views\Home.cshtml" />
     <Content Include="Content\css\.DS_Store" />
     <Content Include="Content\css\bootstrap-grid.css.map" />
     <Content Include="Content\css\bootstrap-grid.min.css.map" />
