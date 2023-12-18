@@ -258,6 +258,7 @@
     <Content Include="Content\images\h_cross.png" />
     <Content Include="Content\images\loading.gif" />
     <Content Include="Content\images\logo.png" />
+    <Content Include="Content\images\logoHKLJuice.png" />
     <Content Include="Content\images\menu_icon.png" />
     <Content Include="Content\images\our1.png" />
     <Content Include="Content\images\our2.png" />
@@ -295,7 +296,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationDbContext.cs" />
-    <Compile Include="CustomBootstrapper.cs" />
+    <Compile Include="Models\User.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
@@ -355,7 +356,9 @@
   <ItemGroup>
     <Folder Include="App_Code\" />
     <Folder Include="Content\icon\" />
+    <Folder Include="Controllers\" />
     <Folder Include="Public\" />
+    <Folder Include="Views\User\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

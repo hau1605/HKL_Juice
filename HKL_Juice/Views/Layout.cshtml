@@ -30,32 +30,32 @@
                         <div class="full">
                             <div class="center-desk">
                                 <div class="logo">
-                                    <a href="/"><img src="~/Content/images/logo.png" alt="#" /></a>
+                                    <a href="/"><img src="~/Content/images/logoHKLJuice.png" alt="logo" style="height:80px"/></a>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="col-xl-9 col-lg-9 col-md-9 col-sm-9">
-                        <nav class="navigation navbar navbar-expand-md navbar-dark ">
+                        <nav class="navigation navbar navbar-expand-md navbar-dark" id="main-nav">
                             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample04" aria-controls="navbarsExample04" aria-expanded="false" aria-label="Toggle navigation">
                                 <span class="navbar-toggler-icon"></span>
                             </button>
                             <div class="collapse navbar-collapse" id="navbarsExample04">
                                 <ul class="navbar-nav mr-auto">
-                                    <li class="nav-item active">
-                                        <a class="nav-link" href="/"> Home  </a>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/">Trang chủ</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" href="/about">About</a>
+                                        <a class="nav-link" href="/about">Về chúng tôi</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" href="/juice">Order Juice</a>
+                                        <a class="nav-link" href="/juice">Đặt hàng</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" href="/imonial"> Testimonial</a>
+                                        <a class="nav-link" href="/imonial">Giới thiệu</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" href="/contact">Contact Us</a>
+                                        <a class="nav-link" href="/contact">Liên hệ</a>
                                     </li>
                                     <li class="nav-item d_none">
                                         <a class="nav-link" href="#"><i class="fa fa-search" aria-hidden="true"></i></a>
@@ -69,7 +69,7 @@
         </div>
     </header>
 
-    <div>
+    <div id="content">
         @RenderBody()
     </div>
 
@@ -141,5 +141,88 @@
     <!-- sidebar -->
     <script src="~/Content/js/jquery.mCustomScrollbar.concat.min.js"></script>
     <script src="~/Content/js/custom.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var navbarLinks = document.querySelectorAll("#main-nav .nav-link");
+            updateActiveLink();
+
+            navbarLinks.forEach(function (link) {
+                link.addEventListener("click", function (e) {
+                    e.preventDefault();
+                    var url = this.getAttribute('href');
+                    loadContent(url);
+                    updateActiveClass(navbarLinks, this);
+                });
+            });
+        });
+
+        function loadContent(url) {
+            fetch(url).then(function (response) {
+                return response.text();
+            }).then(function (html) {
+                var parser = new DOMParser();
+                var doc = parser.parseFromString(html, "text/html");
+                var newContent = doc.getElementById("content").innerHTML;
+                document.getElementById("content").innerHTML = newContent;
+                history.pushState(null, '', url);
+            }).catch(function (err) {
+                console.warn('Something went wrong.', err);
+            });
+        }
+
+        function updateActiveClass(links, activeLink) {
+            links.forEach(function (link) {
+                link.classList.remove("active");
+            });
+            activeLink.classList.add("active");
+        }
+
+        function updateActiveLink() {
+            var currentPath = window.location.pathname;
+            var navbarLinks = document.querySelectorAll("#main-nav .nav-link");
+            navbarLinks.forEach(function (link) {
+                if (link.getAttribute('href') === currentPath) {
+                    link.classList.add("active");
+                }
+            });
+        }
+
+        window.addEventListener("popstate", function (event) {
+            var currentPath = window.location.pathname;
+            updateContent(currentPath);
+            updateActiveLink();
+        });
+
+        function updateContent(url) {
+            fetch(url).then(function (response) {
+                return response.text();
+            }).then(function (html) {
+                var parser = new DOMParser();
+                var doc = parser.parseFromString(html, "text/html");
+                var newContent = doc.getElementById("content").innerHTML;
+                document.getElementById("content").innerHTML = newContent;
+            }).catch(function (err) {
+                console.warn('Something went wrong.', err);
+            });
+        }
+
+        function updateActiveLink() {
+            var currentPath = window.location.pathname;
+            var navbarLinks = document.querySelectorAll("#main-nav .nav-link");
+            navbarLinks.forEach(function (link) {
+                if (link.getAttribute('href') === currentPath) {
+                    link.classList.add("active");
+                } else {
+                    link.classList.remove("active");
+                }
+            });
+        }
+    </script>
+
+
+
+
+
 </body>
 </html>
