@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Data.Entity;
+using System.Web.Script.Serialization;
 namespace HKL_Juice.Routes
 {
     public class AdminRoute : NancyModule
@@ -15,7 +16,10 @@ namespace HKL_Juice.Routes
                 return View["admin.cshtml"];
             }
             );
-
+            Get("/admin/login", parameters => {
+                return View["loginAdmin.cshtml"];
+            }
+           );
             Get("/admin/product", parameters => {
                 var productsWithCategories = dbContext.Product
                                         .Include(p => p.Category)
@@ -27,25 +31,36 @@ namespace HKL_Juice.Routes
               
                 return Response.AsJson(productsWithCategories);
             }
-           );
-             Get("/admin/order",( parameters) => {
-                 var orders = dbContext.Order
-            .Select(o => new
-            {
-                userName = o.User.userFullname,
-                OrderDetailList = o.OrderDetails.Select(od => new
-                {
-                    OrderDetailId = od.orderDetailId,
-                    ProductId = od.productId,
-                    Quantity = od.quantity,
-                    Subtotal = od.subTotal,
-                    imgUrl=od.Product.imgUrl
-                }).ToList()
-            }).ToList();
+            );
 
-                 return Response.AsJson(orders);
-             }
-           );
+            Get("/admin/order", (parameters) =>
+             {
+                 var orders = dbContext.Order
+           .Select(o => new
+           {
+               orderId = o.orderId,
+               orderDate = o.orderDate,
+               paymentStatus = o.paymentStatus,
+               orderTotal = o.orderTotal,
+               userFullname = o.User.userFullname,
+               userId = o.User.userId,
+               paymentMethod=o.paymentMethod,
+               OrderDetails = o.OrderDetails.Select(od => new 
+               {
+                   productName = od.Product.productName,
+                   price = od.Product.price,
+                   productId = od.productId,
+                   quantity = od.quantity,
+                   subTotal = od.subTotal,
+                   imgUrl = od.Product.imgUrl
+               }).ToList()
+           }).ToList();
+                 var serializer = new JavaScriptSerializer();
+                 string json = serializer.Serialize(orders);
+                 return View["orderAdmin.cshtml", json];
+             });
+
+             
 
         }
     }

@@ -1,0 +1,86 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>HKL Juice Admin</title>
+
+    <!-- Meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description" content="HKL Juice Admin">
+    <meta name="author" content="Xiaoying Riley at 3rd Wave Media">
+    <link rel="shortcut icon" href="~/Content/assets/images/HKL_logo.png">
+
+
+    <!-- FontAwesome JS-->
+    <script defer src="~/Content/assets/plugins/fontawesome/js/all.min.js"></script>
+
+    <!-- App CSS -->
+    <link id="theme-style" rel="stylesheet" href="~/Content/assets/css/portal.css">
+
+</head>
+
+<body class="app app-login p-0">
+    <div class="row g-0 app-auth-wrapper">
+        <div class="col-12 col-md-7 col-lg-6 auth-main-col text-center p-5">
+            <div class="d-flex flex-column align-content-end">
+                <div class="app-auth-body mx-auto">
+                    <div class="app-auth-branding mb-4"><a class="app-logo" href="/admin"><img style="width: 110px;height: 100px;" class="logo-icon me-2" src="~/Content/assets/images/HKL_logo.png" alt="logo"></a></div>
+                    <h2 class="auth-heading text-center mb-5">Đăng nhập</h2>
+                    <div class="auth-form-container text-start">
+                        <form class="auth-form login-form" onsubmit="handleLogin(event)">
+                            <div class="email mb-3">
+                                <label for="signin-email">Tài khoản</label>
+                                <input id="signin-email" type="" name="signin-email" class="form-control signin-email" placeholder="Tài khoản" required="required">
+                            </div><!--//form-group-->
+                            <div class="password mb-3">
+                                <label for="signin-password">Mật khẩu</label>
+                                <input id="signin-password" name="signin-password" type="password" class="form-control signin-password" placeholder="Mật khẩu" required="required">
+
+                            </div><!--//form-group-->
+                            <div class="text-center">
+                                <button type="submit" class="btn app-btn-primary w-100 theme-btn mx-auto">Đăng nhập</button>
+                            </div>
+                        </form>
+                    </div><!--//auth-form-container-->
+                </div><!--//auth-body-->
+            </div><!--//flex-column-->
+        </div><!--//auth-main-col-->
+
+        <div class="col-12 col-md-5 col-lg-6 h-100 auth-background-col">
+            <div class="auth-background-holder">
+            </div>
+            <div class="auth-background-mask"></div>
+            <div class="auth-background-overlay p-3 p-lg-5">
+                <div class="d-flex flex-column align-content-end h-100">
+                    <div class="h-100"></div>
+
+                </div>
+            </div><!--//auth-background-overlay-->
+        </div><!--//auth-background-col-->
+
+    </div><!--//row-->
+
+    <script>
+	function handleLogin(event) {
+		event.preventDefault();
+		const email = document.getElementById("signin-email").value;
+        const password = document.getElementById("signin-password").value;
+		console.log(email,password)
+		const user={
+			roleName:'Manager',
+			userPhone:'0123456789',
+			userFullname:'Nguyen Minh Hung',
+			userId:1
+		}
+		if (email==='1'&&password==='1'){
+			localStorage.setItem('loginUser',JSON.stringify(user))
+			window.location.href='/admin'
+		}
+		else alert('Đăng nhập thất bại!')
+	}
+    </script>
+</body>
+</html>
+
