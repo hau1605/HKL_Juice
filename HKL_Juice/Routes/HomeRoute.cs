@@ -19,7 +19,6 @@ namespace HKL_Juice.Routes
             );*/
             Get("/", parameters => {
 
-
                 return View["home.cshtml"];
             }
             );
