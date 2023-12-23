@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
-
 namespace HKL_Juice.Models
 {
     public class Product
@@ -15,5 +14,8 @@ namespace HKL_Juice.Models
         public int price { get; set; }
         public string descript { get; set; }
         public string imgUrl { get; set; }
+
+        // Navigation property to link to Category object
+        public virtual Category Category { get; set; }
     }
 }

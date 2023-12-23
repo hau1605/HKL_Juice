@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
@@ -7,15 +8,15 @@ namespace HKL_Juice.Models
 {
     public class User
     {
-        public int UserId { get; set; }
-        public string Username { get; set; }
-        public string PasswordHash { get; set; }
-        public string Email { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public DateTime DateOfBirth { get; set; }
-        public bool IsActive { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime? LastLogin { get; set; }
+        [Key]
+        public int userId { get; set; } // Auto-incremented by the database
+        public string userName { get; set; }
+        public string userPassword { get; set; }
+        public int roleId { get; set; } // Foreign key reference to Role
+        public string userFullname { get; set; }
+        public string userPhone { get; set; }
+
+        // Navigation property to link to Role object
+        public virtual Role Role { get; set; }
     }
 }
