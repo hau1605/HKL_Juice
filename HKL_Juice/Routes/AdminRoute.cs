@@ -15,6 +15,12 @@ namespace HKL_Juice.Routes
                 return View["admin.cshtml"];
             }
             );
+            Get("/product", parameters => {
+                var products = dbContext.Product.ToList();
+               
+                return Response.AsJson(products);
+            }
+           );
 
         }
     }

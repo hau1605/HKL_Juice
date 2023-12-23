@@ -9,10 +9,11 @@ namespace HKL_Juice.Models
     public class Product
     {
         [Key]
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public double Price { get; set; }
-        public string Description { get; set; }
-        public string ImgUrl { get; set; }
+        public int productId { get; set; }
+        public int categoryId { get; set; }
+        public string productName { get; set; }
+        public int price { get; set; }
+        public string descript { get; set; }
+        public string imgUrl { get; set; }
     }
 }
