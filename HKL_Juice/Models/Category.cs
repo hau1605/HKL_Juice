@@ -11,6 +11,7 @@ namespace HKL_Juice.Models
         [Key]
         public int categoryId { get; set; } // Auto-incremented by the database
         public string categoryName { get; set; }
+
         public virtual ICollection<Product> Products { get; set; }
     }
 }

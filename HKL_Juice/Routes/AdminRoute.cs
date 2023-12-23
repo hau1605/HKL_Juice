@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Data.Entity;
-
 namespace HKL_Juice.Routes
 {
     public class AdminRoute : NancyModule
@@ -25,20 +24,27 @@ namespace HKL_Juice.Routes
                                             ProductName = p.productName,
                                             CategoryName = p.Category.categoryName
                                         }).ToList();
-
-                foreach (var item in productsWithCategories)
-                {
-                    Console.WriteLine($"Product: {item.ProductName}, Category: {item.CategoryName}");
-                }
+              
                 return Response.AsJson(productsWithCategories);
             }
            );
              Get("/admin/order",( parameters) => {
-                var orders =  dbContext.Order
-                 .Include("User") // Including Product navigation property in OrderDetail
-                .ToList();
+                 var orders = dbContext.Order
+            .Select(o => new
+            {
+                userName = o.User.userFullname,
+                OrderDetailList = o.OrderDetails.Select(od => new
+                {
+                    OrderDetailId = od.orderDetailId,
+                    ProductId = od.productId,
+                    Quantity = od.quantity,
+                    Subtotal = od.subTotal,
+                    imgUrl=od.Product.imgUrl
+                }).ToList()
+            }).ToList();
+
                  return Response.AsJson(orders);
-            }
+             }
            );
 
         }

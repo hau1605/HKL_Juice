@@ -11,5 +11,6 @@ namespace HKL_Juice.Models
         [Key]
         public int roleId { get; set; } // Auto-incremented by the database
         public string roleName { get; set; }
+        public virtual ICollection<User> Users { get; set; }
     }
 }

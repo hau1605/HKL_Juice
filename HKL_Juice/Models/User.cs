@@ -18,5 +18,6 @@ namespace HKL_Juice.Models
 
         // Navigation property to link to Role object
         public virtual Role Role { get; set; }
+        public virtual ICollection<Order> Orders { get; set; }
     }
 }

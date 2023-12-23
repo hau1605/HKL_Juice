@@ -18,7 +18,6 @@ namespace HKL_Juice.Models
 
         // Navigation property to link to User object
         public virtual User User { get; set; }
-
-        // Collection navigation property to link to OrderDetails
+        public virtual ICollection<OrderDetail> OrderDetails { get; set; }
     }
 }

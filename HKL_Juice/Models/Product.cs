@@ -17,5 +17,6 @@ namespace HKL_Juice.Models
 
         // Navigation property to link to Category object
         public virtual Category Category { get; set; }
+        public virtual ICollection<OrderDetail> OrderDetails { get; set; }
     }
 }
