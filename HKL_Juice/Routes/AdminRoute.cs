@@ -6,6 +6,8 @@ using System.Linq;
 using System.Web;
 using System.Data.Entity;
 using System.Web.Script.Serialization;
+using Nancy.ModelBinding;
+
 namespace HKL_Juice.Routes
 {
     public class AdminRoute : NancyModule
@@ -60,7 +62,45 @@ namespace HKL_Juice.Routes
                  return View["orderAdmin.cshtml", json];
              });
 
-             
+
+            //Dang nhap
+            Post("/admin/loginUser", parameters =>
+            {
+                var userLogin = this.Bind<LoginRequest>();
+                var userName = userLogin.userName;
+                var userPassword = userLogin.userPassword;
+                // Thực hiện kiểm tra đăng nhập tại đây
+                var user = dbContext.User
+                             .FirstOrDefault(u => u.userName == userName && u.userPassword == userPassword);
+                if (user != null)
+                {
+                    // Người dùng hợp lệ
+                    return Response.AsJson(new
+                    {
+                        Success = true,
+                        Message = "Đăng nhập thành công.",
+                        UserData = new
+                        {
+                            user.userId,
+                            user.userName,
+                            // Do not return sensitive data like passwords
+                            user.userFullname,
+                            user.userPhone,
+                            user.Role.roleName
+                        }
+                    });
+                }
+                else
+                {
+                    // Đăng nhập thất bại
+                    return Response
+                        .WithHeader("Access-Control-Allow-Origin", "*")
+                        .WithHeader("Access-Control-Allow-Methods", "POST,GET,PUT,DELETE,OPTIONS")
+                        .WithHeader("Access-Control-Allow-Headers", "Accept, Origin, Content-type, Authorization")
+                        .AsJson(new { Success = false, Message = "Tên đăng nhập hoặc mật khẩu không đúng." });
+                }
+            });
+
 
         }
     }

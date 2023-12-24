@@ -65,20 +65,33 @@
     <script>
 	function handleLogin(event) {
 		event.preventDefault();
-		const email = document.getElementById("signin-email").value;
-        const password = document.getElementById("signin-password").value;
-		console.log(email,password)
-		const user={
-			roleName:'Manager',
-			userPhone:'0123456789',
-			userFullname:'Nguyen Minh Hung',
-			userId:1
-		}
-		if (email==='1'&&password==='1'){
-			localStorage.setItem('loginUser',JSON.stringify(user))
-			window.location.href='/admin'
-		}
-		else alert('Đăng nhập thất bại!')
+        const userName = document.getElementById("signin-email").value;
+        const userPassword = document.getElementById("signin-password").value;
+        fetch('/admin/loginUser', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                userName: userName
+                ,userPassword: userPassword
+            })
+        }).then(response => response.json())
+            .then(data => {
+                if (data.success) { // Sử dụng 'data' thay vì 'response' sau khi đã chuyển đổi
+                    console.log(data);
+                    // Thực hiện các hành động khác sau khi đăng nhập thành công
+                    localStorage.setItem('loginUser', JSON.stringify(data.userData)); // UserData nên được trả về từ server
+                    window.location.href = '/admin';
+                } else {
+                    console.log(data); // 'data' là đối tượng đã được parse từ JSON
+                    alert('Đăng nhập thất bại!');
+                }
+            })
+            .catch(error => {
+                console.error('Có lỗi xảy ra:', error);
+            });
+		
 	}
     </script>
 </body>
