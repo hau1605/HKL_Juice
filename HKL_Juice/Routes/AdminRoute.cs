@@ -10,6 +10,17 @@ using Nancy.ModelBinding;
 
 namespace HKL_Juice.Routes
 {
+    public class LoginRequest
+    {
+        public string userName { get; set; }
+        public string userPassword { get; set; }
+    }
+    public class PutOrder
+    {
+        public string paymentMethod { get; set; }
+        public string paymentStatus { get; set; }
+        public int userId { get; set; }
+    }
     public class AdminRoute : NancyModule
     {
         public  AdminRoute(ApplicationDbContext dbContext)
@@ -35,7 +46,7 @@ namespace HKL_Juice.Routes
             }
             );
 
-            Get("/admin/order", (parameters) =>
+            Get("/admin/order", parameters =>
              {
                  var orders = dbContext.Order
            .Select(o => new
@@ -61,7 +72,62 @@ namespace HKL_Juice.Routes
                  string json = serializer.Serialize(orders);
                  return View["orderAdmin.cshtml", json];
              });
+            Post("/admin/order", parameters =>
+            {
+                var order = new Order
+                {
+                    orderDate = DateTime.Now,
+                    paymentStatus = "Pending", // Hoặc bất kỳ trạng thái nào bạn muốn đặt mặc định
+                    userId = 2,
+                    paymentMethod = "faef",
+                    orderTotal = 120000
+                };
 
+                // Thêm hóa đơn vào cơ sở dữ liệu
+                dbContext.Order.Add(order);
+                dbContext.SaveChanges();
+                return Response.AsJson(order);
+            });
+            Put("/admin/order/{id}", parameters =>
+            {
+                int orderId = parameters.id;
+                var order = dbContext.Order.FirstOrDefault(o => o.orderId == orderId);
+                if (order == null)
+                {
+                    return HttpStatusCode.NotFound;
+                }
+                var putOrder = this.Bind<PutOrder>();
+                order.paymentMethod = putOrder.paymentMethod;
+                order.paymentStatus = putOrder.paymentStatus;
+                order.userId = putOrder.userId;
+
+                dbContext.SaveChanges();
+
+                return HttpStatusCode.OK;
+            });
+            Delete("/admin/order/{id}", parameters =>
+            {
+
+                int orderId = parameters.id;
+                var orderDetails = dbContext.OrderDetail.Where(od => od.orderId == orderId).ToList();
+
+
+                // Xóa tất cả các chi tiết hóa đơn liên quan
+                foreach (var detail in orderDetails)
+                {
+                    dbContext.OrderDetail.Remove(detail);
+                }
+                var order = dbContext.Order.FirstOrDefault(o => o.orderId == orderId);
+                if (order == null)
+                {
+                    return HttpStatusCode.NotFound;
+                }
+                dbContext.Order.Remove(order);
+
+                dbContext.SaveChanges();
+
+                return HttpStatusCode.OK;
+            });
 
             //Dang nhap
             Post("/admin/loginUser", parameters =>
@@ -93,11 +159,7 @@ namespace HKL_Juice.Routes
                 else
                 {
                     // Đăng nhập thất bại
-                    return Response
-                        .WithHeader("Access-Control-Allow-Origin", "*")
-                        .WithHeader("Access-Control-Allow-Methods", "POST,GET,PUT,DELETE,OPTIONS")
-                        .WithHeader("Access-Control-Allow-Headers", "Accept, Origin, Content-type, Authorization")
-                        .AsJson(new { Success = false, Message = "Tên đăng nhập hoặc mật khẩu không đúng." });
+                    return Response.AsJson(new { Success = false, Message = "Tên đăng nhập hoặc mật khẩu không đúng." });
                 }
             });
 

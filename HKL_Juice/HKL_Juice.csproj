@@ -2614,7 +2614,6 @@
     <Compile Include="Routes\JuiceRoute.cs" />
     <Compile Include="Routes\AboutRoute.cs" />
     <Compile Include="Routes\HomeRoute.cs" />
-    <Compile Include="Routes\LoginRequest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
