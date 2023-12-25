@@ -33,16 +33,22 @@ namespace HKL_Juice.Routes
                 return View["loginAdmin.cshtml"];
             }
            );
-            Get("/admin/product", parameters => {
+            Get("/admin/products", parameters => {
                 var productsWithCategories = dbContext.Product
                                         .Include(p => p.Category)
                                         .Select(p => new
                                         {
-                                            ProductName = p.productName,
-                                            CategoryName = p.Category.categoryName
+                                            productId = p.productId,
+                                            categoryId = p.categoryId,
+                                            productName = p.productName,
+                                            price = p.price,
+                                            descript = p.descript,
+                                            imgUrl = p.imgUrl,
+                                            categoryName = p.Category.categoryName
                                         }).ToList();
-              
-                return Response.AsJson(productsWithCategories);
+                var serializer = new JavaScriptSerializer();
+                string json = serializer.Serialize(productsWithCategories);
+                return View["productAdmin.cshtml", json];
             }
             );
 
@@ -72,6 +78,61 @@ namespace HKL_Juice.Routes
                  string json = serializer.Serialize(orders);
                  return View["orderAdmin.cshtml", json];
              });
+
+            Post("/admin/products", parameters =>
+            {
+                
+                var postProduct = this.Bind<Product>();
+
+                dbContext.Product.Add(postProduct);
+                dbContext.SaveChanges();
+
+                return HttpStatusCode.OK;
+            });
+            Put("/admin/products/{id}", parameters =>
+            {
+                int productId = parameters.id;
+                var product = dbContext.Product.FirstOrDefault(p => p.productId == productId);
+                if (product == null)
+                {
+                    return HttpStatusCode.NotFound;
+                }
+                var putProduct = this.Bind<Product>();
+                product.categoryId = putProduct.categoryId;
+                product.productName = putProduct.productName;
+                product.price = putProduct.price;
+                product.descript = putProduct.descript;
+                product.imgUrl = putProduct.imgUrl;
+                dbContext.SaveChanges();
+
+                return HttpStatusCode.OK;
+            });
+            Delete("/admin/products/{id}", parameters =>
+            {
+
+                int productId = parameters.id;
+                var orderDetails = dbContext.OrderDetail.Where(od => od.productId == productId).ToList();
+
+
+                // Xóa tất cả các chi tiết hóa đơn liên quan
+                foreach (var detail in orderDetails)
+                {
+                    dbContext.OrderDetail.Remove(detail);
+                }
+                var product = dbContext.Product.FirstOrDefault(p => p.productId == productId);
+                if (product == null)
+                {
+                    return HttpStatusCode.NotFound;
+                }
+                dbContext.Product.Remove(product);
+
+                dbContext.SaveChanges();
+
+                return HttpStatusCode.OK;
+            });
+
+
+
             Post("/admin/order", parameters =>
             {
                 var order = new Order
@@ -88,6 +149,34 @@ namespace HKL_Juice.Routes
                 dbContext.SaveChanges();
                 return Response.AsJson(order);
             });
+
+            Delete("/admin/order/{id}", parameters =>
+            {
+
+                int orderId = parameters.id;
+                var orderDetails = dbContext.OrderDetail.Where(od => od.orderId == orderId).ToList();
+
+
+                // Xóa tất cả các chi tiết hóa đơn liên quan
+                foreach (var detail in orderDetails)
+                {
+                    dbContext.OrderDetail.Remove(detail);
+                }
+                var order = dbContext.Order.FirstOrDefault(o => o.orderId == orderId);
+                if (order == null)
+                {
+                    return HttpStatusCode.NotFound;
+                }
+                dbContext.Order.Remove(order);
+
+                dbContext.SaveChanges();
+
+                return HttpStatusCode.OK;
+            });
+
+
+
+
             Put("/admin/order/{id}", parameters =>
             {
                 int orderId = parameters.id;
