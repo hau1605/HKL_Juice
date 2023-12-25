@@ -6,15 +6,15 @@ using System.Web;
 
 namespace HKL_Juice.Routes
 {
-    public class ImonialRoute : NancyModule
+    public class CartRoute : NancyModule
     {
-        public ImonialRoute(ApplicationDbContext dbContext)
+        public CartRoute(ApplicationDbContext dbContext)
         {
-            Get("/imonial", parameters =>
+            Get("/cart", parameters =>
             {
 
 
-                return View["testimonial.cshtml"];
+                return View["cart.cshtml"];
             }
             );
         }
