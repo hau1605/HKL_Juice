@@ -93,8 +93,8 @@
                                         <hr class="dropdown-divider">
                                     </li>
                                     <li>
-                                        <a class="dropdown-item" href="admin/login"
-                                           onclick="localStorage.removeItem('loginUser')"> Đăng xuất</a>
+                                        <a class="dropdown-item" href="/admin/login"
+                                           onclick="localStorage.removeItem('loginUser')">Đăng xuất</a>
                                     </li>
                                 </ul>
                             </div><!--//app-user-dropdown-->
@@ -257,7 +257,7 @@
                                     <form class="table-search-form row gx-1 align-items-center" id="searchForm">
                                         <div class="col-auto">
                                             <input type="text" id="search-orders" name="searchorders"
-                                                   class="form-control search-orders" placeholder="Nhập mã hóa đơn">
+                                                   class="form-control search-orders" placeholder="Tìm theo mã hoặc tên nhân viên">
                                         </div>
                                         <div class="col-auto">
                                             <button type="submit" class="btn app-btn-secondary">Tìm</button>
@@ -327,7 +327,7 @@
                                             <tr>
                                                 <th class="cell">ID</th>
                                                 <th class="cell">Hóa đơn</th>
-                                                <th class="cell">Employee</th>
+                                                <th class="cell">Nhân viên</th>
                                                 <th class="cell">Ngày</th>
                                                 <th class="cell">Trạng thái</th>
                                                 <th class="cell">Tổng tiền</th>
@@ -630,13 +630,15 @@
                 // Time Filter
                 switch (selectedOption) {
                     case 'option-2': // This Week
+                        // Tìm ngày đầu tiên của tuần (Chủ Nhật)
+                        const startOfWeek = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - currentDate.getDay());
+                        // Tìm ngày cuối cùng của tuần (Thứ Bảy)
+                        const endOfWeek = new Date(startOfWeek.getFullYear(), startOfWeek.getMonth(), startOfWeek.getDate() + 6);
 
                         ordersData = ordersData.filter(order => {
                             const orderDate = new Date(order.orderDate);
-                            const startOfWeek = currentDate.getDate() - currentDate.getDay();
-                            const endOfWeek = startOfWeek + 6;
-                            return orderDate >= new Date(currentDate.setDate(startOfWeek)) &&
-                                orderDate <= new Date(currentDate.setDate(endOfWeek));
+                            // So sánh orderDate với startOfWeek và endOfWeek
+                            return orderDate >= startOfWeek && orderDate <= endOfWeek;
                         });
                         break;
                     case 'option-3': // This Month
@@ -758,10 +760,10 @@
             orderS.OrderDetails.forEach(order => {
                 let row =`
                     <tr valign='middle' >
-                        <td><img style="width:70px;border-radius:20%;box-shadow:2px 2px 3px gray" src="${order.imgUrl}" alt="Product Image" class="product-img"></td>
+                        <td><img style="width:70px;height:70px;border-radius:20%;box-shadow:2px 2px 3px gray" src="${order.imgUrl}" alt="Product Image" class="product-img"></td>
                             <td class="product-name">${order.productName}</td>
                             <td>${order.quantity}</td>
-                            <td>${order.price.toLocaleString('vi-VN', {
+                            <td>${order.subTotal.toLocaleString('vi-VN', {
                                 style: 'currency',
                                 currency: 'VND'
                             })}</td>
@@ -786,11 +788,11 @@
                      <h5 style="margin: 0;" class="card-title">Mã Hóa Đơn: #${orderS.orderId}</h5>
                      <h6 style="margin: 0;" class="card-title">Ngày: ${convertToDateTime(orderS.orderDate)}</h6>
                 `
-            if (orderS.userId !== user.userId && orderS.userId !== "") {
+            if (orderS.userId !== user.userId && orderS.userId !== "" && user.roleName!=='Admin') {
                 document.getElementById('EditOrderCardBody').innerHTML = `
                       <p style="text-align: right;" class="card-text">Trạng Thái: ${orderS.paymentStatus}</p>
                       <p style="text-align: right;" class="card-text">Phương Thức: ${orderS.paymentMethod}</p>
-                      <p style="text-align: right;" class="card-text">Nhân Viên: ${orderS.userId}</p>
+                      <p style="text-align: right;" class="card-text">Nhân Viên: ${orderS.userFullname}</p>
                 `
                 document.getElementById("EditOrderModelFooter").innerHTML = `
                           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
@@ -819,7 +821,7 @@
 								<option value="Thẻ tín dụng">Thẻ tín dụng</option>
 							</select>
 					</div>
-					<p style="text-align: right;" class="card-text">Nhân Viên: ${user.userFullname}</p>`
+					<p style="text-align: right;" class="card-text">Nhân Viên: ${orderS.userFullname}</p>`
 
             }
             if (orderS.userId === user.userId || orderS.userId === "") {
@@ -831,10 +833,10 @@
             orderS.OrderDetails.forEach(order => {
                 let row = `
                                                                                             <tr valign='middle' >
-                                                                                                <td><img style="width:70px;border-radius:20%;box-shadow:2px 2px 3px gray" src="${order.imgUrl}" alt="Product Image" class="product-img"></td>
+                                                                                                <td><img style="width:70px;height:70px;border-radius:20%;box-shadow:2px 2px 3px gray" src="${order.imgUrl}" alt="Product Image" class="product-img"></td>
                                                                                                 <td class="product-name">${order.productName}</td>
                                                                                                 <td>${order.quantity}</td>
-                                                                                                <td>${order.price.toLocaleString('vi-VN', {
+                                                                                                <td>${order.subTotal.toLocaleString('vi-VN', {
                     style: 'currency',
                     currency: 'VND'
                 })}</td>
@@ -842,7 +844,7 @@
                 tableBody.innerHTML += row;
             });
 
-            document.getElementById('orderTableFoot').innerHTML = `
+            document.getElementById('EditOrderTableFoot').innerHTML = `
                                                                                         <tr>
                                                                                             <th colspan="3" style="text-align: right;">Tổng Tiền</th>
                                                                                             <th>${orderS.orderTotal.toLocaleString('vi-VN', {
@@ -856,11 +858,12 @@
         // Hàm lưu edit hóa đơn lên server
         function handleEditOrder(params) {
             let editOrder = {
+               
                 paymentStatus: document.getElementById('selPaymentStatus').value,
                 paymentMethod: document.getElementById('selPaymentMethod').value,
                 userId: user.userId
             }
-            fetch(`/order/${editOrder.orderId}`, {
+            fetch(`/admin/order/${params.orderId}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json"
@@ -887,7 +890,7 @@
                                                                                         <h5 style="margin: 0;" class="card-title">Mã Hóa Đơn: #${orderS.orderId}</h5>
                                                                                         <h6 style="margin: 0;" class="card-title">Ngày: ${convertToDateTime(orderS.orderDate)}</h6>
                                                                                     `
-            if (orderS.userId !== user.userId && orderS.userId !== "") {
+            if (orderS.userId !== user.userId && orderS.userId !== "" && user.roleName !== 'Admin') {
                 document.getElementById('DeleteOrderCardBody').innerHTML = `
                                                                                         <p style="text-align: right;" class="card-text">Chỉ có Admin có thể xóa hóa đơn của người khác</p>
                                                                                     `
@@ -911,7 +914,7 @@
         // Hàm lưu xóa hóa đơn lên server
         function handleDeleteOrder(params) {
 
-            fetch(`/order/${params.orderId}`, {
+            fetch(`/admin/order/${params.orderId}`, {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json"
