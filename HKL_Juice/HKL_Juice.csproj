@@ -2378,12 +2378,14 @@
     <Content Include="Content\images\our4.png" />
     <Content Include="Content\images\our5.png" />
     <Content Include="Content\images\our_bg.jpg" />
+    <Content Include="Content\images\shoppingCart.png" />
     <Content Include="Content\images\tes1.png" />
     <Content Include="Content\js\bootstrap.bundle.js" />
     <Content Include="Content\js\bootstrap.bundle.min.js" />
     <Content Include="Content\js\bootstrap.js" />
     <Content Include="Content\js\bootstrap.min.js" />
     <Content Include="Content\js\custom.js" />
+    <Content Include="Content\js\index.js" />
     <Content Include="Content\js\jquery-3.0.0.min.js" />
     <Content Include="Content\js\jquery.mCustomScrollbar.concat.min.js" />
     <Content Include="Content\js\jquery.min.js" />
@@ -2602,6 +2604,7 @@
     <None Include="Views\testimonial.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Views\orderAdmin.cshtml" />
+    <Content Include="Views\cart.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationDbContext.cs" />
@@ -2619,7 +2622,7 @@
     </Compile>
     <Compile Include="Routes\ContactRoute.cs" />
     <Compile Include="Routes\AdminRoute.cs" />
-    <Compile Include="Routes\ImonialRoute.cs" />
+    <Compile Include="Routes\CartRoute.cs" />
     <Compile Include="Routes\JuiceRoute.cs" />
     <Compile Include="Routes\AboutRoute.cs" />
     <Compile Include="Routes\HomeRoute.cs" />

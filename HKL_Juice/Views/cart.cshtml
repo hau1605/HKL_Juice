@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@*@{
+        Layout = "layout";
+    }*@
+
+<!DOCTYPE html>
 
 <html>
 <head>
@@ -46,10 +50,10 @@
                     <div class="col-xl-9 col-lg-9 col-md-9 col-sm-9">
                         <nav class="navigation navbar navbar-expand-md navbar-dark" id="main-nav">
                             <!-- <a class="cart-container nav-link font-weight-bold text-light" href="cart.html">
-                            <i class="bi bi-cart" aria-hidden="true">
-                                <span id="cart-count" class="cart-count">0</span>
-                            </i>
-                        </a> -->
+                                <i class="bi bi-cart" aria-hidden="true">
+                                    <span id="cart-count" class="cart-count">0</span>
+                                </i>
+                            </a> -->
                             <button class="navbar-toggler" type="button" data-toggle="collapse"
                                     data-target="#navbarsExample04" aria-controls="navbarsExample04" aria-expanded="false"
                                     aria-label="Toggle navigation">
@@ -67,8 +71,8 @@
                                         <a class="nav-link font-weight-bold" href="/about">Về chúng tôi</a>
                                     </li>
                                     <!-- <li class="nav-item">
-                                    <a class="nav-link" href="/cart">Giỏ hàng</a>
-                                </li> -->
+                                        <a class="nav-link" href="/cart">Giỏ hàng</a>
+                                    </li> -->
                                     <li class="nav-item">
                                         <a class="cart-container nav-link font-weight-bold" href="/cart">
                                             <i class="bi bi-cart" aria-hidden="true">
@@ -85,9 +89,38 @@
         </div>
     </header>
 
-    <div id="content">
-        @RenderBody()
+
+
+
+
+    <div class="cart-page_container">
+        <div class="empty-product">
+            <h2 class="empty-product_title">Không có sản phẩm nào trong giỏ hàng</h2>
+            <img src="~/Content/images/shoppingCart.png" alt="Shopping Cart" class="empty-product_image" />
+            <a href="juice" class="empty-product_button">Chọn sản phẩm</a>
+        </div>
+
+        <div class="cart-page_container-products">
+            <h1 class="text-center pb-3 font-weight-bold">Giỏ hàng</h1>
+            <div class="cartForPC">
+                <div class="cart-heading grid grid-five-column">
+                    <p class="cart-hide font-weight-bold">Sản phẩm</p>
+                    <p class="cart-hide font-weight-bold">Giá</p>
+                    <p class="cart-hide font-weight-bold">Số lượng</p>
+                    <p class="cart-hide font-weight-bold">Tổng tiền</p>
+                    <p class="cart-hide font-weight-bold"></p>
+                </div>
+                <hr class="m-0">
+                <div class="cart-item" id="cartItemsContainer"></div>
+            </div>
+            <div class="d-flex pt-3 justify-content-end" style="margin: 0 20px;">
+                <button class="btn btn-danger p-2 mr-4 delete-cart" onclick="clearCart()">Xóa giỏ hàng</button>
+                <button class="btn btn-primary p-2">Thanh toán</button>
+            </div>
+        </div>
     </div>
+
+
 
     <footer id="contact">
         <div class="footer">
@@ -151,7 +184,111 @@
 
     <div id="toast-container" class="toast-container position-fixed end-0 p-3" style="z-index: 1000; top: 46px;"></div>
 
- 
+
+
+
+    <script type="application/json">
+    function updateCartCount() {
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        let count = cart.reduce((total, item) => total + (item.quantity || 1), 0);
+        let cartCountElement = document.querySelector('.cart-count');
+        if (cartCountElement) {
+            cartCountElement.textContent = count;
+        }
+    }
+    @*=============================================================================================
+    =========================================CART PRODUCT========================================
+    =============================================================================================*@
+    function updateCartDisplay() {
+        const cartItems = loadCartItemsFromLocalStorage();
+        const emptyCartElement = document.querySelector('.empty-product');
+        const cartElement = document.querySelector('.cart-page_container-products');
+
+        if (cartItems.length === 0) {
+            emptyCartElement.style.display = 'flex';
+            cartElement.style.display = 'none';
+        } else {
+            emptyCartElement.style.display = 'none';
+            cartElement.style.display = 'block';
+            renderCartItems();
+        }
+    }
+    function loadCartItemsFromLocalStorage() {
+        try {
+            return JSON.parse(localStorage.getItem("cart")) || [];
+        } catch (error) {
+            console.error("Error reading cart items from localStorage:", error);
+            return [];
+        }
+    }
+    function renderCartItems() {
+        const cartItems = loadCartItemsFromLocalStorage();
+        console.log("cartItems:", cartItems);
+        console.log("document.getElementById('cartItemsContainer'):", document.getElementById('cartItemsContainer'));
+
+        const container = document.getElementById('cartItemsContainer');
+        container.innerHTML = '';
+
+        cartItems.forEach(item => {
+            const totalPrice = item.price * item.quantity;
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'grid grid-five-column py-3';
+            itemDiv.innerHTML = `
+                <div class="cart-image-name">
+                    <p class="m-0">${item.name}</p>
+                </div>
+                <div class="cart-hide">
+                    <p class="m-0">${Number(item.price).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</p>
+                </div>
+                <div class="cart-btn-quantity">
+                    <button class=" btn-quantity-reduce btn-quantity" onclick="updateCartItemQuantity(${item.id}, ${item.quantity - 1})">-</button>
+                    <span>${item.quantity}</span>
+                    <button class=" btn-quantity-add btn-quantity" onclick="updateCartItemQuantity(${item.id}, ${item.quantity + 1})">+</button>
+                </div>
+                <div class="cart-hide">
+                    ${Number(totalPrice).toLocaleString("vi-VN")} đ
+                </div>
+                <div>
+                    <button class="text-danger bg-transparent delete-btn" onclick="deleteCartItem(${item.id})"><i class="bi bi-trash"></i></button>
+                </div>
+            `;
+
+            container.appendChild(itemDiv);
+        });
+    }
+    function updateCartItemQuantity(productId, newQuantity) {
+        const cartItems = loadCartItemsFromLocalStorage();
+        const itemIndex = cartItems.findIndex(item => item.id === productId);
+        if (itemIndex !== -1) {
+            cartItems[itemIndex].quantity = Math.max(1, newQuantity);
+
+            localStorage.setItem("cart", JSON.stringify(cartItems));
+            renderCartItems();
+        }
+    }
+    function deleteCartItem(productId) {
+        let cartItems = loadCartItemsFromLocalStorage();
+        cartItems = cartItems.filter(item => item.id !== productId);
+        localStorage.setItem("cart", JSON.stringify(cartItems));
+        updateCartDisplay();
+        renderCartItems();
+    }
+    // Delete all cart
+    function clearCart() {
+        localStorage.removeItem("cart");
+        createAndShowToast("Đã xóa toàn bộ giỏ hàng!", "bg-info");
+        updateCartCount();
+        updateCartDisplay();
+    }
+    document.addEventListener("DOMContentLoaded", function () {
+        updateCartCount();
+        renderCartItems();
+    });
+    </script>
+
+
+
+
     <!-- Javascript files-->
     <script src="~/Content/js/jquery.min.js"></script>
     <script src="~/Content/js/popper.min.js"></script>
