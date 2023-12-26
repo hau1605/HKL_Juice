@@ -299,7 +299,7 @@ namespace HKL_Juice.Routes
 
             Get("/admin/account", parameters =>
             {
-                return View["userAdmin.cshtml"];
+                return View["accountAdmin.cshtml"];
             });
         }
     }

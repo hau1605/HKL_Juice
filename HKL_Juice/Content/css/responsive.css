@@ -36,6 +36,9 @@
     .about_img {
         margin-left: 0;
     }
+    .account-container {
+        justify-content: center !important;
+    }
 }
 
 @media (min-width: 768px) and (max-width: 991px) {
@@ -90,6 +93,16 @@
 
     ul.location_icon li {
         display: block;
+    }
+    .account-container {
+        justify-content: center !important;
+    }
+    .account-avatar_container {
+        margin: 0 !important;
+    }
+
+    .account-info_container input {
+        width: 100% !important;
     }
 }
 
@@ -205,6 +218,35 @@
         background: url(../images/menu_icon.png);
         background-repeat: no-repeat;
     }
+
+    .account-container {
+        flex-direction: column !important;
+        align-items: center !important;
+    }
+
+        .account-container button.buttonEditMobile {
+            display: block !important;
+            width: 200px !important;
+            margin: 0 !important;
+        }
+
+    .account-avatar_container {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+        .account-avatar_container button.buttonEditPC {
+            display: none !important;
+        }
+
+    .account-info_container {
+        margin: 0 !important;
+        width: 75% !important;
+    }
+
+        .account-info_container input {
+            width: 100% !important;
+        }
 }
 
 @media (max-width: 575px) {
@@ -341,4 +383,33 @@
         background: url(../images/menu_icon.png);
         background-repeat: no-repeat;
     }
+
+    .account-container {
+        flex-direction: column !important;
+        align-items: center !important;
+    }
+
+        .account-container button.buttonEditMobile {
+            display: block !important;
+            width: 200px !important;
+            margin: 0 !important;
+        }
+
+    .account-avatar_container {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+        .account-avatar_container button.buttonEditPC {
+            display: none !important;
+        }
+
+    .account-info_container {
+        margin: 0 !important;
+        width: 75% !important;
+    }
+
+        .account-info_container input {
+            width: 100% !important;
+        }
 }

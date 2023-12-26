@@ -1026,3 +1026,14 @@ ul.location_icon {
     color: green;
     border: solid 1px green;
 }
+/* ========================================ACCOUNT ADMIN PAGE======================================== */
+.account-avatar_container .account-avatar_container-image {
+    width: 200px;
+    height: 200px;
+    object-fit: contain;
+}
+
+.account-info_container input {
+    box-shadow: 0 0 4px 0 gray;
+    border: none;
+}

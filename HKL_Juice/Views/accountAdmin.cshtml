@@ -18,6 +18,10 @@
 
     <!-- App CSS -->
     <link id="theme-style" rel="stylesheet" href="~/Content/assets/css/portal.css" />
+    <link rel="stylesheet" href="~/Content/css/style.css">
+    <link rel="stylesheet" href="~/Content/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/Content/css/responsive.css">
+
 </head>
 
 <body class="app">
@@ -43,7 +47,7 @@
                         <!--//col-->
                         <div class="app-search-box col">
                             <form class="app-search-form">
-                                <input type="text" placeholder="Search..." name="search"
+                                <input type="text" placeholder="Search~." name="search"
                                        class="form-control search-input" />
                                 <button type="submit" class="btn search-btn btn-primary" value="Search">
                                     <i class="fa-solid fa-magnifying-glass"></i>
@@ -268,22 +272,40 @@
                 </div>
 
                 <div class="tab-content">
-                    <div class="tab-pane fade show active" role="tabpanel" aria-labelledby="products-all-tab">
-                        <div class="d-flex ">
-                            <div class="account-avatar_container">
-                                <image src="" alt="" class="account-avatar_container-image" />
+                    <div class="tab-pane fade show active" role="tabpanel" aria-labelledby="account-all-tab">
+                        <div class="account-container d-flex flex-row w-100">
+                            <div class="account-avatar_container mr-5 pr-5 d-flex flex-column">
+                                <image src="" alt="userAvatar" class="account-avatar_container-image" />
+                                <button data-bs-toggle="modal" 
+                                        data-bs-target="#editAccountModal"  
+                                        class="buttonEditPC w-100 p-2 mt-4 rounded btn btn-secondary" 
+                                        onclick="editInfoAccount()">
+                                    Chỉnh sửa
+                                </button>
                             </div>
-                            <div class="account-info_container d-flex">
-                                <input readonly value="" class="account-info_container-userId" />
-                                <input readonly value="" class="account-info_container-userFullname" />
-                                <input readonly value="" class="account-info_container-userName" />
-                                <input readonly value="" class="account-info_container-userPhone" />
-                                <input readonly value="" class="account-info_container-userRoleId" />
-                            </div>
-                        </div>
-                    </div>
 
-                    <button onclick="editInfoAccount()">Chỉnh sửa</button>
+                            <div class="account-info_container d-flex flex-column w-50 ml-5">
+                                <span class="text-secondary" for="account-info_container-userId">Mã nhân viên</span>
+                                <input readonly value="" class="p-2 mb-3 w-75 text-secondary rounded account-info_container-userId" />
+                                <span class="text-secondary" for="account-info_container-userFullname">Họ và tên</span>
+                                <input readonly value="" class="p-2 mb-3 w-75 text-secondary rounded account-info_container-userFullname" />
+                                <span class="text-secondary" for="account-info_container-userName">Tên đăng nhập</span>
+                                <input readonly value="" class="p-2 mb-3 w-75 text-secondary rounded account-info_container-userName" />
+                                <span class="text-secondary" for="account-info_container-userPhone">Số điện thoại</span>
+                                <input readonly value="" class="p-2 mb-3 w-75 text-secondary rounded account-info_container-userPhone" />
+                                <span class="text-secondary" for="account-info_container-userRoleName">Chức vụ</span>
+                                <input readonly value="" class="p-2 mb-3 w-75 text-secondary rounded account-info_container-userRoleName" />
+                            </div>
+
+                            <button data-bs-toggle="modal" 
+                                    data-bs-target="#editAccountModal" 
+                                    class="buttonEditMobile d-none w-100 p-2 mt-4 rounded btn btn-secondary"
+                                    onclick="editInfoAccount()">
+                                Chỉnh sửa
+                            </button>
+                        </div>
+
+                    </div>
                 </div>
             </div>
 
@@ -300,13 +322,10 @@
                         </div>
                         <div class="modal-body">
                             <div class="card account-card">
-                                <table style="
-                                            border: none;
-                                            vertical-align: middle;
-                                            display: flex;
-                                            flex-direction: column;
-                                            align-items: center;
-                                        " class="table" id="editAccountBody"></table>
+                                <table style="vertical-align: middle;"
+                                       class="table d-flex border-0 flex-column align-items-center" 
+                                       id="editAccountBody">
+                                </table>
                             </div>
                         </div>
                         <div class="modal-footer" id="editAccountModalFooter">
@@ -331,105 +350,144 @@
     <script src="assets/js/app.js"></script>
     <script type="text/javascript">
         const user = JSON.parse(localStorage.getItem("loginUser"));
+        console.log("user: ", user);
+        document.getElementsByClassName("account-avatar_container-image")[0].src = user.userAvatar;
+        document.getElementsByClassName("account-info_container-userId")[0].value = user.userId;
+        document.getElementsByClassName("account-info_container-userFullname")[0].value = user.userFullname;
+        document.getElementsByClassName("account-info_container-userName")[0].value = user.userName;
+        document.getElementsByClassName("account-info_container-userPhone")[0].value = user.userPhone;
+        document.getElementsByClassName("account-info_container-userRoleName")[0].value = user.roleName;
+
         if (!localStorage.getItem("loginUser"))
             window.location.href = "/login.html";
         else if (
-             JSON.parse(localStorage.getItem("loginUser")).roleName === "Admin") {
-             document.getElementById("user_nav").innerHTML = `
-                        <a class="nav-link " href="/admin/users" >
-                            <span class="nav-icon">
-                                <svg width="24px" height="24px" viewBox="0 0 24.00 24.00"  class="bi bi-card-list" fill="none"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                                    <g id="SVGRepo_iconCarrier">
-                                        <path d="M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z"
-                                            stroke="currentColor" stroke-width="1.392" stroke-linecap="round"
-                                            stroke-linejoin="round"></path>
-                                        <path d="M12 14C8.13401 14 5 17.134 5 21H19C19 17.134 15.866 14 12 14Z"
-                                            stroke="currentColor" stroke-width="1.392" stroke-linecap="round"
-                                            stroke-linejoin="round"></path>
-                                    </g>
-                                /svg>
-                            </span>
-                            <span class="nav-link-text">Người dùng</span>
-                        </a><!--//nav-link-->	`;
+            JSON.parse(localStorage.getItem("loginUser")).roleName === "Admin") {
+            document.getElementById("user_nav").innerHTML = `
+                            <a class="nav-link " href="/admin/users" >
+                                <span class="nav-icon">
+                                    <svg width="24px" height="24px" viewBox="0 0 24.00 24.00"  class="bi bi-card-list" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                        <g id="SVGRepo_iconCarrier">
+                                            <path d="M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z"
+                                                stroke="currentColor" stroke-width="1.392" stroke-linecap="round"
+                                                stroke-linejoin="round"></path>
+                                            <path d="M12 14C8.13401 14 5 17.134 5 21H19C19 17.134 15.866 14 12 14Z"
+                                                stroke="currentColor" stroke-width="1.392" stroke-linecap="round"
+                                                stroke-linejoin="round"></path>
+                                        </g>
+                                    /svg>
+                                </span>
+                                <span class="nav-link-text">Người dùng</span>
+                            </a><!--//nav-link-->	`;
         }
 
+        
+
         function editInfoAccount() {
-             
-             document.getElementById("editProductBody").innerHTML = `
-                  <tr style="border: none">
-                     <td style="border: none; font-weight: bold">
-                          <label for="imgUrl">Ảnh đại diện:</label>
-                     </td>
-                     <td style="border: none">
-                           <input type="file" id="add_imgUrl" name="imgUrl" />
-                     </td>
-                  </tr>
+            const user = JSON.parse(localStorage.getItem("loginUser"));
 
-                  <tr style="border: none">
-                        <td style="border: none;"></td>
-                        <td style="border: none">
-                             <button style="border:1px solid black" id="uploadButton">Upload</button>
-                             <img id="displayImageEdit" src=${user.userAvatar} style="width: 100px; height: 100px;display:inline">
-                        </td>
-                  </tr>
+            document.getElementById(
+                "editAccountModalFooter"
+            ).innerHTML = `
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                        <button type="button" class="btn btn-primary" onclick="handleEditAccount()">Sửa sản phẩm</button>
+                    `;
+            document.getElementById("editAccountBody").innerHTML = `
+                      <tr style="border: none">
+                         <td style="border: none; font-weight: bold">
+                              <label for="imgUrl">Ảnh đại diện:</label>
+                         </td>
+                         <td style="border: none">
+                               <input type="file" id="add_imgUrl" name="imgUrl" />
+                         </td>
+                      </tr>
 
-                  <tr style="border: none">
-                     <td style="border: none; text-align:end; font-weight: bold" >
-                          <label for="userId">Mã nhân viên:</label>
-                     </td>
-                     <td style="border: none">
-                         <input readonly type="text" id="userId" name="userId" value="${user.userId}" size="25">
-                     </td>
-                  </tr>
-                  
-                  <tr style="border: none">
-                       <td style="border: none; text-align:end; font-weight: bold">
-                            <label for="userName">Tên đăng nhập:</label>
-                       </td>
-                       <td style="border: none">
-                            <input readonly type="text" id="userName" name="userName" value="${user.userName}" size="25">
-                       </td>
-                  </tr>
+                      <tr style="border: none">
+                            <td style="border: none;"></td>
+                            <td style="border: none">
+                                 <button style="border:1px solid black" id="uploadButton">Upload</button>
+                                 <img id="displayImageEdit" src=${user.userAvatar} style="width: 100px; height: 100px;display:inline">
+                            </td>
+                      </tr>
 
-                  <tr style="border: none">
-                       <td style="border: none; text-align:end; font-weight: bold">
-                            <label for="userPassword">Mật khẩu:</label>
-                       </td>
-                       <td style="border: none">
-                            <input type="password" id="userPassword" name="userPassword" value="" size="25">
-                       </td>
-                  </tr>
+                      <tr style="border: none">
+                           <td style="border: none; text-align:end; font-weight: bold">
+                                <label for="userPassword">Mật khẩu:</label>
+                           </td>
+                           <td style="border: none">
+                                <input type="password" id="userPassword" name="userPassword" value="" size="25">
+                           </td>
+                      </tr>
 
-                 <tr style="border: none">
-                       <td style="border: none; text-align:end; font-weight: bold">
-                            <label for="userFullname">Họ và tên:</label>
-                       </td>
-                       <td style="border: none">
-                            <input type="text" id="userFullname" name="userFullname" value="${user.userFullname}" size="25">
-                       </td>
-                  </tr>
+                     <tr style="border: none">
+                           <td style="border: none; text-align:end; font-weight: bold">
+                                <label for="userFullname">Họ và tên:</label>
+                           </td>
+                           <td style="border: none">
+                                <input type="text" id="userFullname" name="userFullname" value="${user.userFullname}" size="25">
+                           </td>
+                      </tr>
 
-                  <tr style="border: none">
-                       <td style="border: none; text-align:end; font-weight: bold">
-                            <label for="userPhone">Số điện thoại:</label>
-                       </td>
-                       <td style="border: none">
-                            <input type="text" id="userPhone" name="userPhone" value="${user.userPhone}" size="25">
-                       </td>
-                  </tr>
+                      <tr style="border: none">
+                           <td style="border: none; text-align:end; font-weight: bold">
+                                <label for="userPhone">Số điện thoại:</label>
+                           </td>
+                           <td style="border: none">
+                                <input type="text" id="userPhone" name="userPhone" value="${user.userPhone}" size="25">
+                           </td>
+                      </tr>
+                 `;
+            // Xử lý upload ảnh
+            document.getElementById('uploadButton').addEventListener('click', function () {
+                var file = document.getElementById('add_imgUrl').files[0];
+                var formData = new FormData();
+                formData.append('file', file);
+                formData.append('upload_preset', 'upanh555');
+                fetch(`https://api.cloudinary.com/v1_1/djwygccw2/image/upload`, {
+                    method: 'POST',
+                    body: formData
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data);
+                        document.getElementById('displayImageEdit').style = 'width: 100px; height: 100px;display:inline';
+                        document.getElementById('displayImageEdit').src = data.secure_url;
+                    })
+                    .catch(err => console.error(err));
+            });
+        }
+        function handleEditAccount() {
+            let editedAccount = {
+                userId: user.userId,
+                userFullname: document.getElementById("userFullname").value,
+                userPhone: document.getElementById("userPhone").value,
+                userPassword: document.getElementById("userPassword").value,
+                userAvatar: document.getElementById("displayImageEdit").src
+            };
 
-                  <tr style="border: none">
-                       <td style="border: none; text-align:end; font-weight: bold">
-                            <label for="roleId">Chức vụ:</label>
-                       </td>
-                       <td style="border: none">
-                            <input readonly type="text" id="roleId" name="roleId" value="${user.roleId}" size="25">
-                       </td>
-                  </tr>
-             `;
+            console.log(editedAccount);
+
+            fetch(`/admin/users/${editedAccount.userId}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(editedAccount),
+            })
+                .then((response) => {
+                    if (response.ok) {
+                        // Xử lý thành công (ví dụ: đóng modal)
+                        alert("Sửa thông tin thành công!");
+                    } else {
+                        alert("Sửa thông tin không thành công!");
+                    }
+                    window.location.reload();
+                })
+                .catch((error) =>
+                    console.error("An error occurred:", error)
+                );
         }
     </script>
 </body>
