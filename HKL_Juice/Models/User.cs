@@ -15,6 +15,7 @@ namespace HKL_Juice.Models
         public int roleId { get; set; } // Foreign key reference to Role
         public string userFullname { get; set; }
         public string userPhone { get; set; }
+        public string userAvatar { get; set; }
 
         // Navigation property to link to Role object
         public virtual Role Role { get; set; }

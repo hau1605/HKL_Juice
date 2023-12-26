@@ -272,10 +272,10 @@ namespace HKL_Juice.Routes
                         {
                             user.userId,
                             user.userName,
-                            // Do not return sensitive data like passwords
                             user.userFullname,
                             user.userPhone,
-                            user.Role.roleName
+                            user.Role.roleName,
+                            user.userAvatar
                         }
                     });
                 }
@@ -286,7 +286,10 @@ namespace HKL_Juice.Routes
                 }
             });
 
-
+            Get("/admin/account", parameters =>
+            {
+                return View["userAdmin.cshtml"];
+            });
         }
     }
 }
