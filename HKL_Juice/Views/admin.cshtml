@@ -356,15 +356,15 @@
             currency: 'VND'
         })}`
 
-        document.getElementById("adminDoanhThuP").innerHTML = `Tháng ${today.getMonth()}/${today.getFullYear()}`
-        document.getElementById("adminLoiNhuan").innerHTML = `${(adminData.TotalRevenueThisMonth / 5).toLocaleString('vi-VN', {
+        document.getElementById("adminDoanhThuP").innerHTML = `Tháng ${today.getMonth()+1}/${today.getFullYear()}`
+        document.getElementById("adminLoiNhuan").innerHTML = `${(adminData.TotalRevenueThisMonth*3/20).toLocaleString('vi-VN', {
             style: 'currency',
             currency: 'VND'
         })}`
 
-        document.getElementById("adminLoiNhuanP").innerHTML = `Tháng ${today.getMonth()}/${today.getFullYear()}`
+        document.getElementById("adminLoiNhuanP").innerHTML = `Tháng ${today.getMonth()+1}/${today.getFullYear()}`
         document.getElementById("adminSanPham").innerHTML = `${adminData.NumberOfProductsOnSale}`
-        document.getElementById("adminHoaDonNew").innerHTML = `Mới trong tháng ${today.getMonth()}/${today.getFullYear()}`
+        document.getElementById("adminHoaDonNew").innerHTML = `Mới trong tháng ${today.getMonth()+1}/${today.getFullYear()}`
         document.getElementById("adminHoaDon").innerHTML = `${adminData.NumberOfNewOrdersThisMonth}`
         window.chartColors = {
             green: '#75c181',
@@ -558,6 +558,9 @@
                         gridLines: {
                             drawBorder: false,
                             color: window.chartColors.borders,
+                        },
+                        ticks: {
+                            beginAtZero: true
                         },
 
                     }]

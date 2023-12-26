@@ -495,45 +495,45 @@
     </div><!--//app-wrapper-->
     @{ var jsonHtml = Html.Raw(@Model); } <!-- Hiển thị dữ liệu và phân trang lọc -->
     <script type="text/javascript">
-        function convertToDate(date) {
-            var day = ("0" + date.getDate()).slice(-2); // Add leading zero if needed
-            var month = ("0" + (date.getMonth() + 1)).slice(-2); // Add leading zero if needed, month is 0-indexed
-            var year = date.getFullYear();
-            return day + '/' + month + '/' + year;
-        }
-        function convertToTime(date) {
-            var hours = date.getHours();
-            var minutes = date.getMinutes();
-            var ampm = hours >= 12 ? 'PM' : 'AM';
-            hours = hours % 12;
-            hours = hours ? hours : 12; // the hour '0' should be '12'
-            minutes = minutes < 10 ? '0' + minutes : minutes;
-            var strTime = hours + ':' + minutes + ' ' + ampm;
-            return strTime;
-        }
-        function convertToDateTime(dateS) {
-            console.log(dateS)
-            var date = new Date(dateS)
-            var day = ("0" + date.getDate()).slice(-2); // Add leading zero if needed
-            var month = ("0" + (date.getMonth() + 1)).slice(-2); // Add leading zero if needed, month is 0-indexed
-            var year = date.getFullYear();
-            var hours = date.getHours();
-            var minutes = date.getMinutes();
-            var ampm = hours >= 12 ? 'PM' : 'AM';
-            hours = hours % 12;
-            hours = hours ? hours : 12; // the hour '0' should be '12'
-            minutes = minutes < 10 ? '0' + minutes : minutes;
-            var strTime = hours + ':' + minutes + ' ' + ampm;
-            return day + '/' + month + '/' + year + ' '+ strTime;
-        }
+            function convertToDate(date) {
+                var day = ("0" + date.getDate()).slice(-2); // Add leading zero if needed
+                var month = ("0" + (date.getMonth() + 1)).slice(-2); // Add leading zero if needed, month is 0-indexed
+                var year = date.getFullYear();
+                return day + '/' + month + '/' + year;
+            }
+            function convertToTime(date) {
+                var hours = date.getHours();
+                var minutes = date.getMinutes();
+                var ampm = hours >= 12 ? 'PM' : 'AM';
+                hours = hours % 12;
+                hours = hours ? hours : 12; // the hour '0' should be '12'
+                minutes = minutes < 10 ? '0' + minutes : minutes;
+                var strTime = hours + ':' + minutes + ' ' + ampm;
+                return strTime;
+            }
+            function convertToDateTime(dateS) {
+                console.log(dateS)
+                var date = new Date(dateS)
+                var day = ("0" + date.getDate()).slice(-2); // Add leading zero if needed
+                var month = ("0" + (date.getMonth() + 1)).slice(-2); // Add leading zero if needed, month is 0-indexed
+                var year = date.getFullYear();
+                var hours = date.getHours();
+                var minutes = date.getMinutes();
+                var ampm = hours >= 12 ? 'PM' : 'AM';
+                hours = hours % 12;
+                hours = hours ? hours : 12; // the hour '0' should be '12'
+                minutes = minutes < 10 ? '0' + minutes : minutes;
+                var strTime = hours + ':' + minutes + ' ' + ampm;
+                return day + '/' + month + '/' + year + ' '+ strTime;
+            }
 
-        let orders = @jsonHtml
-                for (let i = 0; i < orders.length; i++)
-                    orders[i].orderDate = new Date(parseInt(orders[i].orderDate.match(/\/Date\((\d+)\)\//)[1]))
-                console.log(orders)
+            let orders = @jsonHtml
+                    for (let i = 0; i < orders.length; i++)
+                        orders[i].orderDate = new Date(parseInt(orders[i].orderDate.match(/\/Date\((\d+)\)\//)[1]))
+                    console.log(orders)
 
 
-            const rowsPerPage = 8; // Số hàng mỗi trang
+            const rowsPerPage = 25; // Số hàng mỗi trang
             let currentPage = 1; // Trang hiện tại
             let filterOrder = orders;
             let searchValue = '';
@@ -550,7 +550,34 @@
                 currentPage = 1;
                 setupPagination(orders, document.getElementById('pagination'))
             });
+            function filterOrdersByStatus(status) {
+                statusValue = status;
+                currentPage = 1
+                setupPagination(orders, document.getElementById('pagination'));
+            }
+            // Thêm sự kiện click cho từng tab
+            document.getElementById('orders-all-tab').addEventListener('click', () => filterOrdersByStatus('All'));
+            document.getElementById('orders-paid-tab').addEventListener('click', () => filterOrdersByStatus('Đã thanh toán'));
+            document.getElementById('orders-pending-tab').addEventListener('click', () => filterOrdersByStatus('Đang chờ'));
+            document.getElementById('orders-cancelled-tab').addEventListener('click', () => filterOrdersByStatus('Đã hủy'));
 
+            function updatePaginationButtons(paginationElement, pageCount) {
+                const previousButton = paginationElement.querySelector('#previousPage');
+                const nextButton = paginationElement.querySelector('#nextPage');
+
+                if (currentPage === 1) {
+                    previousButton.classList.add('disabled');
+                } else {
+                    previousButton.classList.remove('disabled');
+                }
+
+                if (currentPage === pageCount || pageCount === 0) {
+                    nextButton.classList.add('disabled');
+                } else {
+                    nextButton.classList.remove('disabled');
+                }
+
+            }
             function displayOrders(ordersData, page = 1) {
                 const tableBody = document.getElementById('ordersTable').getElementsByTagName('tbody')[0];
                 tableBody.innerHTML = ""; // Xóa dữ liệu hiện tại
@@ -593,36 +620,6 @@
 
                 // Cập nhật trạng thái của nút 'Previous' và 'Next'
                 updatePaginationButtons(document.getElementById('pagination'), Math.ceil(ordersData.length / rowsPerPage));
-            }
-
-            // Hàm lọc đơn hàng theo trạng thái
-            function filterOrdersByStatus(status) {
-                statusValue = status;
-                currentPage = 1
-                setupPagination(orders, document.getElementById('pagination'));
-            }
-            // Thêm sự kiện click cho từng tab
-            document.getElementById('orders-all-tab').addEventListener('click', () => filterOrdersByStatus('All'));
-            document.getElementById('orders-paid-tab').addEventListener('click', () => filterOrdersByStatus('Đã thanh toán'));
-            document.getElementById('orders-pending-tab').addEventListener('click', () => filterOrdersByStatus('Đang chờ'));
-            document.getElementById('orders-cancelled-tab').addEventListener('click', () => filterOrdersByStatus('Đã hủy'));
-
-            function updatePaginationButtons(paginationElement, pageCount) {
-                const previousButton = paginationElement.querySelector('#previousPage');
-                const nextButton = paginationElement.querySelector('#nextPage');
-
-                if (currentPage === 1) {
-                    previousButton.classList.add('disabled');
-                } else {
-                    previousButton.classList.remove('disabled');
-                }
-
-                if (currentPage === pageCount || pageCount === 0) {
-                    nextButton.classList.add('disabled');
-                } else {
-                    nextButton.classList.remove('disabled');
-                }
-
             }
 
             function setupPagination(ordersData, paginationElement, current = currentPage) {
@@ -680,25 +677,56 @@
 
                 displayOrders(ordersData, current);
 
-                for (let i = 1; i <= pageCount; i++) {
+                let numPagesToShow = 3;
+                let startPage = Math.max(current - numPagesToShow, 1);
+                let endPage = Math.min(current + numPagesToShow, pageCount);
+
+                // Add the first page and ellipsis if necessary
+                if (startPage > 1) {
+                    addPageButton(1);
+                    if (startPage > 2) {
+                        addEllipsis();
+                    }
+                }
+
+                // Add individual page numbers
+                for (let i = startPage; i <= endPage; i++) {
+                    addPageButton(i);
+                }
+
+                // Add the last page and ellipsis if necessary
+                if (endPage < pageCount) {
+                    if (endPage < pageCount - 1) {
+                        addEllipsis();
+                    }
+                    addPageButton(pageCount);
+                }
+
+                // Update the state of 'Previous' and 'Next' buttons
+
+                function addPageButton(pageNum) {
                     let pageItem = document.createElement('li');
-                    pageItem.classList.add('page-item');
-                    if (i === current) {
+                    pageItem.classList.add('page-item', 'number');
+                    if (pageNum === current) {
                         pageItem.classList.add('active');
                     }
-                    else pageItem.remove('active');
-                    pageItem.innerHTML = `<a class="page-link" href="#">${i}</a>`;
+                    pageItem.innerHTML = `<a class="page-link" href="#">${pageNum}</a>`;
                     pageItem.addEventListener('click', (event) => {
-                        event.preventDefault(); // Ngăn không cho trình duyệt chuyển hướng
-                        currentPage = i;
-                        setupPagination(ordersData, document.getElementById('pagination'), i);
-
+                        event.preventDefault();
+                        currentPage = pageNum;
+                        setupPagination(ordersData, paginationElement, pageNum);
                     });
                     paginationElement.insertBefore(pageItem, paginationElement.querySelector('#nextPage'));
                 }
 
-                // Cập nhật trạng thái nút 'Previous'
-                updatePaginationButtons(paginationElement, pageCount);
+                function addEllipsis() {
+                    let ellipsisItem = document.createElement('li');
+                    ellipsisItem.classList.add('page-item');
+                    ellipsisItem.innerHTML = `<span class="page-link">...</span>`;
+                    paginationElement.insertBefore(ellipsisItem, paginationElement.querySelector('#nextPage'));
+                }
+               
+
             }
 
             document.getElementById('previousPage').addEventListener('click', () => {
@@ -723,114 +751,114 @@
     <!-- Authen + Modal -->
     <script>
         //Authenticate
-        //Authenticate	
+        //Authenticate
         const user = JSON.parse(localStorage.getItem("loginUser"))
         if (!localStorage.getItem('loginUser'))
             window.location.href = '/admin/login'
         else if (JSON.parse(localStorage.getItem('loginUser')).roleName === 'Admin') {
             document.getElementById('user_nav').innerHTML = `
-				<a class="nav-link " href="/admin/users" >
-					<span class="nav-icon">
-						<svg width="24px" height="24px" viewBox="0 0 24.00 24.00"  class="bi bi-card-list" fill="none"
-							xmlns="http://www.w3.org/2000/svg">
-							<g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-							<g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-							<g id="SVGRepo_iconCarrier">
-								<path d="M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z"
-									stroke="currentColor" stroke-width="1.392" stroke-linecap="round"
-									stroke-linejoin="round"></path>
-								<path d="M12 14C8.13401 14 5 17.134 5 21H19C19 17.134 15.866 14 12 14Z"
-									stroke="currentColor" stroke-width="1.392" stroke-linecap="round"
-									stroke-linejoin="round"></path>
-							</g>
-						/svg>
-					</span>
-					<span class="nav-link-text">Người dùng</span>
-				</a><!--//nav-link-->	`
+                    <a class="nav-link " href="/admin/users" >
+                        <span class="nav-icon">
+                            <svg width="24px" height="24px" viewBox="0 0 24.00 24.00"  class="bi bi-card-list" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                <g id="SVGRepo_iconCarrier">
+                                    <path d="M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z"
+                                        stroke="currentColor" stroke-width="1.392" stroke-linecap="round"
+                                        stroke-linejoin="round"></path>
+                                    <path d="M12 14C8.13401 14 5 17.134 5 21H19C19 17.134 15.866 14 12 14Z"
+                                        stroke="currentColor" stroke-width="1.392" stroke-linecap="round"
+                                        stroke-linejoin="round"></path>
+                                </g>
+                            /svg>
+                        </span>
+                        <span class="nav-link-text">Người dùng</span>
+                    </a><!--//nav-link-->	`
         }
 
 
         //Hiển thị Modal Xem chi tiết
         function getDetail(orderS) {
             document.getElementById('orderDetailCardHead').innerHTML = `
-                 <h5 style="margin: 0;" class="card-title">Mã Hóa Đơn: #${orderS.orderId} </h5>
-                 <h6 style="margin: 0;" class="card-title">Ngày: ${convertToDateTime(orderS.orderDate)}</h6>
-                `
+                     <h5 style="margin: 0;" class="card-title">Mã Hóa Đơn: #${orderS.orderId} </h5>
+                     <h6 style="margin: 0;" class="card-title">Ngày: ${convertToDateTime(orderS.orderDate)}</h6>
+                    `
             document.getElementById('orderDetailCardBody').innerHTML = `
-                  <p style="text-align: right;" class="card-text">Trạng Thái: ${orderS.paymentStatus}</p>
-                  <p style="text-align: right;" class="card-text">Phương Thức: ${orderS.paymentMethod}</p>
-                  <p style="text-align: right;" class="card-text">Số bàn: ${orderS.numberTable}</p>
-                  <p style="text-align: right;" class="card-text">Nhân Viên: ${orderS.userFullname}</p>
-            `
+                      <p style="text-align: right;" class="card-text">Trạng Thái: ${orderS.paymentStatus}</p>
+                      <p style="text-align: right;" class="card-text">Phương Thức: ${orderS.paymentMethod}</p>
+                      <p style="text-align: right;" class="card-text">Số bàn: ${orderS.numberTable}</p>
+                      <p style="text-align: right;" class="card-text">Nhân Viên: ${orderS.userFullname}</p>
+                `
             const tableBody = document.getElementById('orderTableBody');
             tableBody.innerHTML = ''
             orderS.OrderDetails.forEach(order => {
-                let row =`
-                    <tr valign='middle' >
-                        <td><img style="width:70px;height:70px;border-radius:20%;box-shadow:2px 2px 3px gray" src="${order.imgUrl}" alt="Product Image" class="product-img"></td>
-                            <td class="product-name">${order.productName}</td>
-                            <td>${order.quantity}</td>
-                            <td>${order.subTotal.toLocaleString('vi-VN', {
-                                style: 'currency',
-                                currency: 'VND'
-                            })}</td>
-                    </tr>`
-                        tableBody.innerHTML += row;
+                let row = `
+                        <tr valign='middle' >
+                            <td><img style="width:70px;height:70px;border-radius:20%;box-shadow:2px 2px 3px gray" src="${order.imgUrl}" alt="Product Image" class="product-img"></td>
+                                <td class="product-name">${order.productName}</td>
+                                <td>${order.quantity}</td>
+                                <td>${order.subTotal.toLocaleString('vi-VN', {
+                    style: 'currency',
+                    currency: 'VND'
+                })}</td>
+                        </tr>`
+                tableBody.innerHTML += row;
             });
 
-                        document.getElementById('orderTableFoot').innerHTML =`
-                        <tr>
-                            <th colspan="3" style="text-align: right;">Tổng Tiền</th>
-                            <th>${orderS.orderTotal.toLocaleString('vi-VN', {
-                                style: 'currency',
-                                currency: 'VND'
-                            })}</th>
-                        </tr>`
+            document.getElementById('orderTableFoot').innerHTML = `
+                            <tr>
+                                <th colspan="3" style="text-align: right;">Tổng Tiền</th>
+                                <th>${orderS.orderTotal.toLocaleString('vi-VN', {
+                style: 'currency',
+                currency: 'VND'
+            })}</th>
+                            </tr>`
 
         }
 
         //Hiển thị Modal Edit Hóa đơn
         function getEditDetail(orderS) {
             document.getElementById('EditOrderCardHead').innerHTML = `
-                     <h5 style="margin: 0;" class="card-title">Mã Hóa Đơn: #${orderS.orderId}</h5>
-                     <h6 style="margin: 0;" class="card-title">Ngày: ${convertToDateTime(orderS.orderDate)}</h6>
-                `
-            if (orderS.userId !== user.userId && orderS.userId !== "" && user.roleName!=='Admin') {
+                         <h5 style="margin: 0;" class="card-title">Mã Hóa Đơn: #${orderS.orderId}</h5>
+                         <h6 style="margin: 0;" class="card-title">Ngày: ${convertToDateTime(orderS.orderDate)}</h6>
+                    `
+            if (orderS.userId !== user.userId && orderS.userId !== "" && user.roleName !== 'Admin') {
                 document.getElementById('EditOrderCardBody').innerHTML = `
-                      <p style="text-align: right;" class="card-text">Trạng Thái: ${orderS.paymentStatus}</p>
-                      <p style="text-align: right;" class="card-text">Phương Thức: ${orderS.paymentMethod}</p>
-                      <p style="text-align: right;" class="card-text">Số bàn: ${orderS.numberTable}</p>
-                      <p style="text-align: right;" class="card-text">Nhân Viên: ${orderS.userFullname}</p>
-                `
+                          <p style="text-align: right;" class="card-text">Trạng Thái: ${orderS.paymentStatus}</p>
+                          <p style="text-align: right;" class="card-text">Phương Thức: ${orderS.paymentMethod}</p>
+                          <p style="text-align: right;" class="card-text">Số bàn: ${orderS.numberTable}</p>
+                          <p style="text-align: right;" class="card-text">Nhân Viên: ${orderS.userFullname}</p>
+                    `
                 document.getElementById("EditOrderModelFooter").innerHTML = `
-                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                      `
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                          `
             } else {
                 let orderString = JSON.stringify(orderS).replace(/"/g, '&quot;');
 
                 document.getElementById("EditOrderModelFooter").innerHTML = `
-                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                         <button type="button" class="btn btn-primary" onclick="handleEditOrder(${orderString})">Sửa hóa đơn</button>
-                   `
-                document.getElementById('EditOrderCardBody').innerHTML = 
-                   `<div style="display: flex;align-items: center;justify-content: flex-end;">
-						<p style="text-align: right;margin: 0 6px;" class="card-text">Trạng Thái: </p>
-							<select name="paymentStatus" id="selPaymentStatus">
-								<option  value="Đang chờ">Đang chờ</option>
-								<option value="Đã thanh toán">Đã thanh toán</option>
-								<option value="Đã hủy">Đã hủy</option>
-							</select>
-					</div>
-					<div style="margin: 18px 0px 10px;display: flex;align-items: center;justify-content: flex-end;">
-						<p style="text-align: right;margin: 0px 6px;" class="card-text">Phương Thức: </p>
-							<select name="paymentMethod" id="selPaymentMethod">
-							    <option value="Tiền mặt">Tiền mặt</option>
-								<option value="Momo">Momo</option>
-								<option value="Thẻ tín dụng">Thẻ tín dụng</option>
-							</select>
-					</div>
-                    <p style="text-align: right;" class="card-text">Số bàn: ${orderS.numberTable}</p>
-					<p style="text-align: right;" class="card-text">Nhân Viên: ${orderS.userFullname}</p>`
+                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                             <button type="button" class="btn btn-primary" onclick="handleEditOrder(${orderString})">Sửa hóa đơn</button>
+                       `
+                document.getElementById('EditOrderCardBody').innerHTML =
+                    `<div style="display: flex;align-items: center;justify-content: flex-end;">
+                            <p style="text-align: right;margin: 0 6px;" class="card-text">Trạng Thái: </p>
+                                <select name="paymentStatus" id="selPaymentStatus">
+                                    <option  value="Đang chờ">Đang chờ</option>
+                                    <option value="Đã thanh toán">Đã thanh toán</option>
+                                    <option value="Đã hủy">Đã hủy</option>
+                                </select>
+                        </div>
+                        <div style="margin: 18px 0px 10px;display: flex;align-items: center;justify-content: flex-end;">
+                            <p style="text-align: right;margin: 0px 6px;" class="card-text">Phương Thức: </p>
+                                <select name="paymentMethod" id="selPaymentMethod">
+                                    <option value="Tiền mặt">Tiền mặt</option>
+                                    <option value="Momo">Momo</option>
+                                    <option value="Thẻ tín dụng">Thẻ tín dụng</option>
+                                </select>
+                        </div>
+                        <p style="text-align: right;" class="card-text">Số bàn: ${orderS.numberTable}</p>
+                        <p style="text-align: right;" class="card-text">Nhân Viên: ${orderS.userFullname}</p>`
 
             }
             if (orderS.userId === user.userId || orderS.userId === "") {
@@ -841,33 +869,33 @@
             tableBody.innerHTML = ''
             orderS.OrderDetails.forEach(order => {
                 let row = `
-                                                                                            <tr valign='middle' >
-                                                                                                <td><img style="width:70px;height:70px;border-radius:20%;box-shadow:2px 2px 3px gray" src="${order.imgUrl}" alt="Product Image" class="product-img"></td>
-                                                                                                <td class="product-name">${order.productName}</td>
-                                                                                                <td>${order.quantity}</td>
-                                                                                                <td>${order.subTotal.toLocaleString('vi-VN', {
+                                                                                                <tr valign='middle' >
+                                                                                                    <td><img style="width:70px;height:70px;border-radius:20%;box-shadow:2px 2px 3px gray" src="${order.imgUrl}" alt="Product Image" class="product-img"></td>
+                                                                                                    <td class="product-name">${order.productName}</td>
+                                                                                                    <td>${order.quantity}</td>
+                                                                                                    <td>${order.subTotal.toLocaleString('vi-VN', {
                     style: 'currency',
                     currency: 'VND'
                 })}</td>
-                                                                                            </tr>`
+                                                                                                </tr>`
                 tableBody.innerHTML += row;
             });
 
             document.getElementById('EditOrderTableFoot').innerHTML = `
-                                                                                        <tr>
-                                                                                            <th colspan="3" style="text-align: right;">Tổng Tiền</th>
-                                                                                            <th>${orderS.orderTotal.toLocaleString('vi-VN', {
+                                                                                            <tr>
+                                                                                                <th colspan="3" style="text-align: right;">Tổng Tiền</th>
+                                                                                                <th>${orderS.orderTotal.toLocaleString('vi-VN', {
                 style: 'currency',
                 currency: 'VND'
             })}</th>
-                                                                                        </tr>
-                                                                                    `
+                                                                                            </tr>
+                                                                                        `
         }
 
         // Hàm lưu edit hóa đơn lên server
         function handleEditOrder(params) {
             let editOrder = {
-               
+
                 paymentStatus: document.getElementById('selPaymentStatus').value,
                 paymentMethod: document.getElementById('selPaymentMethod').value,
                 userId: user.userId
@@ -896,25 +924,25 @@
         //Hiển thị Modal Xóa Hóa đơn
         function openDelete(orderS) {
             document.getElementById('DeleteOrderCardHead').innerHTML = `
-                                                                                        <h5 style="margin: 0;" class="card-title">Mã Hóa Đơn: #${orderS.orderId}</h5>
-                                                                                        <h6 style="margin: 0;" class="card-title">Ngày: ${convertToDateTime(orderS.orderDate)}</h6>
-                                                                                    `
+                                                                                            <h5 style="margin: 0;" class="card-title">Mã Hóa Đơn: #${orderS.orderId}</h5>
+                                                                                            <h6 style="margin: 0;" class="card-title">Ngày: ${convertToDateTime(orderS.orderDate)}</h6>
+                                                                                        `
             if (orderS.userId !== user.userId && orderS.userId !== "" && user.roleName !== 'Admin') {
                 document.getElementById('DeleteOrderCardBody').innerHTML = `
-                                                                                        <p style="text-align: right;" class="card-text">Chỉ có Admin có thể xóa hóa đơn của người khác</p>
-                                                                                    `
-                document.getElementById("DeleteOrderModelFooter").innerHTML = `
-                                                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                                                                                            <p style="text-align: right;" class="card-text">Chỉ có Admin có thể xóa hóa đơn của người khác</p>
                                                                                         `
+                document.getElementById("DeleteOrderModelFooter").innerHTML = `
+                                                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                                                                                            `
             } else {
                 let orderString = JSON.stringify(orderS).replace(/"/g, '&quot;');
 
                 document.getElementById("DeleteOrderModelFooter").innerHTML = `
-                                                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                                                                                            <button type="button" class="btn btn-danger" onclick="handleDeleteOrder(${orderString})">Xóa hóa đơn</button>
-                                                                                        `
+                                                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                                                                                                <button type="button" class="btn btn-danger" onclick="handleDeleteOrder(${orderString})">Xóa hóa đơn</button>
+                                                                                            `
                 document.getElementById('DeleteOrderCardBody').innerHTML = `<div style="display: flex;align-items: center;justify-content: flex-end;">
-                                                                                            <p style="text-align: right;" class="card-text">Bạn có chắc chắn muốn xóa hóa đơn này không?</p>`
+                                                                                                <p style="text-align: right;" class="card-text">Bạn có chắc chắn muốn xóa hóa đơn này không?</p>`
 
             }
 

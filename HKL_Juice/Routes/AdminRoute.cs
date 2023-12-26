@@ -29,12 +29,15 @@ namespace HKL_Juice.Routes
                 var now = DateTime.Now;
                 var firstDayOfMonth = new DateTime(now.Year, now.Month, 1);
                 var totalRevenueThisMonth = dbContext.Order
-                    .Where(o => o.orderDate >= firstDayOfMonth && o.orderDate <= now)
+                    .Where(o => o.paymentStatus == "Đã thanh toán" && 
+                    o.orderDate >= firstDayOfMonth 
+                    && o.orderDate <= now)
                     .Sum(o => o.orderTotal);
                 var numberOfProductsOnSale = dbContext.Product.Count();
 
                 var numberOfNewOrdersThisMonth = dbContext.Order
-                    .Count(o => o.orderDate >= firstDayOfMonth && o.orderDate <= now);
+                    .Count(o => o.paymentStatus == "Đã thanh toán" && 
+                    o.orderDate >= firstDayOfMonth && o.orderDate <= now);
                 var orderCountsLast7Days = new List<object>();
                 var revenueLast14Days = new List<object>();
                 for (int i = 0; i <= 6; i++)
@@ -42,7 +45,8 @@ namespace HKL_Juice.Routes
                     var date = now.AddDays(-i).Date;
                     var dateString = date.ToString("dd-MM-yyyy");
                     var orderCount = dbContext.Order
-                        .Count(o => o.orderDate.Year == date.Year &&
+                        .Count(o => o.paymentStatus == "Đã thanh toán" &&
+                                    o.orderDate.Year == date.Year &&
                                     o.orderDate.Month == date.Month &&
                                     o.orderDate.Day == date.Day);
                     orderCountsLast7Days.Add(new
@@ -58,10 +62,11 @@ namespace HKL_Juice.Routes
                     var dateString = date.ToString("dd-MM-yyyy");
                     // Calculating revenue
                     var dailyRevenue = dbContext.Order
-                        .Where(o => o.orderDate.Year == date.Year &&
+                        .Where(o => o.paymentStatus == "Đã thanh toán" &&
+                                    o.orderDate.Year == date.Year &&
                                     o.orderDate.Month == date.Month &&
                                     o.orderDate.Day == date.Day)
-                        .Sum(o => o.orderTotal);
+                        .Sum(o => (decimal?)o.orderTotal) ?? 0;
                     revenueLast14Days.Add(new
                     {
                         Date = dateString,
