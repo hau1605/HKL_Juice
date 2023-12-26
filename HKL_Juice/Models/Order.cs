@@ -15,6 +15,7 @@ namespace HKL_Juice.Models
         public int userId { get; set; } // Foreign key reference to User
         public string paymentMethod { get; set; }
         public int orderTotal { get; set; }
+        public int numberTable { get; set; }
 
         // Navigation property to link to User object
         public virtual User User { get; set; }

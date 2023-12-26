@@ -1,8 +1,4 @@
-﻿@*@{
-        Layout = "layout";
-    }*@
-
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 
 <html>
 <head>
@@ -27,10 +23,6 @@
 
 </head>
 <body class="main-layout inner_page">
-    <div class="loader_bg">
-        <div class="loader"><img src="~/Content/images/loading.gif" alt="#" /></div>
-    </div>
-
     <header>
         <div class="header">
             <div class="container">
@@ -49,11 +41,6 @@
                     </div>
                     <div class="col-xl-9 col-lg-9 col-md-9 col-sm-9">
                         <nav class="navigation navbar navbar-expand-md navbar-dark" id="main-nav">
-                            <!-- <a class="cart-container nav-link font-weight-bold text-light" href="cart.html">
-                                <i class="bi bi-cart" aria-hidden="true">
-                                    <span id="cart-count" class="cart-count">0</span>
-                                </i>
-                            </a> -->
                             <button class="navbar-toggler" type="button" data-toggle="collapse"
                                     data-target="#navbarsExample04" aria-controls="navbarsExample04" aria-expanded="false"
                                     aria-label="Toggle navigation">
@@ -70,9 +57,6 @@
                                     <li class="nav-item ">
                                         <a class="nav-link font-weight-bold" href="/about">Về chúng tôi</a>
                                     </li>
-                                    <!-- <li class="nav-item">
-                                        <a class="nav-link" href="/cart">Giỏ hàng</a>
-                                    </li> -->
                                     <li class="nav-item">
                                         <a class="cart-container nav-link font-weight-bold" href="/cart">
                                             <i class="bi bi-cart" aria-hidden="true">
@@ -114,8 +98,15 @@
                 <div class="cart-item" id="cartItemsContainer"></div>
             </div>
             <div class="d-flex pt-3 justify-content-end" style="margin: 0 20px;">
-                <button class="btn btn-danger p-2 mr-4 delete-cart" onclick="clearCart()">Xóa giỏ hàng</button>
-                <button class="btn btn-primary p-2">Thanh toán</button>
+                <select id="selectNumberTable" class="m-2 px-4">
+                    <option value="1" selected>Bàn 1</option>
+                    <option value="2">Bàn 2</option>
+                    <option value="3">Bàn 3</option>
+                    <option value="4">Bàn 4</option>
+                    <option value="5">Bàn 5</option>
+                </select>
+                <button class="btn btn-danger p-2 m-2 delete-cart" onclick="clearCart()">Xóa giỏ hàng</button>
+                <button class="btn btn-primary p-2 m-2" onclick="handleOrderProducts()">Thanh toán</button>
             </div>
         </div>
     </div>
@@ -187,107 +178,201 @@
 
 
 
-    <script type="application/json">
-    function updateCartCount() {
-        let cart = JSON.parse(localStorage.getItem('cart')) || [];
-        let count = cart.reduce((total, item) => total + (item.quantity || 1), 0);
-        let cartCountElement = document.querySelector('.cart-count');
-        if (cartCountElement) {
-            cartCountElement.textContent = count;
+    <script type="text/javascript">
+
+        function updateCartCount() {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            let count = cart.reduce((total, item) => total + (item.quantity || 1), 0);
+            let cartCountElement = document.querySelector('.cart-count');
+            if (cartCountElement) {
+                cartCountElement.textContent = count;
+            }
         }
-    }
-    @*=============================================================================================
-    =========================================CART PRODUCT========================================
-    =============================================================================================*@
-    function updateCartDisplay() {
-        const cartItems = loadCartItemsFromLocalStorage();
-        const emptyCartElement = document.querySelector('.empty-product');
-        const cartElement = document.querySelector('.cart-page_container-products');
+        @*=============================================================================================
+        =========================================CART PRODUCT========================================
+        =============================================================================================*@
+        function updateCartDisplay() {
+            const cartItems = loadCartItemsFromLocalStorage();
+            const emptyCartElement = document.querySelector('.empty-product');
+            const cartElement = document.querySelector('.cart-page_container-products');
 
-        if (cartItems.length === 0) {
-            emptyCartElement.style.display = 'flex';
-            cartElement.style.display = 'none';
-        } else {
-            emptyCartElement.style.display = 'none';
-            cartElement.style.display = 'block';
-            renderCartItems();
+            if (cartItems.length === 0) {
+                emptyCartElement.style.display = 'flex';
+                cartElement.style.display = 'none';
+            } else {
+                emptyCartElement.style.display = 'none';
+                cartElement.style.display = 'block';
+                renderCartItems();
+            }
         }
-    }
-    function loadCartItemsFromLocalStorage() {
-        try {
-            return JSON.parse(localStorage.getItem("cart")) || [];
-        } catch (error) {
-            console.error("Error reading cart items from localStorage:", error);
-            return [];
+        function loadCartItemsFromLocalStorage() {
+            try {
+                return JSON.parse(localStorage.getItem("cart")) || [];
+            } catch (error) {
+                console.error("Error reading cart items from localStorage:", error);
+                return [];
+            }
         }
-    }
-    function renderCartItems() {
-        const cartItems = loadCartItemsFromLocalStorage();
-        console.log("cartItems:", cartItems);
-        console.log("document.getElementById('cartItemsContainer'):", document.getElementById('cartItemsContainer'));
+        function renderCartItems() {
+            const cartItems = loadCartItemsFromLocalStorage();
 
-        const container = document.getElementById('cartItemsContainer');
-        container.innerHTML = '';
+            const container = document.getElementById('cartItemsContainer');
+            container.innerHTML = '';
 
-        cartItems.forEach(item => {
-            const totalPrice = item.price * item.quantity;
-            const itemDiv = document.createElement('div');
-            itemDiv.className = 'grid grid-five-column py-3';
-            itemDiv.innerHTML = `
-                <div class="cart-image-name">
-                    <p class="m-0">${item.name}</p>
-                </div>
-                <div class="cart-hide">
-                    <p class="m-0">${Number(item.price).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</p>
-                </div>
-                <div class="cart-btn-quantity">
-                    <button class=" btn-quantity-reduce btn-quantity" onclick="updateCartItemQuantity(${item.id}, ${item.quantity - 1})">-</button>
-                    <span>${item.quantity}</span>
-                    <button class=" btn-quantity-add btn-quantity" onclick="updateCartItemQuantity(${item.id}, ${item.quantity + 1})">+</button>
-                </div>
-                <div class="cart-hide">
-                    ${Number(totalPrice).toLocaleString("vi-VN")} đ
-                </div>
-                <div>
-                    <button class="text-danger bg-transparent delete-btn" onclick="deleteCartItem(${item.id})"><i class="bi bi-trash"></i></button>
-                </div>
-            `;
+            cartItems.forEach(item => {
+                const totalPrice = item.price * item.quantity;
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'grid grid-five-column py-1';
+                itemDiv.innerHTML = `
+                    <div class="cart-image-name d-flex">
+                        <image src="${item.imgUrl}" alt="${item.productName}" class="m-0" />
+                        <p class="m-0">${item.productName}</p>
+                    </div>
+                    <div class="cart-hide">
+                        <p class="m-0">${Number(item.price).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</p>
+                    </div>
+                    <div class="cart-btn-quantity">
+                        <button class=" btn-quantity-reduce btn-quantity" onclick="updateCartItemQuantity(${item.productId}, ${item.quantity - 1})">-</button>
+                        <span>${item.quantity}</span>
+                        <button class=" btn-quantity-add btn-quantity" onclick="updateCartItemQuantity(${item.productId}, ${item.quantity + 1})">+</button>
+                    </div>
+                    <div class="cart-hide">
+                        ${Number(totalPrice).toLocaleString("vi-VN")} đ
+                    </div>
+                    <div>
+                        <button class="text-danger bg-transparent delete-btn" onclick="deleteCartItem(${item.productId})"><i class="bi bi-trash"></i></button>
+                    </div>
+                `;
 
-            container.appendChild(itemDiv);
-        });
-    }
-    function updateCartItemQuantity(productId, newQuantity) {
-        const cartItems = loadCartItemsFromLocalStorage();
-        const itemIndex = cartItems.findIndex(item => item.id === productId);
-        if (itemIndex !== -1) {
-            cartItems[itemIndex].quantity = Math.max(1, newQuantity);
+                container.appendChild(itemDiv);
+            });
+        }
+        function updateCartItemQuantity(productId, newQuantity) {
+            const cartItems = loadCartItemsFromLocalStorage();
+            const itemIndex = cartItems.findIndex(item => item.productId === productId);
+            if (itemIndex !== -1) {
+                cartItems[itemIndex].quantity = Math.max(1, newQuantity);
 
+                localStorage.setItem("cart", JSON.stringify(cartItems));
+                updateCartCount();
+                renderCartItems();
+            }
+        }
+        function deleteCartItem(productId) {
+            let cartItems = loadCartItemsFromLocalStorage();
+            cartItems = cartItems.filter(item => item.productId !== productId);
             localStorage.setItem("cart", JSON.stringify(cartItems));
+            updateCartCount();
+            updateCartDisplay();
             renderCartItems();
         }
-    }
-    function deleteCartItem(productId) {
-        let cartItems = loadCartItemsFromLocalStorage();
-        cartItems = cartItems.filter(item => item.id !== productId);
-        localStorage.setItem("cart", JSON.stringify(cartItems));
-        updateCartDisplay();
-        renderCartItems();
-    }
-    // Delete all cart
-    function clearCart() {
-        localStorage.removeItem("cart");
-        createAndShowToast("Đã xóa toàn bộ giỏ hàng!", "bg-info");
-        updateCartCount();
-        updateCartDisplay();
-    }
-    document.addEventListener("DOMContentLoaded", function () {
-        updateCartCount();
-        renderCartItems();
-    });
+        // Delete all cart
+        function clearCart() {
+            localStorage.removeItem("cart");
+            createAndShowToast("Đã xóa toàn bộ giỏ hàng!", "bg-info");
+            updateCartCount();
+            updateCartDisplay();
+        }
+        function createAndShowToast(message, toastClass) {
+            var toastContainer = document.getElementById('toast-container');
+
+            var toastElement = document.createElement("div");
+            toastElement.className = `toast d-flex ${toastClass}`;
+            toastElement.role = "alert";
+            toastElement.ariaLive = "assertive";
+            toastElement.ariaAtomic = "true";
+            toastElement.setAttribute("data-bs-animation", "true");
+
+            var toastBody = document.createElement("div");
+            toastBody.className = "toast-body text-light";
+            toastBody.textContent = message;
+
+            var closeButton = document.createElement("button");
+            closeButton.type = "button";
+            closeButton.className = "btn-close btn-close-white me-2 m-auto";
+            closeButton.setAttribute("data-bs-dismiss", "toast");
+            closeButton.ariaLabel = "Close";
+
+            toastElement.appendChild(toastBody);
+            toastElement.appendChild(closeButton);
+
+            toastContainer.appendChild(toastElement);
+
+            var toast = new bootstrap.Toast(toastElement, { delay: 5000 });
+            toast.show();
+
+            toastElement.addEventListener('hidden.bs.toast', function () {
+                toastElement.remove();
+            });
+        }
+        @* Xử lý nhấn nút đặt hàng*@
+        document.getElementById('selectNumberTable').addEventListener('change', function () {
+            var selectedNumberTable = this.value;
+            localStorage.setItem('NumberTable', selectedNumberTable);
+        });
+        function handleOrderProducts() {
+            let orderDetails = loadCartItemsFromLocalStorage();
+            let selectedNumberTable = parseInt(localStorage.getItem("NumberTable"));
+            if (!selectedNumberTable) {
+                selectedNumberTable = 1;
+            }
+            console.log("orderDetails: ", orderDetails);
+            if (orderDetails && orderDetails.length > 0) {
+                var requestOrderDetails = {
+                    orderTotal: calculateOrderTotal(orderDetails),
+                    numberTable: selectedNumberTable,
+                    orderDetail: getOrderDetail(orderDetails)
+                }
+            }
+            console.log("requestOrderDetails: ", requestOrderDetails);
+
+
+            fetch(`/api/v1/order`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(requestOrderDetails),
+            })
+                .then((response) => {
+                    if (response.ok) {
+                        localStorage.removeItem("cart");
+                        localStorage.removeItem("NumberTable");
+                        alert("Order thành công!");
+                    } else {
+                        alert("Order không thành công!");
+                    }
+                    window.location.reload();
+                })
+                .catch((error) =>
+                    console.error("An error occurred:", error)
+                );
+        }
+        function calculateOrderTotal(orderDetails) {
+            var total = 0;
+            orderDetails.forEach(function (detail) {
+                total += detail.quantity * detail.price;
+            });
+            return total;
+        }
+        function getOrderDetail(orderDetails) {
+            var orderDetail = [];
+            orderDetails.forEach(function (detail) {
+                orderDetail.push({
+                    productId: detail.productId,
+                    quantity: detail.quantity,
+                    subTotal: detail.quantity * detail.price
+                })
+            });
+            return orderDetail;
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            updateCartDisplay();
+            updateCartCount();
+            renderCartItems();
+        });
     </script>
-
-
-
 
     <!-- Javascript files-->
     <script src="~/Content/js/jquery.min.js"></script>
@@ -297,7 +382,6 @@
     <!-- sidebar -->
     <script src="~/Content/js/jquery.mCustomScrollbar.concat.min.js"></script>
     <script src="~/Content/js/custom.js"></script>
-    <script src="~/Content/js/index.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 </body>
 </html>

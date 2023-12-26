@@ -2624,6 +2624,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Routes\OrderRoute.cs" />
     <Compile Include="Routes\ContactRoute.cs" />
     <Compile Include="Routes\AdminRoute.cs" />
     <Compile Include="Routes\CartRoute.cs" />
