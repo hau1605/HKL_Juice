@@ -35,7 +35,6 @@ namespace HKL_Juice.Routes
            );
             
 
-
             Get("/admin/users", parameters => {
                 var resUser = dbContext.User
                                         .Select(u => new
@@ -45,6 +44,8 @@ namespace HKL_Juice.Routes
                                             userPhone = u.userPhone,
                                             userName = u.userName,
                                             roleId = u.roleId,
+                                            roleName=u.Role.roleName,
+                                            userAvatar = u.userAvatar,
                                         }).ToList();
                 var serializer = new JavaScriptSerializer();
                 string json = serializer.Serialize(resUser);
@@ -54,6 +55,13 @@ namespace HKL_Juice.Routes
             Post("/admin/users", parameters =>
             {
                 var postUser = this.Bind<User>();
+                postUser.userAvatar = "/Content/assets/images/user.png";
+                var existingUser = dbContext.User.FirstOrDefault(u => u.userName == postUser.userName);
+                if (existingUser != null)
+                {
+                    // Username already exists, return bad request
+                    return HttpStatusCode.BadRequest;
+                }
                 dbContext.User.Add(postUser);
                 dbContext.SaveChanges();
                 return HttpStatusCode.OK;
@@ -67,6 +75,7 @@ namespace HKL_Juice.Routes
                     return HttpStatusCode.NotFound;
                 }
                 var putUser = this.Bind<User>();
+              
 
                 user.roleId = putUser.roleId;
                 user.userFullname = putUser.userFullname;
@@ -98,6 +107,7 @@ namespace HKL_Juice.Routes
 
                 return HttpStatusCode.OK;
             });
+
             Get("/admin/products", parameters => {
                 var productsWithCategories = dbContext.Product
                                         .Include(p => p.Category)
@@ -181,6 +191,7 @@ namespace HKL_Juice.Routes
               userFullname = o.User.userFullname,
               userId = o.User.userId,
               paymentMethod = o.paymentMethod,
+              numberTable = o.numberTable,
               OrderDetails = o.OrderDetails.Select(od => new
               {
                   productName = od.Product.productName,

@@ -257,7 +257,7 @@
                                     <form class="table-search-form row gx-1 align-items-center" id="searchForm">
                                         <div class="col-auto">
                                             <input type="text" id="search-orders" name="searchorders"
-                                                   class="form-control search-orders" placeholder="Tìm theo mã hoặc tên nhân viên">
+                                                   class="form-control search-orders" placeholder="Tìm kiếm">
                                         </div>
                                         <div class="col-auto">
                                             <button type="submit" class="btn app-btn-secondary">Tìm</button>
@@ -327,6 +327,7 @@
                                             <tr>
                                                 <th class="cell">ID</th>
                                                 <th class="cell">Hóa đơn</th>
+                                                <th class="cell">Số bàn</th>
                                                 <th class="cell">Nhân viên</th>
                                                 <th class="cell">Ngày</th>
                                                 <th class="cell">Trạng thái</th>
@@ -344,11 +345,11 @@
                         <nav class="app-pagination">
                             <ul class="pagination justify-content-center" id="pagination">
                                 <li class="page-item" id="previousPage">
-                                    <a style="cursor: pointer;" class="page-link">Previous</a>
+                                    <a style="cursor: pointer;" class="page-link">Trước</a>
                                 </li>
                                 <!-- Các nút trang sẽ được thêm vào đây bằng JavaScript -->
                                 <li class="page-item " id="nextPage">
-                                    <a style="cursor: pointer;" class="page-link ">Next</a>
+                                    <a style="cursor: pointer;" class="page-link ">Sau</a>
                                 </li>
                             </ul>
                         </nav>
@@ -563,6 +564,7 @@
                         <tr>
                             <td class="cell">#${order.orderId}</td>
                             <td class="cell" ><a class="btn-sm app-btn-secondary" style="cursor:pointer" data-bs-toggle="modal" data-bs-target="#orderDetailModal" onclick="getDetail(${orderString})">Xem chi tiết</a></td>
+                            <td class="cell">${order.numberTable}</td>
                             <td class="cell">${order.userFullname}</td>
                             <td class="cell"><span>${convertToDate(order.orderDate)}</span><span class="note">${convertToTime(order.orderDate)}</span></td>
                             <td class="cell"><span class="badge ${statusClass}">${order.paymentStatus}</span></td>
@@ -660,7 +662,11 @@
 
                 // Search Filter
                 if (searchValue !== '')
-                    ordersData = ordersData.filter(order => order.orderId.toLocaleString().includes(searchValue) || order.userFullname.toUpperCase().includes(searchValue));
+                    ordersData = ordersData.filter(order => order.orderId.toLocaleString().includes(searchValue)
+                        || order.userFullname.toUpperCase().includes(searchValue)
+                        || order.numberTable.toLocaleString().toUpperCase().includes(searchValue)
+                        || order.orderTotal.toLocaleString().toUpperCase().includes(searchValue)
+                    );
 
                 // Payment status Filter
                 if (statusValue !== 'All')
@@ -747,12 +753,13 @@
         //Hiển thị Modal Xem chi tiết
         function getDetail(orderS) {
             document.getElementById('orderDetailCardHead').innerHTML = `
-                 <h5 style="margin: 0;" class="card-title">Mã Hóa Đơn: #${orderS.orderId}</h5>
+                 <h5 style="margin: 0;" class="card-title">Mã Hóa Đơn: #${orderS.orderId} </h5>
                  <h6 style="margin: 0;" class="card-title">Ngày: ${convertToDateTime(orderS.orderDate)}</h6>
                 `
             document.getElementById('orderDetailCardBody').innerHTML = `
                   <p style="text-align: right;" class="card-text">Trạng Thái: ${orderS.paymentStatus}</p>
                   <p style="text-align: right;" class="card-text">Phương Thức: ${orderS.paymentMethod}</p>
+                  <p style="text-align: right;" class="card-text">Số bàn: ${orderS.numberTable}</p>
                   <p style="text-align: right;" class="card-text">Nhân Viên: ${orderS.userFullname}</p>
             `
             const tableBody = document.getElementById('orderTableBody');
@@ -792,6 +799,7 @@
                 document.getElementById('EditOrderCardBody').innerHTML = `
                       <p style="text-align: right;" class="card-text">Trạng Thái: ${orderS.paymentStatus}</p>
                       <p style="text-align: right;" class="card-text">Phương Thức: ${orderS.paymentMethod}</p>
+                      <p style="text-align: right;" class="card-text">Số bàn: ${orderS.numberTable}</p>
                       <p style="text-align: right;" class="card-text">Nhân Viên: ${orderS.userFullname}</p>
                 `
                 document.getElementById("EditOrderModelFooter").innerHTML = `
@@ -821,6 +829,7 @@
 								<option value="Thẻ tín dụng">Thẻ tín dụng</option>
 							</select>
 					</div>
+                    <p style="text-align: right;" class="card-text">Số bàn: ${orderS.numberTable}</p>
 					<p style="text-align: right;" class="card-text">Nhân Viên: ${orderS.userFullname}</p>`
 
             }

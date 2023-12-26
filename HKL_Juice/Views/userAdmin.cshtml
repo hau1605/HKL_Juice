@@ -84,8 +84,8 @@
                             <div class="app-utility-item app-user-dropdown dropdown">
                                 <a class="dropdown-toggle" id="user-dropdown-toggle" data-bs-toggle="dropdown" href="#"
                                    role="button" aria-expanded="false">
-                                    <img style="border-radius: 50%;"
-                                         src="~/Content/assets/images/anhconcat.jpg" alt="user profile">
+                                    <img style="border-radius: 50%;box-shadow:0 0 2px gray;" id="imgLoginUser"
+                                          alt="user profile">
                                 </a>
                                 <ul class="dropdown-menu" aria-labelledby="user-dropdown-toggle">
                                     <li><a class="dropdown-item" href="/admin/account">Tài khoản</a></li>
@@ -304,6 +304,7 @@
                                         <thead>
                                             <tr>
                                                 <th class="cell">Mã nhân viên</th>
+                                                <th class="cell">Ảnh</th>
                                                 <th class="cell">Họ tên</th>
                                                 <th class="cell">Số điện thoại</th>
                                                 <th class="cell">Tài khoản</th>
@@ -518,7 +519,7 @@
         <script>
             if (!localStorage.getItem('loginUser'))
                 window.location.href = '/admin/login'
-            else if (JSON.parse(localStorage.getItem('loginUser')).roleName === 'Admin')
+            else if (JSON.parse(localStorage.getItem('loginUser')).roleName === 'Admin') {
                 document.getElementById('user_nav').innerHTML = `
                     <a class="nav-link  active" href="/admin/users" >
                         <span class="nav-icon">
@@ -538,6 +539,8 @@
                         </span>
                         <span class="nav-link-text">Người dùng</span>
                     </a><!--//nav-link-->`
+                document.getElementById("imgLoginUser").src = JSON.parse(localStorage.getItem('loginUser')).userAvatar;
+            }
             else window.location.href = '/admin'
             // Giả sử bạn đã có một mảng dữ liệu đơn hàng
             let users =@jsonHtml;
@@ -566,10 +569,12 @@
                 paginatedItems.forEach(userInfo => {
                     let roleClass = userInfo.roleId === 1 ? 'bg-success' : 'bg-warning';
                     let roleLabel = userInfo.roleId === 1 ? 'Admin' : 'Thu ngân';
-                    let row =
-                        `
+                    let row =`
+                        
                         <tr>
                             <td class="cell">#${userInfo.userId}</td>
+                            <td class="cell"><img style="width:30px; border-radius: 50%;box-shadow:0 0 2px gray;" 
+                                alt="user img" src=${userInfo.userAvatar}> </td>
                             <td class="cell"><span class="truncate">${userInfo.userFullname}</span></td>
                             <td class="cell">${userInfo.userPhone}</td>
                             <td class="cell"><span class="note">${userInfo.userName}</span></td>
@@ -645,7 +650,14 @@
             function setupPagination(usersData, paginationElement, current = currentPage) {
                 // Xóa các nút trang số hiện tại
                 if (searchValue !== '')
-                    usersData = usersData.filter(user => user.userId.toUpperCase().includes(searchValue));
+                    usersData = usersData.filter(user => user.userId.toLocaleString().toUpperCase().includes(searchValue)
+                        || user.userFullname.toUpperCase().includes(searchValue)
+                        || user.userPhone.toUpperCase().includes(searchValue)
+                        || user.userName.toUpperCase().includes(searchValue)
+                        || user.roleName.toUpperCase().includes(searchValue)
+
+
+                    );
                 if (roleIdValue !== 'All')
                     usersData = usersData.filter(user => user.roleId === roleIdValue);
 
