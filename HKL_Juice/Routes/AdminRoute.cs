@@ -26,7 +26,61 @@ namespace HKL_Juice.Routes
         public  AdminRoute(ApplicationDbContext dbContext)
         {
             Get("/admin", parameters => {
-                return View["admin.cshtml"];
+                var now = DateTime.Now;
+                var firstDayOfMonth = new DateTime(now.Year, now.Month, 1);
+                var totalRevenueThisMonth = dbContext.Order
+                    .Where(o => o.orderDate >= firstDayOfMonth && o.orderDate <= now)
+                    .Sum(o => o.orderTotal);
+                var numberOfProductsOnSale = dbContext.Product.Count();
+
+                var numberOfNewOrdersThisMonth = dbContext.Order
+                    .Count(o => o.orderDate >= firstDayOfMonth && o.orderDate <= now);
+                var orderCountsLast7Days = new List<object>();
+                var revenueLast14Days = new List<object>();
+                for (int i = 0; i <= 6; i++)
+                {
+                    var date = now.AddDays(-i).Date;
+                    var dateString = date.ToString("dd-MM-yyyy");
+                    var orderCount = dbContext.Order
+                        .Count(o => o.orderDate.Year == date.Year &&
+                                    o.orderDate.Month == date.Month &&
+                                    o.orderDate.Day == date.Day);
+                    orderCountsLast7Days.Add(new
+                    {
+                        Date = dateString,
+                        OrderCount = orderCount
+                    });
+                }
+                // Prepare the data to be sent to the view
+                for (int i = 0; i <= 13; i++)
+                {
+                    var date = now.AddDays(-i).Date;
+                    var dateString = date.ToString("dd-MM-yyyy");
+                    // Calculating revenue
+                    var dailyRevenue = dbContext.Order
+                        .Where(o => o.orderDate.Year == date.Year &&
+                                    o.orderDate.Month == date.Month &&
+                                    o.orderDate.Day == date.Day)
+                        .Sum(o => o.orderTotal);
+                    revenueLast14Days.Add(new
+                    {
+                        Date = dateString,
+                        DailyRevenue = dailyRevenue
+                    });
+                }
+
+                var data = new
+                {
+                    TotalRevenueThisMonth = totalRevenueThisMonth,
+                    NumberOfProductsOnSale = numberOfProductsOnSale,
+                    NumberOfNewOrdersThisMonth = numberOfNewOrdersThisMonth,
+                    OrderCountsLast7Days = orderCountsLast7Days,
+                    RevenueLast14Days = revenueLast14Days
+                };
+
+                var serializer = new JavaScriptSerializer();
+                string json = serializer.Serialize(data);
+                return View["admin.cshtml", json];
             }
             );
             Get("/admin/login", parameters => {
@@ -182,26 +236,27 @@ namespace HKL_Juice.Routes
             Get("/admin/order", parameters =>
             {
                 var orders = dbContext.Order
-          .Select(o => new
-          {
-              orderId = o.orderId,
-              orderDate = o.orderDate,
-              paymentStatus = o.paymentStatus,
-              orderTotal = o.orderTotal,
-              userFullname = o.User.userFullname,
-              userId = o.User.userId,
-              paymentMethod = o.paymentMethod,
-              numberTable = o.numberTable,
-              OrderDetails = o.OrderDetails.Select(od => new
-              {
-                  productName = od.Product.productName,
-                  price = od.Product.price,
-                  productId = od.productId,
-                  quantity = od.quantity,
-                  subTotal = od.subTotal,
-                  imgUrl = od.Product.imgUrl
-              }).ToList()
-          }).ToList();
+                    .Select(o => new
+                    {
+                        orderId = o.orderId,
+                        orderDate = o.orderDate,
+                        paymentStatus = o.paymentStatus,
+                        orderTotal = o.orderTotal,
+                        userFullname = o.User.userFullname,
+                        userId = o.User.userId,
+                        paymentMethod = o.paymentMethod,
+                        numberTable = o.numberTable,
+                        OrderDetails = o.OrderDetails.Select(od => new
+                        {
+                            productName = od.Product.productName,
+                            price = od.Product.price,
+                            productId = od.productId,
+                            quantity = od.quantity,
+                            subTotal = od.subTotal,
+                            imgUrl = od.Product.imgUrl
+                        }).ToList()
+                    }).ToList();
+
                 var serializer = new JavaScriptSerializer();
                 string json = serializer.Serialize(orders);
                 return View["orderAdmin.cshtml", json];

@@ -2597,9 +2597,9 @@
     </None>
     <Content Include="Views\about.cshtml" />
     <Content Include="Views\accountAdmin.cshtml" />
+    <Content Include="Views\admin.cshtml" />
     <None Include="Views\contact.cshtml" />
     <None Include="Views\index.cshtml" />
-    <None Include="Views\admin.cshtml" />
     <Content Include="Views\juice.cshtml" />
     <Content Include="Content\Site.css" />
     <Content Include="Views\Layout.cshtml" />
