@@ -276,7 +276,7 @@
                                     </select>
                                 </div>
                                 <div class="col-auto">
-                                    <a class="btn app-btn-secondary" href="#">
+                                    <a id="downloadExcel" class="btn app-btn-secondary" href="#">
                                         <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-download me-1"
                                              fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                                             <path fill-rule="evenodd"
@@ -532,6 +532,71 @@
                     for (let i = 0; i < orders.length; i++)
                         orders[i].orderDate = new Date(parseInt(orders[i].orderDate.match(/\/Date\((\d+)\)\//)[1]))
                     console.log(orders)
+        const paidOrders = orders.filter(order => order.paymentStatus === 'Đã thanh toán');
+        paidOrders.sort((a, b) => new Date(b.orderDate) - new Date(a.orderDate));
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return [
+                ('0' + date.getDate()).slice(-2),
+                ('0' + (date.getMonth() + 1)).slice(-2),
+                date.getFullYear(),
+            ].join('-');
+        } const modifiedOrders = paidOrders.map(order => ({
+            orderId: order.orderId,
+            numberTable: order.numberTable,
+            userFullname: order.userFullname,
+            paymentMethod: order.paymentMethod,
+            orderDate: formatDate(order.orderDate), // Format date
+            orderTotal: order.orderTotal.toLocaleString(
+                "vi-VN",
+                {
+                    style: "currency",
+                    currency: "VND",
+                }) // Format currency
+            // Remove orderDetails
+        })).map(order => ({ // Translate to Vietnamese
+            "Mã Đơn": order.orderId,
+            "Số Bàn": order.numberTable,
+            "Nhân Viên": order.userFullname,
+            "Ngày Đặt": order.orderDate,
+            "Phương Thức Thanh Toán": order.paymentMethod,
+            "Tổng Tiền": order.orderTotal
+        }));
+        const totalOrders = modifiedOrders.length;
+        const totalAmount = paidOrders.reduce((sum, order) => sum + order.orderTotal, 0);
+
+        // Add a final row for the totals
+        modifiedOrders.push({
+            "Mã Đơn": '',
+            "Số Bàn": '',
+            "Nhân Viên": '',
+            "Ngày Đặt": '',
+            "Phương Thức Thanh Toán": 'Tổng hóa đơn',
+            "Tổng Tiền": `${totalAmount.toLocaleString(
+                "vi-VN",
+                {
+                    style: "currency",
+                    currency: "VND",
+                })}`
+        });
+        // Now, modifiedOrders is ready for export without the orderDetails field
+        downloadExcel.addEventListener("click", async () => {
+            const XLSX = await import("https://cdn.sheetjs.com/xlsx-0.19.2/package/xlsx.mjs");
+            const worksheet = XLSX.utils.json_to_sheet(modifiedOrders);
+
+            // Convert the modified orders to a worksheet
+            const range = XLSX.utils.decode_range(worksheet['!ref']);
+
+            // Add custom headers to the worksheet
+
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Orders");
+
+            // Write the workbook to a file
+            XLSX.writeFile(workbook, "Orders.xlsx", {
+                compression: true,
+            });
+        })
 
 
             const rowsPerPage = 25; // Số hàng mỗi trang
