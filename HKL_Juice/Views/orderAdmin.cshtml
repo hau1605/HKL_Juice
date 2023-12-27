@@ -83,8 +83,8 @@
                             <div class="app-utility-item app-user-dropdown dropdown">
                                 <a class="dropdown-toggle" id="user-dropdown-toggle" data-bs-toggle="dropdown" href="#"
                                    role="button" aria-expanded="false">
-                                    <img style="border-radius: 50%;"
-                                         src="~/Content/assets/images/anhconcat.jpg" alt="user profile">
+                                    <img style="border-radius: 50%;box-shadow:0 0 2px gray;" id="imgLoginUser"
+                                         alt="user profile">
                                 </a>
                                 <ul class="dropdown-menu" aria-labelledby="user-dropdown-toggle">
                                     <li><a class="dropdown-item" href="/admin/account">Tài khoản</a></li>
@@ -495,7 +495,8 @@
     </div><!--//app-wrapper-->
     @{ var jsonHtml = Html.Raw(@Model); } <!-- Hiển thị dữ liệu và phân trang lọc -->
     <script type="text/javascript">
-            function convertToDate(date) {
+        document.getElementById("imgLoginUser").src = JSON.parse(localStorage.getItem('loginUser')).userAvatar;
+        function convertToDate(date) {
                 var day = ("0" + date.getDate()).slice(-2); // Add leading zero if needed
                 var month = ("0" + (date.getMonth() + 1)).slice(-2); // Add leading zero if needed, month is 0-indexed
                 var year = date.getFullYear();
@@ -823,7 +824,7 @@
                          <h5 style="margin: 0;" class="card-title">Mã Hóa Đơn: #${orderS.orderId}</h5>
                          <h6 style="margin: 0;" class="card-title">Ngày: ${convertToDateTime(orderS.orderDate)}</h6>
                     `
-            if (orderS.userId !== user.userId && orderS.userId !== "" && user.roleName !== 'Admin') {
+            if (orderS.userId !== user.userId&&orderS.userId!==1 &&  user.roleName !== 'Admin') {
                 document.getElementById('EditOrderCardBody').innerHTML = `
                           <p style="text-align: right;" class="card-text">Trạng Thái: ${orderS.paymentStatus}</p>
                           <p style="text-align: right;" class="card-text">Phương Thức: ${orderS.paymentMethod}</p>
@@ -858,10 +859,10 @@
                                 </select>
                         </div>
                         <p style="text-align: right;" class="card-text">Số bàn: ${orderS.numberTable}</p>
-                        <p style="text-align: right;" class="card-text">Nhân Viên: ${orderS.userFullname}</p>`
+                        <p style="text-align: right;" class="card-text">Nhân Viên: ${user.userFullname}</p>`
 
             }
-            if (orderS.userId === user.userId || orderS.userId === "") {
+            if (orderS.userId === user.userId ) {
                 document.getElementById('selPaymentStatus').value = orderS.paymentStatus;
                 document.getElementById('selPaymentMethod').value = orderS.paymentMethod;
             }

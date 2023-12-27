@@ -85,8 +85,8 @@
                             <div class="app-utility-item app-user-dropdown dropdown">
                                 <a class="dropdown-toggle" id="user-dropdown-toggle" data-bs-toggle="dropdown" href="#"
                                    role="button" aria-expanded="false">
-                                    <img style="border-radius: 50%"
-                                         src="~/Content/assets/images/anhconcat.jpg" alt="user profile" />
+                                    <img style="border-radius: 50%;box-shadow:0 0 2px gray;" id="imgLoginUser"
+                                         alt="user profile">
                                 </a>
                                 <ul class="dropdown-menu" aria-labelledby="user-dropdown-toggle">
                                     <li>
@@ -586,7 +586,7 @@
 
     <script src="~/Content/assets/js/app.js"></script>
     <script>
-      
+        document.getElementById("imgLoginUser").src = JSON.parse(localStorage.getItem('loginUser')).userAvatar;
         // Constructor for Product
 
        
@@ -693,7 +693,7 @@
                     <tr>
                         <td class="cell">#${product.productId}</td>
                         <td class="cell"><img src='${product.imgUrl
-                    }' style='width: 200px; height: 150px;'></td>
+                    }' style='width: 200px; height: 150px;object-fit:contain'></td>
                         <td class="cell">${product.productName}</td>
                         <td class="cell">${product.price.toLocaleString("vi-VN", {
                         style: "currency",
@@ -948,12 +948,10 @@
                                 <label for="categoryId">Danh mục:</label>
                             </td>
                             <td style="border: none">
-                                <select id="categoryId">
-                                    <option value="1">Cà phê</option>
-                                    <option value="2">Nước ép</option>
-                                    <option value="3">Trà</option>
-                                </select>
-                            </td>
+                            <select id="categoryId">
+
+                            </select>
+                        </td>
                         </tr>
                         <tr style="border: none">
                             <td style="border: none; text-align:end; font-weight: bold">
@@ -976,6 +974,15 @@
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
                         <button type="button" class="btn btn-primary" onclick="handleEditProduct(${productString})">Sửa sản phẩm</button>
                     `;
+                const selectElement = document.getElementById("categoryId");
+
+                // Populate the select element with options based on categories
+                categories.forEach((category) => {
+                    const option = document.createElement("option");
+                    option.value = category.categoryId;
+                    option.textContent = category.categoryName;
+                    selectElement.appendChild(option);
+                });
 
                 var currentCategoryId = product.categoryId;
                 document.getElementById("categoryId").value =
@@ -1148,12 +1155,10 @@
                                 <label for="categoryId">Danh mục:</label>
                             </td>
                             <td style="border: none">
-                                <select id="add_categoryId">
-                                    <option value="1">Cà phê</option>
-                                    <option value="2">Nước ép</option>
-                                    <option value="3">Trà</option>
-                                </select>
-                            </td>
+                            <select id="add_categoryId">
+
+                            </select>
+                        </td>
 
                         </tr>
                         <tr style="border: none">
@@ -1167,7 +1172,16 @@
 
 
                     `;
+                const selectElement =
+                    document.getElementById("add_categoryId");
 
+                // Populate the select element with options based on categories
+                categories.forEach((category) => {
+                    const option = document.createElement("option");
+                    option.value = category.categoryId;
+                    option.textContent = category.categoryName;
+                    selectElement.appendChild(option);
+                });
             }
             else {
                 document.getElementById("addProductBody").innerHTML = `
