@@ -85,8 +85,9 @@
                             <div class="app-utility-item app-user-dropdown dropdown">
                                 <a class="dropdown-toggle" id="user-dropdown-toggle" data-bs-toggle="dropdown" href="#"
                                    role="button" aria-expanded="false">
-                                    <img style="border-radius: 50%"
-                                         src="~/Content/assets/images/anhconcat.jpg" alt="user profile" />
+                                    <img style="border-radius: 50%; object-fit:contain; box-shadow: 0 0 2px gray"
+                                         src="~/Content/assets/images/anhconcat.jpg" alt="user profile" 
+                                         class="user-profile"/>
                                 </a>
                                 <ul class="dropdown-menu" aria-labelledby="user-dropdown-toggle">
                                     <li>
@@ -484,6 +485,10 @@
     <script src="~/Content/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
     <script src="~/Content/assets/js/app.js"></script>
     <script>
+        const user = JSON.parse(localStorage.getItem("loginUser"));
+        console.log("user: ", user);
+        document.getElementsByClassName("user-profile")[0].src = user.userAvatar;
+
         let categories =@jsonHtml;
         console.log(categories);
 

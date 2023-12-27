@@ -89,7 +89,7 @@
                             <div class="app-utility-item app-user-dropdown dropdown">
                                 <a class="dropdown-toggle" id="user-dropdown-toggle" data-bs-toggle="dropdown" href="#"
                                    role="button" aria-expanded="false">
-                                    <img style="border-radius: 50%; object-fit:contain"
+                                    <img style="border-radius: 50%; object-fit:contain; box-shadow: 0 0 2px gray"
                                          src="~/Content/assets/images/anhconcat.jpg" alt="user profile" 
                                          class="user-profile"/>
                                 </a>
@@ -348,7 +348,7 @@
 
     <script src="~/Content/assets/plugins/popper.min.js"></script>
     <script src="~/Content/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
-    <script src="assets/js/app.js"></script>
+    <script src="~/Content/assets/js/app.js"></script>
     <script type="text/javascript">
         const user = JSON.parse(localStorage.getItem("loginUser"));
         console.log("user: ", user);
@@ -402,7 +402,7 @@
                               <label for="imgUrl">Ảnh đại diện:</label>
                          </td>
                          <td style="border: none">
-                               <input class="p-2 rounded" type="file" id="add_imgUrl" name="imgUrl" />
+                               <input class="rounded" type="file" id="add_imgUrl" name="imgUrl" />
                          </td>
                       </tr>
 

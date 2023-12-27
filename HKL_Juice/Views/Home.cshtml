@@ -1,6 +1,85 @@
-﻿﻿@{
-    Layout = "layout";
-}
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <title>HKL Juice</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="stylesheet" href="~/Content/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/Content/css/style.css">
+    <link rel="stylesheet" href="~/Content/css/responsive.css">
+    <link rel="stylesheet" href="~/Content/css/jquery.mCustomScrollbar.min.css">
+    <link rel="icon" href="~/Content/images/con_top.png" type="image/gif" />
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nouislider/distribute/nouislider.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/nouislider/distribute/nouislider.min.js"></script>
+
+</head>
+<body class="main-layout inner_page" id="home-container">
+    <header>
+        <div class="header">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col logo_section">
+                        <div class="full">
+                            <div class="center-desk">
+                                <div class="logo">
+                                    <a href="/">
+                                        <img src="~/Content/images/logoHKLJuice.png" alt="logo"
+                                             style="height:60px" />
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-9 col-lg-9 col-md-9 col-sm-9">
+                        <nav class="navigation navbar navbar-expand-md navbar-dark" id="main-nav">
+                            <!-- <a class="cart-container nav-link font-weight-bold text-light" href="cart.html">
+                                <i class="bi bi-cart" aria-hidden="true">
+                                    <span id="cart-count" class="cart-count">0</span>
+                                </i>
+                            </a> -->
+                            <button class="navbar-toggler" type="button" data-toggle="collapse"
+                                    data-target="#navbarsExample04" aria-controls="navbarsExample04" aria-expanded="false"
+                                    aria-label="Toggle navigation">
+                                <span class="navbar-toggler-icon"></span>
+                            </button>
+                            <div class="collapse navbar-collapse" id="navbarsExample04">
+                                <ul class="navbar-nav mr-auto">
+                                    <li class="nav-item ">
+                                        <a class="nav-link font-weight-bold" href="/">Trang chủ</a>
+                                    </li>
+                                    <li class="nav-item ">
+                                        <a class="nav-link font-weight-bold" href="/juice">Đặt hàng</a>
+                                    </li>
+                                    <li class="nav-item ">
+                                        <a class="nav-link font-weight-bold" href="/about">Về chúng tôi</a>
+                                    </li>
+                                    <!-- <li class="nav-item">
+                                        <a class="nav-link" href="/cart">Giỏ hàng</a>
+                                    </li> -->
+                                    <li class="nav-item">
+                                        <a class="cart-container nav-link font-weight-bold" href="/cart">
+                                            <i class="bi bi-cart" aria-hidden="true">
+                                                <span id="cart-count" class="cart-count">0</span>
+                                            </i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
 
     <!-- banner -->
     <section class="banner_main">
@@ -91,7 +170,6 @@
         </div>
     </section>
     <!-- end banner -->
-
     <!-- about -->
     <div class="about">
         <div class="container">
@@ -112,7 +190,6 @@
         </div>
     </div>
     <!-- end about -->
-
     <!-- Our Juices -->
     <div class="juices ">
         <div class="container">
@@ -196,7 +273,6 @@
         </div>
     </div>
     <!-- end Our Juices  section -->
-
     <!-- testimonial -->
     <div class="testimonial">
         <div class="container">
@@ -277,3 +353,258 @@
         </div>
     </div>
     <!-- end testimonial -->
+    <footer id="contact">
+        <div class="footer">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="titlepage">
+                            <h2>Contact Us</h2>
+                        </div>
+                    </div>
+                    <div class="col-md-10 offset-md-1">
+                        <form id="request" class="main_form">
+                            <div class="row">
+                                <div class="col-md-12 ">
+                                    <input class="contactus" placeholder="Full Name" type="text" name="Full Name">
+                                </div>
+                                <div class="col-md-7">
+                                    <input class="contactus" placeholder="Email" type="email" name="Email">
+                                </div>
+                                <div class="col-md-7">
+                                    <input class="contactus" placeholder="Phone Number" type="text" name="Phone Number">
+                                </div>
+                                <div class="col-xl-5 col-lg-5 col-md-5 col-sm-12">
+                                    <ul class="social_icon">
+                                        <h3>Follow Me</h3>
+                                        <li><a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
+                                        <li><a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+                                        <li><a href="#"><i class="fa fa-linkedin-square" aria-hidden="true"></i></a></li>
+                                        <li><a href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a></li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-12">
+                                    <textarea class="contactus1" placeholder="Message" type="type" Message="Name">Message </textarea>
+                                </div>
+                                <div class="col-md-12">
+                                    <button class="send_btn">Send</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-md-10 offset-md-1">
+                        <ul class="location_icon">
+                            <li><a href="#"><i class="fa fa-map-marker" aria-hidden="true"></i></a> UIT</li>
+                            <li><a href="#"><i class="fa fa-volume-control-phone" aria-hidden="true"></i></a> +84 987654321</li>
+                            <li><a href="#"><i class="fa fa-envelope" aria-hidden="true"></i></a>hkljuice@gmail.com</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="copyright">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p>Copyright 2023 All Right Reserved By HKL Juice</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <div id="toast-container" class="toast-container position-fixed end-0 p-3" style="z-index: 1000; top: 46px;"></div>
+   
+    
+    
+    @{ var productsJson = Html.Raw(@Model); }
+
+    <script type="text/javascript">
+        var products = @productsJson;
+        console.log("products: ", products);
+        // =============================================================================================
+        // ======================================SEARCH AND FILTER======================================
+        // =============================================================================================
+        let searchValue = '';
+        var priceSlider = document.getElementById('price-range-slider');
+        noUiSlider.create(priceSlider, {
+            start: [0, 100000],
+            connect: true,
+            step: 1000,
+            range: {
+                'min': 0,
+                'max': 100000
+            }
+        });
+        var currentFilter = {
+            type: 'all',
+            minPrice: 0,
+            maxPrice: 100000
+        };
+        priceSlider.noUiSlider.on('update', function (values) {
+            var minValue = Math.round(values[0]);
+            var maxValue = Math.round(values[1]);
+            document.getElementById('price-min').textContent = minValue.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+            document.getElementById('price-max').textContent = maxValue.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+            currentFilter.minPrice = Math.round(values[0]);
+            currentFilter.maxPrice = Math.round(values[1]);
+            filterAndDisplayProducts();
+
+        });
+        document.querySelectorAll('.filter-type button').forEach(button => {
+            button.addEventListener('click', function () {
+                document.querySelectorAll('.filter-type button').forEach(
+                    btn => btn.classList.remove('button-selected')
+                );
+                this.classList.add('button-selected');
+
+                currentFilter.type = this.value;
+                filterAndDisplayProducts();
+            });
+        });
+
+        function filterAndDisplayProducts() {
+            var filteredProducts = products.filter(function (product) {
+                var productPrice = parseFloat(product.price);
+
+                var matchesPrice = productPrice >= currentFilter.minPrice &&
+                    productPrice <= currentFilter.maxPrice;
+
+                var matchesType = currentFilter.type === 'all' ||
+                    product.productName.includes(currentFilter.type);
+
+                return matchesPrice && matchesType;
+            });
+            displayProducts(filteredProducts);
+        }
+
+        function displayProducts(productsToDisplay) {
+            var html = '';
+            if (searchValue !== '')
+                productsToDisplay = productsToDisplay
+                    .filter(product =>
+                        product.productName.toUpperCase().includes(searchValue)
+                    );
+
+            productsToDisplay.forEach(function (product) {
+                html += `<div class="col-md-4 mb-4">
+                <div class="our_main_box">
+                    <div class="our_img">
+                        <figure>
+                            <img src=${product.imgUrl} alt="${product.productName}" />
+                        </figure>
+                        <div class="our_text">
+                            <div class="text-center px-4">
+                                <h3> ${product.productName} </h3>
+                                <h6 class="mb-4 text-secondary"> ${product.price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</h6>
+                            </div>
+                            <a class="add-product-to-card order-now read_more rounded" href="#" data-product-id="${product.productId}">Đặt ngay</a>
+                            <button type="button" id="liveToastBtn" class="add-product-to-card btn btn-success align-baseline" data-product-id="${product.productId}">
+                                <i class="bi bi-cart-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+            });
+            document.getElementById('product-container').innerHTML = html;
+
+            attachEventListenersToButtons();
+        }
+
+        function submitSearch(event) {
+            event.preventDefault();
+            const inputValue = document.getElementById('search-product').value.trim().toUpperCase();
+            searchValue = inputValue;
+            displayProducts(products)
+        }
+        // =============================================================================================
+        // =========================================ADD PRODUCT=========================================
+        // =============================================================================================
+        function addToCart(product) {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+            if (cart.some(cartItem => cartItem.productId === product.productId)) {
+                createAndShowToast("Sản phẩm đã có trong giỏ hàng", "bg-warning");
+            } else {
+                cart.push({ ...product, quantity: 1 });
+                localStorage.setItem('cart', JSON.stringify(cart));
+                updateCartCount();
+                createAndShowToast("Thêm sản phẩm thành công", "bg-success");
+            }
+        }
+        function updateCartCount() {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            let count = cart.reduce((total, item) => total + (item.quantity || 1), 0);
+            let cartCountElement = document.querySelector('.cart-count');
+            if (cartCountElement) {
+                cartCountElement.textContent = count;
+            }
+        }
+        function attachEventListenersToButtons() {
+            document.querySelectorAll('.add-product-to-card').forEach(button => {
+                button.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    var productId = this.getAttribute('data-product-id');
+                    var product = products.find(p => p.productId == productId);
+                    addToCart(product);
+                    if (this.classList.contains('order-now')) {
+                        window.location.href = '/cart';
+                    }
+                });
+            });
+        }
+        function createAndShowToast(message, toastClass) {
+            var toastContainer = document.getElementById('toast-container');
+
+            var toastElement = document.createElement("div");
+            toastElement.className = `toast d-flex ${toastClass}`;
+            toastElement.role = "alert";
+            toastElement.ariaLive = "assertive";
+            toastElement.ariaAtomic = "true";
+            toastElement.setAttribute("data-bs-animation", "true");
+
+            var toastBody = document.createElement("div");
+            toastBody.className = "toast-body text-light";
+            toastBody.textContent = message;
+
+            var closeButton = document.createElement("button");
+            closeButton.type = "button";
+            closeButton.className = "btn-close btn-close-white me-2 m-auto";
+            closeButton.setAttribute("data-bs-dismiss", "toast");
+            closeButton.ariaLabel = "Close";
+
+            toastElement.appendChild(toastBody);
+            toastElement.appendChild(closeButton);
+
+            toastContainer.appendChild(toastElement);
+
+            var toast = new bootstrap.Toast(toastElement, { delay: 5000 });
+            toast.show();
+
+            toastElement.addEventListener('hidden.bs.toast', function () {
+                toastElement.remove();
+            });
+        }
+
+
+        document.addEventListener("DOMContentLoaded", function () {
+            filterAndDisplayProducts();
+            updateCartCount();
+        });
+    </script>
+
+
+
+    <!-- Javascript files-->
+    <script src="~/Content/js/jquery.min.js"></script>
+    <script src="~/Content/js/popper.min.js"></script>
+    <script src="~/Content/js/bootstrap.bundle.min.js"></script>
+    <script src="~/Content/js/jquery-3.0.0.min.js"></script>
+    <!-- sidebar -->
+    <script src="~/Content/js/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script src="~/Content/js/custom.js"></script>
+    <script src="~/Content/js/index.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+</body>
+</html>
