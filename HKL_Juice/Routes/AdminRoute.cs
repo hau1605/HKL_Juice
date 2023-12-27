@@ -21,6 +21,12 @@ namespace HKL_Juice.Routes
         public string paymentStatus { get; set; }
         public int userId { get; set; }
     }
+
+
+    public class ExcelProduct
+    {
+        public List<Product> excelProducts { get; set; }
+    }
     public class AdminRoute : NancyModule
     {
         public  AdminRoute(ApplicationDbContext dbContext)
@@ -149,12 +155,9 @@ namespace HKL_Juice.Routes
                 int userId = parameters.id;
                 var orders = dbContext.Order.Where(o => o.userId == userId).ToList();
 
-
                 // Xóa tất cả các chi tiết hóa đơn liên quan
-                foreach (var order in orders)
-                {
-                    dbContext.Order.Remove(order);
-                }
+                if (orders.Count > 0)
+                    return HttpStatusCode.BadRequest;
                 var user = dbContext.User.FirstOrDefault(u => u.userId == userId);
                 if (user == null)
                 {
@@ -180,8 +183,18 @@ namespace HKL_Juice.Routes
                                             imgUrl = p.imgUrl,
                                             categoryName = p.Category.categoryName
                                         }).ToList();
+                var cateGory = dbContext.Category.Select(p=>new
+                {
+                    categoryId = p.categoryId,
+                    categoryName = p.categoryName
+                }).ToList();
+                var productData = new
+                {
+                    products = productsWithCategories,
+                    cateGory = cateGory
+                };
                 var serializer = new JavaScriptSerializer();
-                string json = serializer.Serialize(productsWithCategories);
+                string json = serializer.Serialize(productData);
                 return View["productAdmin.cshtml", json];
             }
             );
@@ -194,6 +207,34 @@ namespace HKL_Juice.Routes
                 dbContext.SaveChanges();
 
                 return HttpStatusCode.OK;
+            });
+            Post("/admin/excelproducts", parameters =>
+            {
+                try
+                {
+                    var excelData = this.Bind<ExcelProduct>();
+                    if (excelData == null || excelData.excelProducts == null)
+                    {
+                        // Log the issue or return an error response
+                        Console.WriteLine("excelData or excelData.excelProducts is null.");
+                        return HttpStatusCode.BadRequest;
+                    }
+
+                    foreach (var excelProduct in excelData.excelProducts)
+                    {
+                        dbContext.Product.Add(excelProduct);
+
+                        dbContext.SaveChanges();
+                    }
+
+                    return HttpStatusCode.OK;
+                }
+                catch (Exception ex)
+                {
+                    // Log exception details here
+                    Console.WriteLine(ex.ToString());
+                    return HttpStatusCode.InternalServerError;
+                }
             });
             Put("/admin/products/{id}", parameters =>
             {
@@ -218,13 +259,8 @@ namespace HKL_Juice.Routes
 
                 int productId = parameters.id;
                 var orderDetails = dbContext.OrderDetail.Where(od => od.productId == productId).ToList();
-
-
-                // Xóa tất cả các chi tiết hóa đơn liên quan
-                foreach (var detail in orderDetails)
-                {
-                    dbContext.OrderDetail.Remove(detail);
-                }
+                if (orderDetails.Count>0)
+                    return HttpStatusCode.BadRequest;
                 var product = dbContext.Product.FirstOrDefault(p => p.productId == productId);
                 if (product == null)
                 {

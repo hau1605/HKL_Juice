@@ -291,15 +291,43 @@
                                     </button>
                                 </div>
                                 <div class="col-auto">
-                                    <a class="btn app-btn-secondary" href="#">
-                                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-download me-1"
-                                             fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <a class="btn app-btn-secondary"
+                                       href="#"
+                                       id="downloadExcel">
+                                        <svg width="1em"
+                                             height="1em"
+                                             viewBox="0 0 16 16"
+                                             class="bi bi-download me-1"
+                                             fill="currentColor"
+                                             xmlns="http://www.w3.org/2000/svg">
                                             <path fill-rule="evenodd"
                                                   d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z" />
                                             <path fill-rule="evenodd"
                                                   d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z" />
                                         </svg>
-                                        Download CSV
+                                        Tải về file .xlsx
+                                    </a>
+                                </div>
+                                <div class="col-auto">
+                                    <a class="btn app-btn-secondary"
+                                       href="#"
+                                       id="uploadBtn"
+                                       data-bs-toggle="modal"
+                                       data-bs-target="#uploadExcelModal"
+                                       onclick="uploadExcel()">
+                                        <svg width="1em"
+                                             height="1em"
+                                             viewBox="0 0 16 16"
+                                             class="bi bi-download me-1"
+                                             fill="currentColor"
+                                             xmlns="http://www.w3.org/2000/svg"
+                                             transform="rotate(180)">
+                                            <path fill-rule="evenodd"
+                                                  d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z" />
+                                            <path fill-rule="evenodd"
+                                                  d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z" />
+                                        </svg>
+                                        Tải lên file .xlsx
                                     </a>
                                 </div>
                             </div>
@@ -311,22 +339,16 @@
                 </div>
                 <!--//row-->
 
-                <nav id="orders-table-tab"
-                     class="orders-table-tab app-nav-tabs nav shadow-sm flex-column flex-sm-row mb-4">
-                    <a class="flex-sm-fill text-sm-center nav-link active" id="products-all-tab" data-bs-toggle="tab"
-                       href="#products-all" role="tab" aria-controls="products-all" aria-selected="true">Tất cả</a>
-                    <a class="flex-sm-fill text-sm-center nav-link" id="products-coffee-tab" data-bs-toggle="tab"
-                       href="#products-coffee" role="tab" aria-controls="products-coffee" aria-selected="false">
-                        Cà
-                        phê
-                    </a>
-                    <a class="flex-sm-fill text-sm-center nav-link" id="products-juice-tab" data-bs-toggle="tab"
-                       href="#products-juice" role="tab" aria-controls="products-juice" aria-selected="false">
-                        Nước
-                        ép
-                    </a>
-                    <a class="flex-sm-fill text-sm-center nav-link" id="products-tea-tab" data-bs-toggle="tab"
-                       href="#products-tea" role="tab" aria-controls="products-tea" aria-selected="false">Trà</a>
+                <nav id="products-table-tab"
+                     class="products-table-tab app-nav-tabs nav shadow-sm flex-column flex-sm-row mb-4">
+                    <a class="flex-sm-fill text-sm-center nav-link active"
+                       id="products-all-tab"
+                       data-bs-toggle="tab"
+                       href="#products-all"
+                       role="tab"
+                       aria-controls="products-all"
+                       aria-selected="true">Tất cả</a>
+
                 </nav>
 
                 <div class="tab-content">
@@ -461,9 +483,9 @@
                                         " class="card-header"></div>
                                 <div class="card-body">
                                     <!-- <h4>
-                                            Bạn có chắc chắc muốn xóa sản phẩm
-                                            này không?
-                                        </h4> -->
+                                Bạn có chắc chắc muốn xóa sản phẩm
+                                này không?
+                            </h4> -->
                                     <div id="deleteProductCardBody"></div>
                                 </div>
                             </div>
@@ -507,6 +529,49 @@
                     </div>
                 </div>
             </div>
+
+            <!--//Modal Upload Excel-->
+            <div class="modal fade"
+                 id="uploadExcelModal"
+                 tabindex="-1"
+                 aria-labelledby="uploadExcelModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title"
+                                id="uploadExcelModalLabel">
+                                Tải lên file .xlsx
+                            </h5>
+                            <button type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="card product-card">
+                                <div style="
+                                            border: none;
+                                            vertical-align: middle;
+                                            display: flex;
+                                            flex-direction: column;
+                                            align-items: center;
+                                        "
+                                     class="table"
+                                     id="uploadExcelBody"></div>
+                            </div>
+                        </div>
+                        <div class="modal-footer"
+                             id="uploadExcelModalFooter">
+                            <button type="button"
+                                    class="btn btn-secondary"
+                                    data-bs-dismiss="modal">
+                                Đóng
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <!--//app-content-->
     </div>
@@ -526,9 +591,37 @@
 
        
         // Create fake Product array
-        let products =@jsonHtml;
+        let productData =@jsonHtml;
+        let products = productData.products;
+        let categories = productData.cateGory;
 
-        // console.log(products);
+
+        function createTabs(categories) {
+            var navElement = document.getElementById("products-table-tab");
+
+            // Loop through categories and create a tab for each one
+            categories.forEach((category) => {
+                var tab_id =
+                    "tab-" +
+                    category.categoryName
+                        .toLowerCase()
+                        .replace(/\s+/g, "-");
+                var newTab = document.createElement("a");
+                newTab.id = tab_id;
+                newTab.className = "flex-sm-fill text-sm-center nav-link";
+                newTab.setAttribute("data-bs-toggle", "tab");
+                newTab.href = "#" + tab_id;
+                newTab.role = "tab";
+                newTab.setAttribute("aria-controls", tab_id);
+                newTab.setAttribute("aria-selected", "false");
+                newTab.innerHTML = category.categoryName;
+
+                // Append the new tab to the navigation bar
+                navElement.appendChild(newTab);
+            });
+        }
+        createTabs(categories);
+
 
         const rowsPerPage = 5; // 5 product in a page
         let currentPage = 1;
@@ -648,26 +741,27 @@
             );
         }
         // Thêm sự kiện click cho từng tab
-        document
-            .getElementById("products-all-tab")
-            .addEventListener("click", () =>
-                filterProductsByCategory("Tất cả")
-            );
-        document
-            .getElementById("products-coffee-tab")
-            .addEventListener("click", () =>
-                filterProductsByCategory("Cà phê")
-            );
-        document
-            .getElementById("products-juice-tab")
-            .addEventListener("click", () =>
-                filterProductsByCategory("Nước ép")
-            );
-        document
-            .getElementById("products-tea-tab")
-            .addEventListener("click", () =>
-                filterProductsByCategory("Trà")
-            );
+        categories.forEach((category) => {
+            // Tạo ID từ tên danh mục
+            var id_category_name =
+                "tab-" +
+                category.categoryName.toLowerCase().replace(/\s+/g, "-");
+
+            // Kiểm tra xem có phần tử nào trong DOM có ID này hay không
+            var element = document.getElementById(id_category_name);
+
+            if (element) {
+                // Thêm sự kiện click cho phần tử
+                element.addEventListener("click", () =>
+                    filterProductsByCategory(category.categoryName)
+                );
+            } else {
+                console.error(
+                    `Element with ID ${id_category_name} not found in the DOM.`
+                );
+            }
+        });
+
 
         function updatePaginationButtons(paginationElement, pageCount) {
             const previousButton =
@@ -1146,6 +1240,116 @@
                     console.error("An error occurred:", error)
                 );
         }
+
+        // download excel
+        downloadExcel.addEventListener("click", async () => {
+            if (user.roleName === "Admin") {
+                const XLSX = await import(
+                    "https://cdn.sheetjs.com/xlsx-0.19.2/package/xlsx.mjs"
+                );
+
+                const worksheet = XLSX.utils.json_to_sheet(products);
+
+                const workbook = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(
+                    workbook,
+                    worksheet,
+                    "Products"
+                );
+
+                XLSX.writeFile(workbook, "Products.xlsx", {
+                    compression: true,
+                });
+            } else {
+                alert("Chỉ Admin mới được tải về dữ liệu sản phẩm!");
+            }
+        });
+
+        // upload excel
+
+        var selectedFile;
+
+        function uploadExcel() {
+            if (user.roleName === "Admin") {
+                document.getElementById("uploadExcelBody").innerHTML = `
+                    <p style="font-size: 20px; font-weight: bold">File dữ liệu sản phẩm:</p>
+                    <input type="file" id="fileUpload" accept=".xls,.xlsx" />
+            	`;
+            } else {
+                document.getElementById("uploadExcelBody").innerHTML = `
+            		<tr style="border: none">
+                        <td style="border: none; text-align:end; font-weight: bold" >
+                            <label for="productName">Chỉ có Admin có quyền thêm sản phẩm bằng file excel</label>
+                        </td>
+
+                    </tr>`;
+                document.getElementById(
+                    "uploadExcelModalFooter"
+                ).innerHTML = `
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+				`;
+            }
+            document.getElementById("uploadExcelModalFooter").innerHTML = `
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+					<button type="button" class="btn btn-primary" onClick="handleAddMultiProducts()">Thêm sản phẩm</button>
+				`;
+            document
+                .getElementById("fileUpload")
+                .addEventListener("change", function (event) {
+                    selectedFile = event.target.files[0];
+                });
+        }
+
+        async function handleAddMultiProducts() {
+            const XLSX = await import(
+                "https://cdn.sheetjs.com/xlsx-0.19.2/package/xlsx.mjs"
+            );
+            if (selectedFile) {
+                let jsonObject;
+                console.log("hi");
+                var fileReader = new FileReader();
+                fileReader.onload = function (event) {
+                    var data = event.target.result;
+
+                    var workbook = XLSX.read(data, {
+                        type: "binary",
+                    });
+                    workbook.SheetNames.forEach((sheet) => {
+                        let rowObject =
+                            XLSX.utils.sheet_to_row_object_array(
+                                workbook.Sheets[sheet]
+                            );
+                         
+                        jsonObject = {
+                            excelProducts:rowObject
+                        };
+                        console.log("--- jsonOb", jsonObject);
+                    });
+                    fetch(`/admin/excelproducts/`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(jsonObject),
+                    })
+                        .then((response) => {
+                            if (response.ok) {
+                                // Xử lý thành công (ví dụ: đóng modal)
+                                alert("Thêm sản phẩm thành công!");
+                            } else {
+                                alert("Thêm sản phẩm không thành công!");
+                            }
+                            window.location.reload();
+                        })
+                        .catch((error) =>
+                            console.error("An error occurred:", error)
+                        );
+                };
+                fileReader.readAsBinaryString(selectedFile);
+                // Send JSON data to your API endpoint for processing
+            }
+        }
+
     </script>
 </body>
 
