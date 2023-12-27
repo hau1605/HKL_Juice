@@ -2606,11 +2606,11 @@
     <Content Include="Views\home.cshtml" />
     <Content Include="Views\loginAdmin.cshtml" />
     <Content Include="Views\productAdmin.cshtml" />
-    <None Include="Views\testimonial.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Views\orderAdmin.cshtml" />
     <Content Include="Views\cart.cshtml" />
     <Content Include="Views\userAdmin.cshtml" />
+    <Content Include="Views\setting.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationDbContext.cs" />

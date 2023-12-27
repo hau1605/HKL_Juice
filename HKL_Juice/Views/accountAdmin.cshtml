@@ -47,7 +47,7 @@
                         <!--//col-->
                         <div class="app-search-box col">
                             <form class="app-search-form">
-                                <input type="text" placeholder="Search~." name="search"
+                                <input type="text" placeholder="Search..." name="search"
                                        class="form-control search-input" />
                                 <button type="submit" class="btn search-btn btn-primary" value="Search">
                                     <i class="fa-solid fa-magnifying-glass"></i>
@@ -89,8 +89,9 @@
                             <div class="app-utility-item app-user-dropdown dropdown">
                                 <a class="dropdown-toggle" id="user-dropdown-toggle" data-bs-toggle="dropdown" href="#"
                                    role="button" aria-expanded="false">
-                                    <img style="border-radius: 50%"
-                                         src="~/Content/assets/images/anhconcat.jpg" alt="user profile" />
+                                    <img style="border-radius: 50%; object-fit:contain"
+                                         src="~/Content/assets/images/anhconcat.jpg" alt="user profile" 
+                                         class="user-profile"/>
                                 </a>
                                 <ul class="dropdown-menu" aria-labelledby="user-dropdown-toggle">
                                     <li>
@@ -171,7 +172,7 @@
                         <!--//nav-item-->
                         <li class="nav-item">
                             <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
-                            <a class="nav-link active" href="/admin/products">
+                            <a class="nav-link" href="/admin/products">
                                 <span class="nav-icon">
                                     <svg width="256px" height="256px" viewBox="0 0 512 512" class="bi bi-card-list"
                                          fill="currentColor" xmlns="http://www.w3.org/2000/svg" stroke="#000000"
@@ -351,6 +352,7 @@
     <script type="text/javascript">
         const user = JSON.parse(localStorage.getItem("loginUser"));
         console.log("user: ", user);
+        document.getElementsByClassName("user-profile")[0].src = user.userAvatar;
         document.getElementsByClassName("account-avatar_container-image")[0].src = user.userAvatar;
         document.getElementsByClassName("account-info_container-userId")[0].value = user.userId;
         document.getElementsByClassName("account-info_container-userFullname")[0].value = user.userFullname;
@@ -358,8 +360,8 @@
         document.getElementsByClassName("account-info_container-userPhone")[0].value = user.userPhone;
         document.getElementsByClassName("account-info_container-userRoleName")[0].value = user.roleName;
 
-        if (!localStorage.getItem("loginUser"))
-            window.location.href = "/login.html";
+        if (!localStorage.getItem("loginUser") || user == null)
+            window.location.href = "/admin/login";
         else if (
             JSON.parse(localStorage.getItem("loginUser")).roleName === "Admin") {
             document.getElementById("user_nav").innerHTML = `
@@ -392,7 +394,7 @@
                 "editAccountModalFooter"
             ).innerHTML = `
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                        <button type="button" class="btn btn-primary" onclick="handleEditAccount()">Sửa sản phẩm</button>
+                        <button type="button" class="btn btn-primary" onclick="handleEditAccount()">Sửa thông tin</button>
                     `;
             document.getElementById("editAccountBody").innerHTML = `
                       <tr style="border: none">
@@ -400,15 +402,15 @@
                               <label for="imgUrl">Ảnh đại diện:</label>
                          </td>
                          <td style="border: none">
-                               <input type="file" id="add_imgUrl" name="imgUrl" />
+                               <input class="p-2 rounded" type="file" id="add_imgUrl" name="imgUrl" />
                          </td>
                       </tr>
 
                       <tr style="border: none">
                             <td style="border: none;"></td>
                             <td style="border: none">
-                                 <button style="border:1px solid black" id="uploadButton">Upload</button>
-                                 <img id="displayImageEdit" src=${user.userAvatar} style="width: 100px; height: 100px;display:inline">
+                                 <button class="p-2 rounded" style="border:1px solid black" id="uploadButton">Upload</button>
+                                 <img id="displayImageEdit" src=${user.userAvatar} style="width: 100px; height: 100px;display:inline; object-fit:contain">
                             </td>
                       </tr>
 
@@ -417,7 +419,7 @@
                                 <label for="userPassword">Mật khẩu:</label>
                            </td>
                            <td style="border: none">
-                                <input type="password" id="userPassword" name="userPassword" value="" size="25">
+                                <input class="p-2 rounded" type="password" id="userPassword" name="userPassword" value="" placeholder="********" size="25">
                            </td>
                       </tr>
 
@@ -426,7 +428,7 @@
                                 <label for="userFullname">Họ và tên:</label>
                            </td>
                            <td style="border: none">
-                                <input type="text" id="userFullname" name="userFullname" value="${user.userFullname}" size="25">
+                                <input class="p-2 rounded" type="text" id="userFullname" name="userFullname" value="${user.userFullname}" placeholder="${user.userFullname}" size="25">
                            </td>
                       </tr>
 
@@ -435,7 +437,7 @@
                                 <label for="userPhone">Số điện thoại:</label>
                            </td>
                            <td style="border: none">
-                                <input type="text" id="userPhone" name="userPhone" value="${user.userPhone}" size="25">
+                                <input class="p-2 rounded" type="text" id="userPhone" name="userPhone" value="${user.userPhone}" placeholder="${user.userPhone}" size="25">
                            </td>
                       </tr>
                  `;
@@ -468,18 +470,44 @@
             };
 
             console.log(editedAccount);
-
-            fetch(`/admin/users/${editedAccount.userId}`, {
+            let fieldsToUpdate = {};
+            if (editedAccount.userFullname !== "") {
+                fieldsToUpdate.userFullname = editedAccount.userFullname;
+            }
+            if (editedAccount.userPhone !== "") {
+                fieldsToUpdate.userPhone = editedAccount.userPhone;
+            }
+            if (editedAccount.userPassword !== "") {
+                fieldsToUpdate.userPassword = editedAccount.userPassword;
+            }
+            if (editedAccount.userAvatar !== "") {
+                fieldsToUpdate.userAvatar = editedAccount.userAvatar;
+            }
+            if (Object.keys(fieldsToUpdate).length === 0) {
+                alert("Không có trường nào được cập nhật!");
+                return;
+            }
+            fetch(`/admin/account/${editedAccount.userId}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(editedAccount),
+                body: JSON.stringify(fieldsToUpdate),
             })
                 .then((response) => {
                     if (response.ok) {
+                        var loginUser = JSON.parse(localStorage.getItem('loginUser'));
+                        if (loginUser) {
+                            Object.keys(fieldsToUpdate).forEach((field) => {
+                                if (field !== "userPassword") {
+                                    loginUser[field] = fieldsToUpdate[field];
+                                }
+                            });
+
+                            localStorage.setItem('loginUser', JSON.stringify(loginUser));
+                            alert("Sửa thông tin thành công!");
+                        }
                         // Xử lý thành công (ví dụ: đóng modal)
-                        alert("Sửa thông tin thành công!");
                     } else {
                         alert("Sửa thông tin không thành công!");
                     }

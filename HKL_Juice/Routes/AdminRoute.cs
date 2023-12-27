@@ -393,9 +393,84 @@ namespace HKL_Juice.Routes
                 }
             });
 
+            // Account
             Get("/admin/account", parameters =>
             {
                 return View["accountAdmin.cshtml"];
+            });
+            Put("/admin/account/{userId}", parameters =>
+            {
+                int userId = parameters.userId;
+                var user = dbContext.User.FirstOrDefault(u => u.userId == userId);
+                if (user == null)
+                {
+                    return HttpStatusCode.NotFound;
+                }
+                var putUser = this.Bind<User>();
+
+
+                dbContext.SaveChanges();
+
+                return HttpStatusCode.OK;
+            });
+
+            // Settings === Category
+            Get("/admin/settings", parameters =>
+            {
+                var categories = dbContext.Category
+                                        .Select(c => new
+                                        {
+                                            categoryId = c.categoryId,
+                                            categoryName = c.categoryName,
+                                            numsProduct = dbContext.Product.Count(p => p.categoryId == c.categoryId)
+                                        }).ToList();
+
+                var serializer = new JavaScriptSerializer();
+                string json = serializer.Serialize(categories);
+                return View["setting.cshtml", json];
+            });
+            Post("/admin/categories", parameters =>
+            {
+                var postCategory = this.Bind<Category>();
+
+                dbContext.Category.Add(postCategory);
+                dbContext.SaveChanges();
+
+                return HttpStatusCode.OK;
+            });
+            Put("/admin/categories/{id}", parameters =>
+            {
+                int categoryId = parameters.id;
+                var catrgory = dbContext.Category.FirstOrDefault(c => c.categoryId == categoryId);
+                if (catrgory == null)
+                {
+                    return HttpStatusCode.NotFound;
+                }
+                var putCategory = this.Bind<Category>();
+                catrgory.categoryName = putCategory.categoryName;
+                dbContext.SaveChanges();
+
+                return HttpStatusCode.OK;
+            });
+            Delete("/admin/categories/{id}", parameters =>
+            {
+
+                int categoryId = parameters.id;
+                var products = dbContext.Product.Where(p => p.categoryId == categoryId).ToList();
+                if (products.Count > 0)
+                {
+                    return HttpStatusCode.BadRequest;
+                }
+
+                var category = dbContext.Category.FirstOrDefault(c => c.categoryId == categoryId);
+                if (category == null)
+                {
+                    return HttpStatusCode.NotFound;
+                }
+                dbContext.Category.Remove(category);
+                dbContext.SaveChanges();
+
+                return HttpStatusCode.OK;
             });
         }
     }

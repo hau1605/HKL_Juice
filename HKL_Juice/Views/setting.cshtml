@@ -1,0 +1,913 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>HKL Juice Admin</title>
+
+    <!-- Meta -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <meta name="description" content="HKL Juice Admin" />
+    <meta name="author" content="Xiaoying Riley at 3rd Wave Media" />
+    <link rel="shortcut icon" href="~/Content/assets/images/HKL_logo.png" />
+
+    <!-- FontAwesome JS-->
+    <script defer src="~/Content/assets/plugins/fontawesome/js/all.min.js"></script>
+
+    <!-- App CSS -->
+    <link id="theme-style" rel="stylesheet" href="~/Content/assets/css/portal.css" />
+</head>
+
+<body class="app">
+    <header class="app-header fixed-top">
+        <div class="app-header-inner">
+            <div class="container-fluid py-2">
+                <div class="app-header-content">
+                    <div class="row justify-content-between align-items-center">
+                        <div class="col-auto">
+                            <a id="sidepanel-toggler" class="sidepanel-toggler d-inline-block d-xl-none" href="#">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30"
+                                     role="img">
+                                    <title>Menu</title>
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10"
+                                          stroke-width="2" d="M4 7h22M4 15h22M4 23h22"></path>
+                                </svg>
+                            </a>
+                        </div>
+                        <!--//col-->
+                        <div class="search-mobile-trigger d-sm-none col">
+                            <i class="search-mobile-trigger-icon fa-solid fa-magnifying-glass"></i>
+                        </div>
+                        <!--//col-->
+                        <div class="app-search-box col">
+                            <form class="app-search-form">
+                                <input type="text" placeholder="Search..." name="search"
+                                       class="form-control search-input" />
+                                <button type="submit" class="btn search-btn btn-primary" value="Search">
+                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                </button>
+                            </form>
+                        </div>
+                        <!--//app-search-box-->
+
+                        <div class="app-utilities col-auto">
+                            <div class="app-utility-item app-notifications-dropdown dropdown">
+                                <a class="dropdown-toggle no-toggle-arrow" id="notifications-dropdown-toggle"
+                                   data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false"
+                                   title="Notifications">
+                                    <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
+                                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-bell icon"
+                                         fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2z" />
+                                        <path fill-rule="evenodd"
+                                              d="M8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6z" />
+                                    </svg>
+                                    <span class="icon-badge">3</span>
+                                </a><!--//dropdown-toggle-->
+                            </div>
+                            <!--//app-utility-item-->
+                            <div class="app-utility-item">
+                                <a href="/admin/settings" title="Settings">
+                                    <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
+                                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-gear icon"
+                                         fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd"
+                                              d="M8.837 1.626c-.246-.835-1.428-.835-1.674 0l-.094.319A1.873 1.873 0 0 1 4.377 3.06l-.292-.16c-.764-.415-1.6.42-1.184 1.185l.159.292a1.873 1.873 0 0 1-1.115 2.692l-.319.094c-.835.246-.835 1.428 0 1.674l.319.094a1.873 1.873 0 0 1 1.115 2.693l-.16.291c-.415.764.42 1.6 1.185 1.184l.292-.159a1.873 1.873 0 0 1 2.692 1.116l.094.318c.246.835 1.428.835 1.674 0l.094-.319a1.873 1.873 0 0 1 2.693-1.115l.291.16c.764.415 1.6-.42 1.184-1.185l-.159-.291a1.873 1.873 0 0 1 1.116-2.693l.318-.094c.835-.246.835-1.428 0-1.674l-.319-.094a1.873 1.873 0 0 1-1.115-2.692l.16-.292c.415-.764-.42-1.6-1.185-1.184l-.291.159A1.873 1.873 0 0 1 8.93 1.945l-.094-.319zm-2.633-.283c.527-1.79 3.065-1.79 3.592 0l.094.319a.873.873 0 0 0 1.255.52l.292-.16c1.64-.892 3.434.901 2.54 2.541l-.159.292a.873.873 0 0 0 .52 1.255l.319.094c1.79.527 1.79 3.065 0 3.592l-.319.094a.873.873 0 0 0-.52 1.255l.16.292c.893 1.64-.902 3.434-2.541 2.54l-.292-.159a.873.873 0 0 0-1.255.52l-.094.319c-.527 1.79-3.065 1.79-3.592 0l-.094-.319a.873.873 0 0 0-1.255-.52l-.292.16c-1.64.893-3.433-.902-2.54-2.541l.159-.292a.873.873 0 0 0-.52-1.255l-.319-.094c-1.79-.527-1.79-3.065 0-3.592l.319-.094a.873.873 0 0 0 .52-1.255l-.16-.292c-.892-1.64.902-3.433 2.541-2.54l.292.159a.873.873 0 0 0 1.255-.52l.094-.319z" />
+                                        <path fill-rule="evenodd"
+                                              d="M8 5.754a2.246 2.246 0 1 0 0 4.492 2.246 2.246 0 0 0 0-4.492zM4.754 8a3.246 3.246 0 1 1 6.492 0 3.246 3.246 0 0 1-6.492 0z" />
+                                    </svg>
+                                </a>
+                            </div>
+                            <!--//app-utility-item-->
+
+                            <div class="app-utility-item app-user-dropdown dropdown">
+                                <a class="dropdown-toggle" id="user-dropdown-toggle" data-bs-toggle="dropdown" href="#"
+                                   role="button" aria-expanded="false">
+                                    <img style="border-radius: 50%"
+                                         src="~/Content/assets/images/anhconcat.jpg" alt="user profile" />
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="user-dropdown-toggle">
+                                    <li>
+                                        <a class="dropdown-item" href="/admin/account">Tài khoản</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="/admin/settings">Cài đặt</a>
+                                    </li>
+                                    <li>
+                                        <hr class="dropdown-divider" />
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="/admin/login"
+                                           onclick="localStorage.removeItem('loginUser')">Đăng xuất</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <!--//app-user-dropdown-->
+                        </div>
+                        <!--//app-utilities-->
+                    </div>
+                    <!--//row-->
+                </div>
+                <!--//app-header-content-->
+            </div>
+            <!--//container-fluid-->
+        </div>
+        <!--//app-header-inner-->
+        <div id="app-sidepanel" class="app-sidepanel">
+            <div id="sidepanel-drop" class="sidepanel-drop"></div>
+            <div class="sidepanel-inner d-flex flex-column">
+                <a href="#" id="sidepanel-close" class="sidepanel-close d-xl-none">&times;</a>
+                <div class="app-branding">
+                    <a class="app-logo" href="/admin">
+                        <img style="height: 50px; width: 55px" class="logo-icon me-2"
+                             src="~/Content/assets/images/HKL_logo.png" alt="logo" /><span class="logo-text">HKL Juice</span>
+                    </a>
+                </div>
+                <!--//app-branding-->
+
+                <nav id="app-nav-main" class="app-nav app-nav-main flex-grow-1">
+                    <ul class="app-menu list-unstyled accordion" id="menu-accordion">
+                        <li class="nav-item">
+                            <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
+                            <a class="nav-link" href="/admin">
+                                <span class="nav-icon">
+                                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-house-door"
+                                         fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd"
+                                              d="M7.646 1.146a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 .146.354v7a.5.5 0 0 1-.5.5H9.5a.5.5 0 0 1-.5-.5v-4H7v4a.5.5 0 0 1-.5.5H2a.5.5 0 0 1-.5-.5v-7a.5.5 0 0 1 .146-.354l6-6zM2.5 7.707V14H6v-4a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5v4h3.5V7.707L8 2.207l-5.5 5.5z" />
+                                        <path fill-rule="evenodd"
+                                              d="M13 2.5V6l-2-2V2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5z" />
+                                    </svg>
+                                </span>
+                                <span class="nav-link-text">Tổng quan</span>
+                            </a><!--//nav-link-->
+                        </li>
+                        <!--//nav-item-->
+
+                        <li class="nav-item">
+                            <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
+                            <a class="nav-link" href="/admin/order">
+                                <span class="nav-icon">
+                                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-card-list"
+                                         fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd"
+                                              d="M14.5 3h-13a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-13z" />
+                                        <path fill-rule="evenodd"
+                                              d="M5 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 5 8zm0-2.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm0 5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5z" />
+                                        <circle cx="3.5" cy="5.5" r=".5" />
+                                        <circle cx="3.5" cy="8" r=".5" />
+                                        <circle cx="3.5" cy="10.5" r=".5" />
+                                    </svg>
+                                </span>
+                                <span class="nav-link-text">Hóa đơn</span>
+                            </a><!--//nav-link-->
+                        </li>
+                        <!--//nav-item-->
+                        <li class="nav-item">
+                            <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
+                            <a class="nav-link " href="/admin/products">
+                                <span class="nav-icon">
+                                    <svg width="256px" height="256px" viewBox="0 0 512 512" class="bi bi-card-list"
+                                         fill="currentColor" xmlns="http://www.w3.org/2000/svg" stroke="#000000"
+                                         stroke-width="36.864">
+                                        <g id="SVGRepo_iconCarrier">
+                                            <defs />
+                                            <g id="Layer-2" xmlns:vectornator="http://vectornator.io">
+                                                <path d="M83.9375 31C79.6383 31 76.1562 34.4821 76.1562 38.7812C76.1562 43.0804 79.6383 46.5625 83.9375 46.5625L150.844 46.5625L168.312 87.7188L133.562 87.7188C129.263 87.7188 125.781 91.2008 125.781 95.5L125.781 249.906C125.781 321.504 179.235 379.975 246.812 384.188L246.812 465.438L177.25 465.438C172.951 465.438 169.469 468.92 169.469 473.219C169.469 477.518 172.951 481 177.25 481L331.906 481C336.205 481 339.687 477.518 339.688 473.219C339.688 468.92 336.205 465.438 331.906 465.438L262.375 465.438L262.375 384.188C329.936 379.942 383.406 321.471 383.406 249.906L383.406 169.562C383.407 169.507 383.438 169.462 383.438 169.406C383.438 169.351 383.407 169.305 383.406 169.25L383.406 156.562C412.998 152.643 435.813 126.828 435.844 95.5625C435.844 95.5412 435.844 95.5213 435.844 95.5C435.844 61.5033 408.91 33.8437 375.594 33.8438C344.862 33.8438 319.645 57.3868 315.906 87.7188L185.219 87.7188L163.188 35.75C162.806 34.8491 162.234 34.1025 161.594 33.4375C161.474 33.3117 161.347 33.2113 161.219 33.0938C160.653 32.578 160.026 32.1388 159.344 31.8125C159.157 31.7228 158.976 31.6374 158.781 31.5625C157.892 31.2206 156.967 30.9993 156 31L83.9375 31ZM367.812 50.25L367.812 76.5312L349.531 58.25C354.876 54.2622 361.061 51.482 367.812 50.25ZM383.406 50.25C390.149 51.4811 396.347 54.2381 401.688 58.2188L383.406 76.5L383.406 50.25ZM338.75 69.5L356.969 87.7188L331.688 87.7188C332.79 81.0526 335.191 74.8564 338.75 69.5ZM412.438 69.5C416.007 74.8683 418.43 81.0655 419.531 87.75C413.748 87.7388 404.918 87.7226 394.188 87.7188L412.438 69.5ZM141.344 103.281C143.487 103.281 165.913 103.281 174.906 103.281L199.625 161.625L141.344 161.625L141.344 103.281ZM191.812 103.281C236.937 103.281 280.994 103.281 323.031 103.281C323.086 103.282 323.132 103.313 323.188 103.312L367.812 103.312L367.812 149.344L367.812 161.625L216.562 161.625L191.812 103.281ZM394.562 103.312L419.531 103.312C418.436 109.888 416.083 116.041 412.594 121.344L394.562 103.312ZM383.406 114.156L401.875 132.625C396.492 136.684 390.231 139.504 383.406 140.75L383.406 114.156ZM141.344 177.188L367.812 177.188L367.812 249.906C367.812 315.785 317.023 369.031 254.562 369.031C192.116 369.031 141.344 315.799 141.344 249.906L141.344 177.188ZM165.844 236.156C161.545 236.156 158.063 239.638 158.062 243.938C158.063 302.968 203.802 350.969 260.438 350.969C264.737 350.969 268.219 347.487 268.219 343.188C268.219 338.888 264.737 335.406 260.438 335.406C212.572 335.406 173.625 294.533 173.625 243.938C173.625 239.638 170.143 236.156 165.844 236.156Z"
+                                                      fill-rule="evenodd" opacity="1" stroke="none"
+                                                      xmlns:vectornator="http://vectornator.io" />
+                                            </g>
+                                        </g>
+                                    </svg>
+                                </span>
+                                <span class="nav-link-text">Sản phẩm</span>
+                            </a><!--//nav-link-->
+                        </li>
+                        <!--//nav-item-->
+                        <li class="nav-item" id="user_nav">
+                            <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
+                        </li>
+                        <li class="nav-item has-submenu">
+                            <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
+                            <a class="nav-link submenu-toggle" href="#" data-bs-toggle="collapse"
+                               data-bs-target="#submenu-1" aria-expanded="false" aria-controls="submenu-1">
+                                <span class="nav-icon">
+                                    <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
+                                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-files"
+                                         fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd"
+                                              d="M4 2h7a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm0 1a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H4z" />
+                                        <path d="M6 0h7a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2v-1a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H6a1 1 0 0 0-1 1H4a2 2 0 0 1 2-2z" />
+                                    </svg>
+                                </span>
+                                <span class="nav-link-text">Trang</span>
+                                <span class="submenu-arrow">
+                                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-chevron-down"
+                                         fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd"
+                                              d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" />
+                                    </svg>
+                                </span><!--//submenu-arrow-->
+                            </a><!--//nav-link-->
+                            <div id="submenu-1" class="collapse submenu submenu-1" data-bs-parent="#menu-accordion">
+                                <ul class="submenu-list list-unstyled">
+                                    <li class="submenu-item">
+                                        <a class="submenu-link" href="/admin/account">Tài khoản</a>
+                                    </li>
+                                    <li class="submenu-item">
+                                        <a class="submenu-link" href="/admin/settings">Cài đặt</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <!--//nav-item-->
+                    </ul>
+                    <!--//app-menu-->
+                </nav>
+                <!--//app-nav-->
+                <div class="app-sidepanel-footer">
+                    <nav class="app-nav app-nav-footer">
+                        <ul class="app-menu footer-menu list-unstyled">
+                            <li class="nav-item">
+                                <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
+                                <a class="nav-link" href="/admin/settings">
+                                    <span class="nav-icon">
+                                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-gear"
+                                             fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd"
+                                                  d="M8.837 1.626c-.246-.835-1.428-.835-1.674 0l-.094.319A1.873 1.873 0 0 1 4.377 3.06l-.292-.16c-.764-.415-1.6.42-1.184 1.185l.159.292a1.873 1.873 0 0 1-1.115 2.692l-.319.094c-.835.246-.835 1.428 0 1.674l.319.094a1.873 1.873 0 0 1 1.115 2.693l-.16.291c-.415.764.42 1.6 1.185 1.184l.292-.159a1.873 1.873 0 0 1 2.692 1.116l.094.318c.246.835 1.428.835 1.674 0l.094-.319a1.873 1.873 0 0 1 2.693-1.115l.291.16c.764.415 1.6-.42 1.184-1.185l-.159-.291a1.873 1.873 0 0 1 1.116-2.693l.318-.094c.835-.246.835-1.428 0-1.674l-.319-.094a1.873 1.873 0 0 1-1.115-2.692l.16-.292c.415-.764-.42-1.6-1.185-1.184l-.291.159A1.873 1.873 0 0 1 8.93 1.945l-.094-.319zm-2.633-.283c.527-1.79 3.065-1.79 3.592 0l.094.319a.873.873 0 0 0 1.255.52l.292-.16c1.64-.892 3.434.901 2.54 2.541l-.159.292a.873.873 0 0 0 .52 1.255l.319.094c1.79.527 1.79 3.065 0 3.592l-.319.094a.873.873 0 0 0-.52 1.255l.16.292c.893 1.64-.902 3.434-2.541 2.54l-.292-.159a.873.873 0 0 0-1.255.52l-.094.319c-.527 1.79-3.065 1.79-3.592 0l-.094-.319a.873.873 0 0 0-1.255-.52l-.292.16c-1.64.893-3.433-.902-2.54-2.541l.159-.292a.873.873 0 0 0-.52-1.255l-.319-.094c-1.79-.527-1.79-3.065 0-3.592l.319-.094a.873.873 0 0 0 .52-1.255l-.16-.292c-.892-1.64.902-3.433 2.541-2.54l.292.159a.873.873 0 0 0 1.255-.52l.094-.319z" />
+                                            <path fill-rule="evenodd"
+                                                  d="M8 5.754a2.246 2.246 0 1 0 0 4.492 2.246 2.246 0 0 0 0-4.492zM4.754 8a3.246 3.246 0 1 1 6.492 0 3.246 3.246 0 0 1-6.492 0z" />
+                                        </svg>
+                                    </span>
+                                    <span class="nav-link-text active">Cài đặt</span>
+                                </a><!--//nav-link-->
+                            </li>
+                            <!--//nav-item-->
+                        </ul>
+                        <!--//footer-menu-->
+                    </nav>
+                </div>
+                <!--//app-sidepanel-footer-->
+            </div>
+            <!--//sidepanel-inner-->
+        </div>
+        <!--//app-sidepanel-->
+    </header>
+    <!--//app-header-->
+
+    <div class="app-wrapper">
+        <div class="app-content pt-3 p-md-3 p-lg-4">
+            <div class="container-xl">
+                <div class="row g-3 mb-4 align-items-center justify-content-between">
+                    <div class="col-auto">
+                        <h1 class="app-page-title mb-0">Danh mục sản phẩm</h1>
+                    </div>
+                    <div class="col-auto">
+                        <div class="page-utilities">
+                            <div class="row g-2 justify-content-start justify-content-md-end align-items-center">
+                                <div class="col-auto">
+                                    <form class="table-search-form row gx-1 align-items-center" id="searchForm">
+                                        <div class="col-auto">
+                                            <input type="text" id="search-categories" name="searchcategories"
+                                                   class="form-control search-categories"
+                                                   placeholder="Tìm theo ID, tên" />
+                                        </div>
+                                        <div class="col-auto">
+                                            <button type="submit" class="btn app-btn-secondary">
+                                                Tìm
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <!--//col-->
+                                <div class="col-auto">
+                                    <button class="btn app-btn-secondary"
+                                            style="background-color: #5edd93; color: #fff;" data-bs-toggle="modal"
+                                            data-bs-target="#addCategoryModal" onclick="addCategory()">
+                                        Thêm danh mục
+                                    </button>
+                                </div>
+                            </div>
+                            <!--//row-->
+                        </div>
+                        <!--//table-utilities-->
+                    </div>
+                    <!--//col-auto-->
+                </div>
+                <!--//row-->
+
+                <div class="tab-content">
+                    <div class="tab-pane fade show active" role="tabpanel" aria-labelledby="categories-all-tab">
+                        <div class="app-card app-card-orders-table shadow-sm mb-5">
+                            <div class="app-card-body">
+                                <div class="table-responsive">
+                                    <table style="text-align: center" class="table app-table-hover mb-0 text-left"
+                                           id="categoriesTable">
+                                        <thead>
+                                            <tr>
+                                                <th class="cell">ID</th>
+                                                <th class="cell">
+                                                    Tên danh mục
+                                                </th>
+                                                <th class="cell">
+                                                    Số loại sản phẩm
+                                                </th>
+                                                <th class="cell">
+                                                    Hành động
+                                                </th>
+                                                <th class="cell"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!--//table-responsive-->
+                            </div>
+                            <!--//app-card-body-->
+                        </div>
+                        <!--//app-card-->
+                        <nav class="app-pagination">
+                            <ul class="pagination justify-content-center" id="pagination">
+                                <li class="page-item disabled" id="previousPage">
+                                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Trước</a>
+                                </li>
+
+                                <li class="page-item" id="nextPage">
+                                    <a class="page-link" style="cursor: pointer;" href="#">Sau</a>
+                                </li>
+                            </ul>
+                        </nav>
+                        <!--//app-pagination-->
+                    </div>
+
+                    <!--//tab-pane-->
+                </div>
+                <!--//tab-content-->
+            </div>
+
+            <!--//container-fluid-->
+            <!--//Modal View-->
+            <div class="modal fade" id="CategoryDetailModal" tabindex="-1" aria-labelledby="CategoryDetailModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="categoryDetailModalLabel">
+                                Chi tiết danh mục
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="card category-card">
+                                <table style="
+                                            border: none;
+                                            vertical-align: middle;
+                                        " class="table" id="categoryBody"></table>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                Đóng
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--//Modal Edit-->
+            <div class="modal fade" id="editCategoryModal" tabindex="-1" aria-labelledby="editCategoryModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editCategoryModalLabel">
+                                Sửa danh mục sản phẩm
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="card category-card">
+                                <table style="
+                                            border: none;
+                                            vertical-align: middle;
+                                            display: flex;
+                                            flex-direction: column;
+                                            align-items: center;
+                                        " class="table" id="editCategoryBody"></table>
+                            </div>
+                        </div>
+                        <div class="modal-footer" id="editCategoryModalFooter">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                Đóng
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--//Modal Delete-->
+            <div class="modal fade" id="deleteCategoryModal" tabindex="-1" aria-labelledby="deleteCategoryModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Xóa danh mục</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="card category-card">
+                                <div id="deleteCategoryCardHead" style="
+                                            display: flex;
+                                            justify-content: space-between;
+                                            align-items: center;
+                                        " class="card-header"></div>
+                                <div class="card-body">
+                                    <!-- <h4>
+                                            Bạn có chắc chắc muốn xóa sản phẩm
+                                            này không?
+                                        </h4> -->
+                                    <div id="deleteCategoryCardBody"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer" id="deleteCategoryModelFooter">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                Đóng
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--//Modal Add-->
+            <div class="modal fade" id="addCategoryModal" tabindex="-1" aria-labelledby="addCategoryModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="addCategoryModalLabel">
+                                Thêm danh mục sản phẩm
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="card category-card">
+                                <table style="
+                                            border: none;
+                                            vertical-align: middle;
+                                            display: flex;
+                                            flex-direction: column;
+                                            align-items: center;
+                                        " class="table" id="addCategoryBody"></table>
+                            </div>
+                        </div>
+                        <div class="modal-footer" id="addCategoryModalFooter">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                Đóng
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--//app-content-->
+    </div>
+    <!--//app-wrapper-->
+    <!-- Javascript -->
+    @{ var jsonHtml = Html.Raw(@Model); }
+
+    <script src="~/Content/assets/plugins/popper.min.js"></script>
+    <script src="~/Content/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+    <script src="~/Content/assets/js/app.js"></script>
+    <script>
+        let categories =@jsonHtml;
+        console.log(categories);
+
+        const rowsPerPage = 5;
+        let currentPage = 1;
+        let filterCategory = categories;
+        let searchValue = "";
+        let categoryValue = "Tất cả";
+
+        document
+            .getElementById("searchForm")
+            .addEventListener("submit", function (event) {
+                event.preventDefault(); // Ngăn không cho trình duyệt gửi biểu mẫu
+                const inputValue = document
+                    .getElementById("search-categories")
+                    .value.trim()
+                    .toUpperCase();
+                searchValue = inputValue;
+                setupPagination(
+                    categories,
+                    document.getElementById("pagination")
+                );
+                currentPage = 1;
+                document.getElementById("categories-all-tab").click();
+            });
+
+        function displayCategories(categoriesData, page = 1) {
+            const tableBody = document.getElementById('categoriesTable').getElementsByTagName('tbody')[0];
+            tableBody.innerHTML = "";
+            const start = (page - 1) * rowsPerPage;
+            const end = start + rowsPerPage;
+            const paginatedItems = categoriesData.slice(start, end);
+            console.log('paginatedItems', paginatedItems);
+            paginatedItems.forEach((category) => {
+                let categoryString = JSON.stringify(category).replace(
+                    /"/g,
+                    "&quot;"
+                );
+                console.log('categoryString', categoryString);
+                
+                let row = `
+                    <tr>
+                        <td class="cell">#${category.categoryId}</td>
+                        <td class="cell">${category.categoryName}</td>
+                        <td class="cell">${category.numsProduct}</td>
+                        <td class="cell">
+                            <svg style="cursor:pointer;margin-right:2px" data-bs-toggle="modal" data-bs-target="#editCategoryModal" onclick="editCategory(${categoryString})" width="24px" height="24px" viewBox="0 0 25 25" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title>edit_cover [#1481]</title> <desc>Created with Sketch.</desc> <defs> </defs> <g id="Page-1" stroke="#27c4b2" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="Dribbble-Light-Preview" transform="translate(-419.000000, -359.000000)" fill="#27c4b2"> <g id="icons" transform="translate(56.000000, 160.000000)"> <path d="M384,209.210475 L384,219 L363,219 L363,199.42095 L373.5,199.42095 L373.5,201.378855 L365.1,201.378855 L365.1,217.042095 L381.9,217.042095 L381.9,209.210475 L384,209.210475 Z M370.35,209.51395 L378.7731,201.64513 L380.4048,203.643172 L371.88195,212.147332 L370.35,212.147332 L370.35,209.51395 Z M368.25,214.105237 L372.7818,214.105237 L383.18415,203.64513 L378.8298,199 L368.25,208.687714 L368.25,214.105237 Z" id="edit_cover-[#1481]"> </path> </g> </g> </g> </g></svg>
+                            <svg style="cursor:pointer" data-bs-toggle="modal" data-bs-target="#deleteCategoryModal" onclick="deleteCategory(${categoryString})" width="24px" height="24px" viewBox="0 0 25 25" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#fe4d4d"> <g id="Page-1" stroke="#fe4d4d" stroke-width="1" fill="none" fill-rule="evenodd">
+                                    <g id="Dribbble-Light-Preview" transform="translate(-179.000000, -360.000000)" fill="#fe4d4d"">
+                                        <g id="icons" transform="translate(56.000000, 160.000000)" >
+                                            <path d="M130.35,216 L132.45,216 L132.45,208 L130.35,208 L130.35,216 Z M134.55,216 L136.65,216 L136.65,208 L134.55,208 L134.55,216 Z M128.25,218 L138.75,218 L138.75,206 L128.25,206 L128.25,218 Z M130.35,204 L136.65,204 L136.65,202 L130.35,202 L130.35,204 Z M138.75,204 L138.75,200 L128.25,200 L128.25,204 L123,204 L123,206 L126.15,206 L126.15,220 L140.85,220 L140.85,206 L144,206 L144,204 L138.75,204 Z" id="delete-[#1487]">
+                                            /path>
+                                        </g>
+                                    </g>
+                                   </g>
+                            </svg>
+                        </td>
+                    </tr>`;
+                tableBody.innerHTML += row;
+            });
+
+            document
+                .querySelectorAll(".pagination .page-item")
+                .forEach((item) => {
+                    item.classList.remove("active");
+                });
+
+            // Cập nhật trạng thái của nút 'Previous' và 'Next'
+            updatePaginationButtons(
+                document.getElementById("pagination"),
+                Math.ceil(categoriesData.length / rowsPerPage)
+            );
+        }
+
+        // Hàm lọc đơn hàng theo trạng thái
+        function filterCategoriesByCategory(categoryName) {
+            categoryValue = categoryName;
+            currentPage = 1;
+            setupPagination(
+                categories,
+                document.getElementById("pagination")
+            );
+        }
+
+        function updatePaginationButtons(paginationElement, pageCount) {
+            const previousButton =
+                paginationElement.querySelector("#previousPage");
+            const nextButton = paginationElement.querySelector("#nextPage");
+
+            if (currentPage === 1) {
+                previousButton.classList.add("disabled");
+            } else {
+                previousButton.classList.remove("disabled");
+            }
+
+            if (currentPage === pageCount || pageCount === 0) {
+                nextButton.classList.add("disabled");
+            } else {
+                nextButton.classList.remove("disabled");
+            }
+        }
+
+        function setupPagination(
+            categoriesData,
+            paginationElement,
+            current = currentPage
+        ) {
+            filterCategory = categoriesData;
+            console.log("---filterCategory", filterCategory);
+
+
+            // Xóa các nút trang số hiện tại
+            if (searchValue !== "")
+                filterCategory = filterCategory.filter(
+                    (category) =>
+                        category.categoryName
+                            .toUpperCase()
+                            .includes(searchValue) ||
+                        category.categoryId.toLocaleString().includes(searchValue) ||
+                        category.categoryName
+                            .toUpperCase()
+                            .includes(searchValue)
+                );
+            if (categoryValue !== "Tất cả")
+                filterCategory = filterCategory.filter(
+                    (category) => category.categoryName === categoryValue
+                );
+
+            while (paginationElement.children.length > 2) {
+                paginationElement.removeChild(
+                    paginationElement.children[1]
+                );
+            }
+            let pageCount = Math.ceil(filterCategory.length / rowsPerPage);
+            console.log("filterCategory", filterCategory);
+
+            displayCategories(filterCategory, current);
+
+            for (let i = 1; i <= pageCount; i++) {
+                let pageItem = document.createElement("li");
+                pageItem.classList.add("page-item");
+                if (i === current) {
+                    pageItem.classList.add("active");
+                } else pageItem.remove("active");
+                pageItem.innerHTML = `<a class="page-link" href="#">${i}</a>`;
+                pageItem.addEventListener("click", (event) => {
+                    event.preventDefault(); // Ngăn không cho trình duyệt chuyển hướng
+                    currentPage = i;
+                    setupPagination(
+                        categoriesData,
+                        document.getElementById("pagination"),
+                        i
+                    );
+                });
+                paginationElement.insertBefore(
+                    pageItem,
+                    paginationElement.querySelector("#nextPage")
+                );
+            }
+
+            // Cập nhật trạng thái nút 'Previous'
+            updatePaginationButtons(paginationElement, pageCount);
+        }
+        document
+            .getElementById("previousPage")
+            .addEventListener("click", () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    setupPagination(
+                        filtercategory,
+                        document.getElementById("pagination")
+                    );
+                }
+            });
+
+        document
+            .getElementById("nextPage")
+            .addEventListener("click", () => {
+                if (currentPage * rowsPerPage < filtercategory.length) {
+                    currentPage++;
+                    setupPagination(
+                        filtercategory,
+                        document.getElementById("pagination")
+                    );
+                }
+            });
+
+        window.onload = () => {
+            setupPagination(
+                categories,
+                document.getElementById("pagination")
+            );
+        };
+        // Hiển thị tất cả đơn hàng khi trang tải xong
+    </script>
+    <script>
+                    //Authenticate
+                    const user = JSON.parse(localStorage.getItem("loginUser"));
+                    if (!localStorage.getItem("loginUser"))
+                        window.location.href = "/admin/login";
+                    else if (
+                        JSON.parse(localStorage.getItem("loginUser")).roleName ===
+                        "Admin"
+                    ) {
+                        document.getElementById("user_nav").innerHTML = `
+                                <a class="nav-link " href="/admin/users" >
+                                    <span class="nav-icon">
+                                        <svg width="24px" height="24px" viewBox="0 0 24.00 24.00"  class="bi bi-card-list" fill="none"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                            <g id="SVGRepo_iconCarrier">
+                                                <path d="M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z"
+                                                    stroke="currentColor" stroke-width="1.392" stroke-linecap="round"
+                                                    stroke-linejoin="round"></path>
+                                                <path d="M12 14C8.13401 14 5 17.134 5 21H19C19 17.134 15.866 14 12 14Z"
+                                                    stroke="currentColor" stroke-width="1.392" stroke-linecap="round"
+                                                    stroke-linejoin="round"></path>
+                                            </g>
+                                        /svg>
+                                    </span>
+                                    <span class="nav-link-text">Người dùng</span>
+                                </a><!--//nav-link-->	`;
+                    }
+
+                    // Show detail category modal
+                    function editCategory(category) {
+                        console.log(category);
+                        if (user.roleName === "Admin") {
+                            document.getElementById("editCategoryBody").innerHTML = `
+                                    <tr style="border: none">
+                                        <td style="border: none; text-align:end; font-weight: bold" >
+                                            <label for="categoryName">Tên danh mục:</label>
+                                        </td>
+                                        <td style="border: none">
+                                            <input class="p-2 rounded" type="text" id="categoryName" name="categoryName" value="${category.categoryName}" size="25">
+                                        </td>
+                                    </tr>
+                                `;
+
+                            let categoryString = JSON.stringify(category).replace(
+                                /"/g,
+                                "&quot;"
+                            );
+
+                            document.getElementById(
+                                "editCategoryModalFooter"
+                            ).innerHTML = `
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                                    <button type="button" class="btn btn-primary" onclick="handleEditCategory(${categoryString})">Sửa danh mục</button>
+                                `;
+
+                            var currentCategoryId = category.categoryId;
+                            document.getElementById("categoryId").value =
+                                currentCategoryId;
+
+                            var currentDesc = category.descript;
+                            document.getElementById("desc").value = currentDesc;
+                        }
+                        else {
+                            document.getElementById("editCategoryBody").innerHTML = `
+                                    <tr style="border: none">
+                                        <td style="border: none; text-align:end; font-weight: bold" >
+                                            <label for="categoryName">Chỉ có Admin có quyền sửa danh mục sản phẩm</label>
+                                        </td>
+
+                                    </tr>`
+                            document.getElementById(
+                                "editCategoryModalFooter"
+                            ).innerHTML = `
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                                `;
+                        }
+                        document.getElementById(
+                            "addCategoryModalFooter"
+                        ).innerHTML = `
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                                    <button type="button" class="btn btn-primary" onclick="handleAddCategory()">Thêm danh mục</button>
+                                `;
+                    }
+
+                    function handleEditCategory(category) {
+                        let editedCategory = {
+                            categoryName: document.getElementById("categoryName").value
+                        };
+
+                        console.log(editedCategory);
+
+                        fetch(`/admin/categories/${category.categoryId}`, {
+                            method: "PUT",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify(editedCategory),
+                        })
+                            .then((response) => {
+                                if (response.ok) {
+                                    // Xử lý thành công (ví dụ: đóng modal)
+                                    alert("Sửa danh mục sản phẩm thành công!");
+                                } else {
+                                    alert("Sửa danh mục sản phẩm không thành công!");
+                                }
+                                window.location.reload();
+                            })
+                            .catch((error) =>
+                                console.error("An error occurred:", error)
+                            );
+                    }
+
+                    function deleteCategory(category) {
+                        let categoryString = JSON.stringify(category).replace(
+                            /"/g,
+                            "&quot;"
+                        );
+                        if (user.roleName === "Admin") {
+                            document.getElementById("deleteCategoryModelFooter").innerHTML = `
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                                    <button type="button" class="btn btn-danger" onclick="handleDeleteCategory(${categoryString})">Xóa danh mục</button>
+                                `;
+                            document.getElementById(
+                                "deleteCategoryCardBody"
+                            ).innerHTML = `<div style="display: flex;align-items: center;justify-content: center;">
+                                    <h4 style="text-align: center;" class="card-text">Bạn có chắc chắn muốn xóa danh mục sản phẩm '${category.categoryName}' này không?</h4>`;
+                        }
+                        else {
+                            document.getElementById("deleteCategoryCardBody").innerHTML = `
+                                    <h4 style="text-align: center;" class="card-text">Chỉ có Admin có quyền xóa danh mục sản phẩm</h4>
+                                        `
+                            document.getElementById(
+                                "deleteCategoryModelFooter"
+                            ).innerHTML = `
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                                `;
+                        }
+                    }
+
+                    function handleDeleteCategory(category) {
+                        fetch(`/admin/categories/${category.categoryId}`, {
+                            method: "DELETE",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                        })
+                            .then(response => {
+                                if (response.ok) {
+                                    // Xử lý thành công (ví dụ: đóng modal)
+                                    alert("Xóa danh mục sản phẩm thành công!");
+                                } else {
+                                    alert("Xóa danh mục sản phẩm không thành công!");
+                                }
+                                window.location.reload()
+
+                            })
+                            .catch(error => console.error("An error occurred:", error));
+                    }
+
+
+
+
+                    // add category
+                    function addCategory() {
+                        if (user.roleName === "Admin") {
+                            document.getElementById("addCategoryBody").innerHTML = `
+                                    <tr style="border: none">
+                                        <td style="border: none; text-align:end; font-weight: bold" >
+                                            <label for="categoryName">Tên danh mục sản phẩm:</label>
+                                        </td>
+                                        <td style="border: none">
+                                            <input class="p-2 rounded" type="text" required id="add_categoryName" name="categoryName" size="25" placeholder="Tên danh mục">
+                                        </td>
+                                    </tr>
+                                `;
+
+                        }
+                        else {
+                            document.getElementById("addCategoryBody").innerHTML = `
+                                    <tr style="border: none">
+                                        <td style="border: none; text-align:end; font-weight: bold" >
+                                            <label for="categoryName">Chỉ có Admin có quyền thêm danh mục sản phẩm</label>
+                                        </td>
+
+                                    </tr>`
+                            document.getElementById(
+                                "addCategoryModalFooter"
+                            ).innerHTML = `
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                                `;
+                        }
+                        document.getElementById(
+                            "addCategoryModalFooter"
+                        ).innerHTML = `
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                                    <button type="button" class="btn btn-primary" onclick="handleAddCategory()">Thêm danh mục</button>
+                                `;
+                    }
+
+                    function handleAddCategory() {
+                        let addCategory = {
+                            categoryName: document.getElementById("add_categoryName").value
+                        };
+                        console.log(addCategory);
+
+
+                        fetch(`/admin/categories`, {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify(addCategory),
+                        })
+                            .then((response) => {
+                                if (response.ok) {
+                                    // Xử lý thành công (ví dụ: đóng modal)
+                                    alert("Thêm danh mục sản phẩm thành công!");
+                                } else {
+                                    alert("Thêm danh mục sản phẩm không thành công!");
+                                }
+                                window.location.reload();
+                            })
+                            .catch((error) =>
+                                console.error("An error occurred:", error)
+                            );
+                    }
+                </script>
+        </body>
+
+        </html>
