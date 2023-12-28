@@ -295,6 +295,7 @@
                         </div><!--//app-card-->
                     </div><!--//col-->
                 </div><!--//row-->
+
                 <div class="row g-4 mb-4">
                     <div class="col-12 col-lg-6">
                         <div class="app-card app-card-chart h-100 shadow-sm">
@@ -335,6 +336,26 @@
 
                 </div><!--//row-->
 
+                <div class="row g-4 mb-4 ">
+                    <div class="">
+                        <div class="app-card app-card-chart h-100 shadow-sm">
+                            <div class="app-card-header p-3">
+                                <div class="row justify-content-between align-items-center">
+                                    <div class="col-auto">
+                                        <h4 class="app-card-title">Sản phẩm</h4>
+                                    </div><!--//col-->
+
+                                </div><!--//row-->
+                            </div><!--//app-card-header-->
+                            <div class="app-card-body p-3 p-lg-4">
+
+                                <div class="chart-container">
+                                    <canvas id="canvas-customchart"></canvas>
+                                </div>
+                            </div><!--//app-card-body-->
+                        </div><!--//app-card-->
+                    </div><!--//col-->
+                </div>
 
             </div><!--//container-fluid-->
         </div><!--//app-content-->
@@ -570,13 +591,77 @@
             }
         }
 
+        function getRandomColor() {
+            var letters = '0123456789ABCDEF';
+            var color = '#';
+            for (var i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+        var colors = Array.from({ length: 18 }, () => getRandomColor())
+        let labelPieData = [];
+        let pieData = [];
+        adminData.ProductsSoldThisMonth.map((item) => {
+            labelPieData.push(item.ProductName);
+            pieData.push(item.QuantitySold)
+        })
+        var pieChartConfig = {
+            type: 'pie',
+
+            data: {
+                datasets: [{
+                    data: pieData,
+                    backgroundColor: colors,
+                }],
+
+                labels: labelPieData
+            },
+            options: {
+                responsive: true,
+                aspectRatio: 1.5,
+                legend: {
+                    position: 'bottom',
+                    align: 'center',
+                },
+                title: {
+                    display: true,
+                    text: 'Biểu đồ tròn sản phẩm đã bán tháng này'
+                },
+                tooltips: {
+                    mode: 'index',
+                    intersect: false,
+                    titleMarginBottom: 10,
+                    bodySpacing: 10,
+                    xPadding: 16,
+                    yPadding: 16,
+                    borderColor: window.chartColors.border,
+                    borderWidth: 1,
+                    backgroundColor: '#fff',
+                    bodyFontColor: window.chartColors.text,
+                    titleFontColor: window.chartColors.text,
+
+                }, callbacks: {
+                    label: function (tooltipItem, data) {
+                        var label = data.labels[tooltipItem.index] || '';
+                        if (label) {
+                            label += ': ';
+                        }
+                        label += '123';
+                        return label;
+                    }
+                }
+            }
+        }
+
         // Generate charts on load
         window.addEventListener('load', function () {
             var lineChart = document.getElementById('canvas-linechart').getContext('2d');
             window.myLine = new Chart(lineChart, lineChartConfig);
             var barChart = document.getElementById('canvas-barchart').getContext('2d');
             window.myBar = new Chart(barChart, barChartConfig);
-        });
+            var pieChart = document.getElementById('canvas-customchart').getContext('2d');
+            window.myPie = new Chart(pieChart, pieChartConfig);});
 
     </script>
     <!-- Charts JS -->

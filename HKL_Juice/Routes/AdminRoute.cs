@@ -79,14 +79,26 @@ namespace HKL_Juice.Routes
                         DailyRevenue = dailyRevenue
                     });
                 }
-
+                var productsSoldThisMonth = dbContext.Order
+                    .Where(o => o.paymentStatus == "Đã thanh toán" &&
+                                o.orderDate >= firstDayOfMonth &&
+                                o.orderDate <= now)
+                    .SelectMany(o => o.OrderDetails)
+                    .GroupBy(od => od.Product.productName)
+                    .Select(g => new 
+                    {
+                        ProductName = g.Key,
+                        QuantitySold = g.Sum(od => od.quantity)
+                    })
+                    .ToList();
                 var data = new
                 {
                     TotalRevenueThisMonth = totalRevenueThisMonth,
                     NumberOfProductsOnSale = numberOfProductsOnSale,
                     NumberOfNewOrdersThisMonth = numberOfNewOrdersThisMonth,
                     OrderCountsLast7Days = orderCountsLast7Days,
-                    RevenueLast14Days = revenueLast14Days
+                    RevenueLast14Days = revenueLast14Days,
+                    ProductsSoldThisMonth = productsSoldThisMonth
                 };
 
                 var serializer = new JavaScriptSerializer();
