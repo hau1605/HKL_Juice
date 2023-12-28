@@ -487,6 +487,8 @@
                 alert("Không có trường nào được cập nhật!");
                 return;
             }
+            console.log("editedAccount.userId:: ", editedAccount.userId);
+            console.log("fieldsToUpdate:: ", fieldsToUpdate);
             fetch(`/admin/account/${editedAccount.userId}`, {
                 method: "PUT",
                 headers: {

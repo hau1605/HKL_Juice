@@ -407,7 +407,13 @@ namespace HKL_Juice.Routes
                     return HttpStatusCode.NotFound;
                 }
                 var putUser = this.Bind<User>();
-
+                user.userFullname = putUser.userFullname;
+                user.userPhone = putUser.userPhone;
+                user.userAvatar = putUser.userAvatar;
+                if (!string.IsNullOrEmpty(putUser.userPassword))
+                {
+                    user.userPassword = putUser.userPassword;
+                }
 
                 dbContext.SaveChanges();
 
