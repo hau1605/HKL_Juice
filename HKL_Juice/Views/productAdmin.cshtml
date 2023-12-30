@@ -628,7 +628,11 @@
         let filterProduct = products;
         let searchValue = "";
         let categoryValue = "Tất cả";
-
+        document
+            .getElementById("products-all-tab")
+            .addEventListener("click", () =>
+                filterProductsByCategory("Tất cả")
+            );
         document
             .getElementById("searchForm")
             .addEventListener("submit", function (event) {

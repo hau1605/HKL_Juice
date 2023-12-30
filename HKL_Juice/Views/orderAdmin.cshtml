@@ -245,34 +245,53 @@
 
         <div class="app-content pt-3 p-md-3 p-lg-4">
             <div class="container-xl">
-                <div class="row g-3 mb-4 align-items-center justify-content-between">
+                <div class="row g-3 mb-4 align-items-start justify-content-between">
                     <div class="col-auto">
                         <h1 class="app-page-title mb-0">Hóa đơn</h1>
                     </div>
                     <!-- Top main -->
                     <div class="col-auto">
                         <div class="page-utilities">
-                            <div class="row g-2 justify-content-start justify-content-md-end align-items-center">
+                            <div class="row g-2 gy-2 justify-content-start justify-content-md-end align-items-center">
                                 <div class="col-auto">
-                                    <form class="table-search-form row gx-1 align-items-center" id="searchForm">
-                                        <div class="col-auto">
-                                            <input type="text" id="search-orders" name="searchorders"
-                                                   class="form-control search-orders" placeholder="Tìm kiếm">
+                                    <form class="table-search-form row gx-2 align-items-center" id="searchForm">
+                                        <div class="col-auto my-2">
+                                            <div class="col-auto my-1">
+                                                <input type="text" id="order-id" name="searchorders"
+                                                       class="form-control search-orders" placeholder="Nhập mã hóa đơn">
+                                            </div>
+                                            <div class="col-auto my-1">
+                                                <input type="text" id="table-number" name="tablenumber"
+                                                       class="form-control" placeholder="Số bàn">
+                                            </div>
                                         </div>
+
                                         <div class="col-auto">
-                                            <button type="submit" class="btn app-btn-secondary">Tìm</button>
+                                            <div class="col-auto my-2">
+                                                <div class="col-auto my-1">
+                                                    <input type="text" id="employee-name" name="employeename"
+                                                           class="form-control" placeholder="Tên nhân viên">
+                                                </div>
+                                                <div class="col-auto my-1">
+                                                    <input type="date" id="order-date" name="orderdate"
+                                                           class="form-control" placeholder="Ngày">
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+
+                                        <div class="col-auto">
+                                            <button type="submit" class="btn app-btn-primary">Tìm</button>
                                         </div>
                                     </form>
-
                                 </div><!--//col-->
                                 <div class="col-auto">
-
                                     <select class="form-select w-auto">
                                         <option selected value="option-1">Tất cả</option>
                                         <option value="option-2">Tuần này</option>
                                         <option value="option-3">Tháng này</option>
                                         <option value="option-4">Năm này</option>
-
                                     </select>
                                 </div>
                                 <div class="col-auto">
@@ -606,8 +625,6 @@
             let statusValue = 'All';
             document.getElementById('searchForm').addEventListener('submit', function (event) {
                 event.preventDefault(); // Ngăn không cho trình duyệt gửi biểu mẫu
-                const inputValue = document.getElementById('search-orders').value.trim().toUpperCase();
-                searchValue = inputValue;
                 setupPagination(orders, document.getElementById('pagination'))
                 currentPage = 1;
                 document.getElementById('orders-all-tab').click()
@@ -696,9 +713,9 @@
                 switch (selectedOption) {
                     case 'option-2': // This Week
                         // Tìm ngày đầu tiên của tuần (Chủ Nhật)
-                        const startOfWeek = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - currentDate.getDay());
+                        const startOfWeek = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - currentDate.getDay()+1);
                         // Tìm ngày cuối cùng của tuần (Thứ Bảy)
-                        const endOfWeek = new Date(startOfWeek.getFullYear(), startOfWeek.getMonth(), startOfWeek.getDate() + 6);
+                        const endOfWeek = new Date(startOfWeek.getFullYear(), startOfWeek.getMonth(), startOfWeek.getDate() + 7);
 
                         ordersData = ordersData.filter(order => {
                             const orderDate = new Date(order.orderDate);
@@ -719,18 +736,29 @@
                     default: // All
                         ordersData = [...ordersData];
                 }
+                function formatDateSort(dateString) {
+                    const dateObject = new Date(dateString);
 
+                    const year = dateObject.getFullYear();
+                    const month = String(dateObject.getMonth() + 1).padStart(2, '0');
+                    const day = String(dateObject.getDate()).padStart(2, '0');
+
+                    return `${year}-${month}-${day}`;
+                }
                 // Sort Date
                 ordersData.sort((a, b) => new Date(b.orderDate) - new Date(a.orderDate));
-
+                let idValue = document.getElementById('order-id').value.trim();
+                let employeeNameValue = document.getElementById('employee-name').value.trim().toUpperCase();
+                let tableNumberValue = document.getElementById('table-number').value.trim();
+                let orderDateValue = document.getElementById('order-date').value.trim();
                 // Search Filter
-                if (searchValue !== '')
-                    ordersData = ordersData.filter(order => order.orderId.toLocaleString().includes(searchValue)
-                        || order.userFullname.toUpperCase().includes(searchValue)
-                        || order.numberTable.toLocaleString().toUpperCase().includes(searchValue)
-                        || order.orderTotal.toLocaleString().toUpperCase().includes(searchValue)
-                    );
-
+                console.log(ordersData[0].orderDate, formatDateSort(ordersData[0].orderDate), orderDateValue)
+                ordersData = ordersData.filter(order => order.orderId.toLocaleString().includes(idValue)
+                    && order.userFullname.toUpperCase().includes(employeeNameValue)
+                    && order.numberTable.toLocaleString().toUpperCase().includes(tableNumberValue)
+                    && formatDateSort(order.orderDate).toUpperCase().includes(orderDateValue));
+                // Search Filter
+              
                 // Payment status Filter
                 if (statusValue !== 'All')
                     ordersData = ordersData.filter(order => order.paymentStatus === statusValue);
