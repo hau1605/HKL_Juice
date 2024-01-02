@@ -268,6 +268,7 @@
                                            class="table app-table-hover mb-0 text-left">
                                         <thead>
                                             <tr>
+                                                <th class="cell">STT</th>
                                                 <th class="cell">ID</th>
                                                 <th class="cell">Hóa đơn</th>
                                                 <th class="cell">Số bàn</th>
@@ -591,11 +592,12 @@
                 const start = (page - 1) * rowsPerPage;
                 const end = start + rowsPerPage;
                 const paginatedItems = ordersData.slice(start, end);
-                paginatedItems.forEach(order => {
+                paginatedItems.forEach((order,index) => {
                     let statusClass = order.paymentStatus === 'Đã thanh toán' ? 'bg-success' : (order.paymentStatus === 'Đang chờ' ? 'bg-warning' : 'bg-danger')
                     let orderString = JSON.stringify(order).replace(/"/g, '&quot;');
                     let row =`
                         <tr>
+                            <td class="cell">${index+1}</td>
                             <td class="cell">#${order.orderId}</td>
                             <td class="cell" ><a class="btn-sm app-btn-secondary" style="cursor:pointer" data-bs-toggle="modal" data-bs-target="#orderDetailModal" onclick="getDetail(${orderString})">Xem chi tiết</a></td>
                             <td class="cell">${order.numberTable}</td>

@@ -90,6 +90,7 @@ namespace HKL_Juice.Routes
                         ProductName = g.Key,
                         QuantitySold = g.Sum(od => od.quantity)
                     })
+                    .OrderByDescending(item => item.QuantitySold)
                     .ToList();
                 var data = new
                 {
