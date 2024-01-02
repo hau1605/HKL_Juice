@@ -433,7 +433,7 @@ namespace HKL_Juice.Routes
             });
 
             // Settings === Category
-            Get("/admin/settings", parameters =>
+            Get("/admin/categories", parameters =>
             {
                 var categories = dbContext.Category
                                         .Select(c => new
@@ -445,7 +445,7 @@ namespace HKL_Juice.Routes
 
                 var serializer = new JavaScriptSerializer();
                 string json = serializer.Serialize(categories);
-                return View["setting.cshtml", json];
+                return View["categoryAdmin.cshtml", json];
             });
             Post("/admin/categories", parameters =>
             {

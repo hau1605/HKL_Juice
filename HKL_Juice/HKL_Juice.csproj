@@ -2610,7 +2610,7 @@
     <Content Include="Views\orderAdmin.cshtml" />
     <Content Include="Views\cart.cshtml" />
     <Content Include="Views\userAdmin.cshtml" />
-    <Content Include="Views\setting.cshtml" />
+    <Content Include="Views\categoryAdmin.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationDbContext.cs" />
