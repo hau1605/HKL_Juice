@@ -18,7 +18,7 @@ namespace HKL_Juice.Routes
                 return View["index.cshtml"];
             }
             );*/
-            Get("/", parameters => {
+            /*Get("/", parameters => {
 
                 var products = dbContext.Product
                    .Select(p => new
@@ -36,7 +36,7 @@ namespace HKL_Juice.Routes
                 string json = serializer.Serialize(products);
 
                 return View["home.cshtml", json];
-            });
+            });*/
         }
     }
 }

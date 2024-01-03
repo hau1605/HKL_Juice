@@ -48,16 +48,16 @@
                             </button>
                             <div class="collapse navbar-collapse" id="navbarsExample04">
                                 <ul class="navbar-nav mr-auto">
-                                    <li class="nav-item ">
+                                    @*<li class="nav-item ">
                                         <a class="nav-link font-weight-bold" href="/">Trang chủ</a>
-                                    </li>
+                                    </li>*@
                                     <li class="nav-item ">
-                                        <a class="nav-link font-weight-bold" href="/juice">Đặt hàng</a>
+                                        <a class="nav-link font-weight-bold" href="/">Đặt hàng</a>
                                     </li>
                                     <li class="nav-item ">
                                         <a class="nav-link font-weight-bold" href="/about">Về chúng tôi</a>
                                     </li>
-                                    <li class="nav-item">
+                                    <li class="nav-item active">
                                         <a class="cart-container nav-link font-weight-bold" href="/cart">
                                             <i class="bi bi-cart" aria-hidden="true">
                                                 <span id="cart-count" class="cart-count">0</span>
@@ -81,7 +81,7 @@
         <div class="empty-product">
             <h2 class="empty-product_title">Không có sản phẩm nào trong giỏ hàng</h2>
             <img src="~/Content/images/shoppingCart.png" alt="Shopping Cart" class="empty-product_image" />
-            <a href="juice" class="empty-product_button">Chọn sản phẩm</a>
+            <a href="/" class="empty-product_button">Chọn sản phẩm</a>
         </div>
 
         <div class="cart-page_container-products">
@@ -98,15 +98,17 @@
                 <div class="cart-item" id="cartItemsContainer"></div>
             </div>
             <div class="d-flex pt-3 justify-content-end" style="margin: 0 20px;">
-                <select id="selectNumberTable" class="m-2 px-4">
-                    <option value="1" selected>Bàn 1</option>
-                    <option value="2">Bàn 2</option>
-                    <option value="3">Bàn 3</option>
-                    <option value="4">Bàn 4</option>
-                    <option value="5">Bàn 5</option>
-                </select>
-                <button class="btn btn-danger p-2 m-2 delete-cart" onclick="clearCart()">Xóa giỏ hàng</button>
-                <button class="btn btn-primary p-2 m-2" onclick="handleOrderProducts()">Thanh toán</button>
+                <button data-bs-toggle="modal"
+                        data-bs-target="#deleteCartModal"
+                        class="btn btn-danger p-2 m-2 delete-cart" >
+                    Xóa giỏ hàng
+                </button>
+                <button data-bs-toggle="modal"
+                        data-bs-target="#handleOrderModal"
+                        class="btn btn-primary p-2 m-2"
+                        onclick="confirmOrder()">
+                    Thanh toán
+                </button>
             </div>
         </div>
     </div>
@@ -174,8 +176,91 @@
     </footer>
 
     <div id="toast-container" class="toast-container position-fixed end-0 p-3" style="z-index: 1000; top: 46px;"></div>
+    @*Modal order*@
+    <div class="modal fade" id="handleOrderModal" tabindex="-1" aria-labelledby="handleOrderModalLable"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="handleOrderModalLable">
+                        Thông báo
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="card account-card">
+                        <div style="vertical-align: middle;"
+                             class="table d-flex my-4 border-0 flex-column align-items-center">
+                            <h6>Bạn xác nhận đặt đơn hàng này?</h6>
+                            <table class="cart-item">
+                                <thead>
+                                    <tr>
+                                        <td>Tên</td>
+                                        <td>Số lượng</td>
+                                        <td>Tổng</td>
+                                    </tr>
+                                </thead>
+                                <tbody id="handleOrderModalBody">
 
-
+                                </tbody>
+                            </table>
+                            <div class="cart-item d-flex align-content-end" id="handleOrderModalBodyTotal"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" id="handleOrderModalFooter">
+                    <button type="button"
+                            class="btn btn-secondary"
+                            data-bs-dismiss="modal">
+                        Quay lại
+                    </button>
+                    <button type="button"
+                            class="btn btn-success"
+                            style="width:120px"
+                            id="btn-handleOrderProducts"
+                            onclick="handleOrderProducts()">
+                        Đồng ý
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*Modal delete all product*@
+    <div class="modal fade" id="deleteCartModal" tabindex="-1" aria-labelledby="deleteCartModalLable"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteCartModalLable">
+                        Cảnh báo
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="card account-card">
+                        <p style="vertical-align: middle;"
+                           class="table d-flex my-4 border-0 flex-column align-items-center"
+                           id="deleteCartModalBody">
+                            Bạn xác nhận xóa toàn bộ sản phẩm?
+                        </p>
+                    </div>
+                </div>
+                <div class="modal-footer" id="deleteCartModalFooter">
+                    <button type="button"
+                            class="btn btn-secondary"
+                            data-bs-dismiss="modal">
+                        Quay lại
+                    </button>
+                    <button type="button"
+                            class="btn btn-danger"
+                            data-bs-dismiss="modal"
+                            onclick="clearCart()">
+                        Đồng ý
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
     <script type="text/javascript">
@@ -260,7 +345,9 @@
         }
         function deleteCartItem(productId) {
             let cartItems = loadCartItemsFromLocalStorage();
+            cartItemDeleted = cartItems.filter(item => item.productId === productId);
             cartItems = cartItems.filter(item => item.productId !== productId);
+            createAndShowToast(`Đã xóa sản phẩm ${cartItemDeleted[0].productName}!`, "bg-warning");
             localStorage.setItem("cart", JSON.stringify(cartItems));
             updateCartCount();
             updateCartDisplay();
@@ -269,7 +356,7 @@
         // Delete all cart
         function clearCart() {
             localStorage.removeItem("cart");
-            createAndShowToast("Đã xóa toàn bộ giỏ hàng!", "bg-info");
+            createAndShowToast("Đã xóa toàn bộ giỏ hàng!", "bg-warning");
             updateCartCount();
             updateCartDisplay();
         }
@@ -305,14 +392,38 @@
                 toastElement.remove();
             });
         }
-        @* Xử lý nhấn nút đặt hàng*@
-        document.getElementById('selectNumberTable').addEventListener('change', function () {
-            var selectedNumberTable = this.value;
-            localStorage.setItem('NumberTable', selectedNumberTable);
-        });
-        function handleOrderProducts() {
+        @*confirmOrder*@
+        function confirmOrder() {
             let orderDetails = loadCartItemsFromLocalStorage();
-            let selectedNumberTable = parseInt(localStorage.getItem("NumberTable"));
+            let orderTotal = calculateOrderTotal(orderDetails);
+
+            document.getElementById("handleOrderModalBodyTotal").innerHTML = `
+                <div>Tổng tiền: ${Number(orderTotal).toLocaleString("vi-VN")} đ</div>
+            `;
+            const modalBody = document.getElementById("handleOrderModalBody");
+            modalBody.innerHTML = "";
+
+            orderDetails.forEach(item => {
+                const totalPrice = item.price * item.quantity;
+
+                const itemElement = document.createElement('tr');
+                itemElement.innerHTML = `
+                    <td>${item.productName}</td>
+                    <td>${item.quantity}</td>
+                    <td>${Number(totalPrice).toLocaleString("vi-VN")} đ</td>
+                `;
+                modalBody.appendChild(itemElement);
+            });            
+        }
+        //@* Xử lý nhấn nút đặt hàng*@
+        function handleOrderProducts() {
+            const btnHandleOrderProducts = document.getElementById("btn-handleOrderProducts");
+            btnHandleOrderProducts.innerHTML = `
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Loading...
+            `;
+            let orderDetails = loadCartItemsFromLocalStorage();
+            let selectedNumberTable = 6;
             if (!selectedNumberTable) {
                 selectedNumberTable = 1;
             }
@@ -335,6 +446,7 @@
                 body: JSON.stringify(requestOrderDetails),
             })
                 .then((response) => {
+                    btnHandleOrderProducts.innerHTML = `Đồng ý`;
                     if (response.ok) {
                         localStorage.removeItem("cart");
                         localStorage.removeItem("NumberTable");

@@ -12,7 +12,7 @@ namespace HKL_Juice.Routes
     {
         public JuiceRoute(ApplicationDbContext dbContext)
         {
-            Get("/juice", parameters =>
+            Get("/", parameters =>
             {
                 var products = dbContext.Product
                    .Select(p => new
