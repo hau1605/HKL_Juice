@@ -241,6 +241,19 @@
     <Content Include="Content\assets\images\doc-thumb-2.jpg" />
     <Content Include="Content\assets\images\HKL_logo.png" />
     <Content Include="Content\assets\images\portal-logo.svg" />
+    <Content Include="Content\assets\images\product\BlackCoffee.jpg" />
+    <Content Include="Content\assets\images\product\cafemocha.jpg" />
+    <Content Include="Content\assets\images\product\MilkCoffee.jpg" />
+    <Content Include="Content\assets\images\product\nuoc-ep-cam.png" />
+    <Content Include="Content\assets\images\product\nuoc-ep-luu.jpg" />
+    <Content Include="Content\assets\images\product\nuoc-ep-oi.jpg" />
+    <Content Include="Content\assets\images\product\nuoc-ep-tao.jpg" />
+    <Content Include="Content\assets\images\product\nuoc-ep-vai.jpg" />
+    <Content Include="Content\assets\images\product\tra-buoi.jpg" />
+    <Content Include="Content\assets\images\product\tra-chanh.jpg" />
+    <Content Include="Content\assets\images\product\tra-hoa-cuc.jpg" />
+    <Content Include="Content\assets\images\product\tra-lipton.jpg" />
+    <Content Include="Content\assets\images\product\tra-olong.jpg" />
     <Content Include="Content\assets\images\profiles\profile-1.png" />
     <Content Include="Content\assets\images\profiles\profile-2.png" />
     <Content Include="Content\assets\images\profiles\profile-3.png" />
@@ -2591,6 +2604,10 @@
     <Content Include="Content\assets\scss\bootstrap\scss\_variables.scss" />
     <Content Include="Content\assets\scss\config.codekit3" />
     <Content Include="Content\assets\scss\portal.scss" />
+    <Content Include="Content\assets\images\product\EggCoffee.webp" />
+    <Content Include="Content\assets\images\product\latte.webp" />
+    <Content Include="Content\assets\images\product\nuoc-ep-thom.webp" />
+    <Content Include="Content\assets\images\product\tra-gung.webp" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

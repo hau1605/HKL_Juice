@@ -11,6 +11,8 @@
 
     <meta name="description" content="HKL Juice Admin">
     <link rel="shortcut icon" href="~/Content/assets/images/HKL_logo.png">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.3.2/html2canvas.min.js"></script>
 
 
     <!-- FontAwesome JS-->
@@ -155,7 +157,7 @@
                             </a><!--//nav-link-->
                         </li><!--//nav-item-->
 
-
+                       
 
                     </ul><!--//app-menu-->
                 </nav><!--//app-nav-->
@@ -318,7 +320,7 @@
                         <h5 class="modal-title" id="orderDetailModalLabel">Chi tiết hóa đơn</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body">
+                    <div class="modal-body" id="pdfExport">
                         <div class="card order-card">
                             <div id="orderDetailCardHead"
                                  style="display: flex; justify-content: space-between;align-items: center;"
@@ -327,7 +329,6 @@
                             <div class="card-body">
                                 <div id="orderDetailCardBody">
                                 </div>
-
                                 <table style="text-align:center" class="table" id="orderTbody">
                                     <thead>
                                         <tr>
@@ -350,6 +351,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                        <button class="btn btn-primary" onclick="exportModalToPDF()">Xuất PDF</button>
                     </div>
                 </div>
             </div>
@@ -599,7 +601,7 @@
                         <tr>
                             <td class="cell">${index+1}</td>
                             <td class="cell">#${order.orderId}</td>
-                            <td class="cell" ><a class="btn-sm app-btn-secondary" style="cursor:pointer" data-bs-toggle="modal" data-bs-target="#orderDetailModal" onclick="getDetail(${orderString})">Xem chi tiết</a></td>
+                            <td class="cell" ><a class="btn-sm app-btn-secondary" style="cursor:pointer" data-bs-toggle="modal" data-bs-target="#orderDetailModal" onclick="getDetail(${orderString})">Xem / Xuất</a></td>
                             <td class="cell">${order.numberTable}</td>
                             <td class="cell">${order.userFullname}</td>
                             <td class="cell"><span>${convertToDate(order.orderDate)}</span><span class="note">${convertToTime(order.orderDate)}</span></td>
@@ -684,7 +686,7 @@
                     && order.numberTable.toLocaleString().toUpperCase().includes(tableNumberValue)
                     && formatDateSort(order.orderDate).toUpperCase().includes(orderDateValue));
                 // Search Filter
-              
+
                 // Payment status Filter
                 if (statusValue !== 'All')
                     ordersData = ordersData.filter(order => order.paymentStatus === statusValue);
@@ -745,7 +747,7 @@
                     ellipsisItem.innerHTML = `<span class="page-link">...</span>`;
                     paginationElement.insertBefore(ellipsisItem, paginationElement.querySelector('#nextPage'));
                 }
-               
+
 
             }
 
@@ -777,111 +779,111 @@
             window.location.href = '/admin/login'
         else if (JSON.parse(localStorage.getItem('loginUser')).roleName === 'Admin') {
             document.getElementById('user_nav').innerHTML = `
-                    <a class="nav-link " href="/admin/users" >
-                        <span class="nav-icon">
-                            <svg width="24px" height="24px" viewBox="0 0 24.00 24.00"  class="bi bi-card-list" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                                <g id="SVGRepo_iconCarrier">
-                                    <path d="M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z"
-                                        stroke="currentColor" stroke-width="1.392" stroke-linecap="round"
-                                        stroke-linejoin="round"></path>
-                                    <path d="M12 14C8.13401 14 5 17.134 5 21H19C19 17.134 15.866 14 12 14Z"
-                                        stroke="currentColor" stroke-width="1.392" stroke-linecap="round"
-                                        stroke-linejoin="round"></path>
-                                </g>
-                            /svg>
-                        </span>
-                        <span class="nav-link-text">Người dùng</span>
-                    </a><!--//nav-link-->	`
+                                    <a class="nav-link " href="/admin/users" >
+                                        <span class="nav-icon">
+                                            <svg width="24px" height="24px" viewBox="0 0 24.00 24.00"  class="bi bi-card-list" fill="none"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                                <g id="SVGRepo_iconCarrier">
+                                                    <path d="M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z"
+                                                        stroke="currentColor" stroke-width="1.392" stroke-linecap="round"
+                                                        stroke-linejoin="round"></path>
+                                                    <path d="M12 14C8.13401 14 5 17.134 5 21H19C19 17.134 15.866 14 12 14Z"
+                                                        stroke="currentColor" stroke-width="1.392" stroke-linecap="round"
+                                                        stroke-linejoin="round"></path>
+                                                </g>
+                                            /svg>
+                                        </span>
+                                        <span class="nav-link-text">Người dùng</span>
+                                    </a><!--//nav-link-->	`
         }
 
 
         //Hiển thị Modal Xem chi tiết
         function getDetail(orderS) {
             document.getElementById('orderDetailCardHead').innerHTML = `
-                     <h5 style="margin: 0;" class="card-title">Mã Hóa Đơn: #${orderS.orderId} </h5>
-                     <h6 style="margin: 0;" class="card-title">Ngày: ${convertToDateTime(orderS.orderDate)}</h6>
-                    `
+                                     <h5 style="margin: 0;" class="card-title">Mã Hóa Đơn: #${orderS.orderId} </h5>
+                                     <h6 style="margin: 0;" class="card-title">Ngày: ${convertToDateTime(orderS.orderDate)}</h6>
+                                    `
             document.getElementById('orderDetailCardBody').innerHTML = `
-                      <p style="text-align: right;" class="card-text">Trạng Thái: ${orderS.paymentStatus}</p>
-                      <p style="text-align: right;" class="card-text">Phương Thức: ${orderS.paymentMethod}</p>
-                      <p style="text-align: right;" class="card-text">Số bàn: ${orderS.numberTable}</p>
-                      <p style="text-align: right;" class="card-text">Nhân Viên: ${orderS.userFullname}</p>
-                `
+                                      <p style="text-align: right;" class="card-text">Trạng Thái: ${orderS.paymentStatus}</p>
+                                      <p style="text-align: right;" class="card-text">Phương Thức: ${orderS.paymentMethod}</p>
+                                      <p style="text-align: right;" class="card-text">Số bàn: ${orderS.numberTable}</p>
+                                      <p style="text-align: right;" class="card-text">Nhân Viên: ${orderS.userFullname}</p>
+                                `
             const tableBody = document.getElementById('orderTableBody');
             tableBody.innerHTML = ''
             orderS.OrderDetails.forEach(order => {
                 let row = `
-                        <tr valign='middle' >
-                            <td><img style="width:70px;height:70px;border-radius:20%;box-shadow:2px 2px 3px gray" src="${order.imgUrl}" alt="Product Image" class="product-img"></td>
-                                <td class="product-name">${order.productName}</td>
-                                <td>${order.quantity}</td>
-                                <td>${order.subTotal.toLocaleString('vi-VN', {
+                                        <tr valign='middle' >
+                                            <td><img class="img-pdf" style="width:70px;height:70px;border-radius:20%;box-shadow:2px 2px 3px gray" src="${order.imgUrl}" alt="Product Image" class="product-img"></td>
+                                                <td class="product-name">${order.productName}</td>
+                                                <td>${order.quantity}</td>
+                                                <td>${order.subTotal.toLocaleString('vi-VN', {
                     style: 'currency',
                     currency: 'VND'
                 })}</td>
-                        </tr>`
+                                        </tr>`
                 tableBody.innerHTML += row;
             });
 
             document.getElementById('orderTableFoot').innerHTML = `
-                            <tr>
-                                <th colspan="3" style="text-align: right;">Tổng Tiền</th>
-                                <th>${orderS.orderTotal.toLocaleString('vi-VN', {
+                                            <tr>
+                                                <th colspan="3" style="text-align: right;">Tổng Tiền</th>
+                                                <th>${orderS.orderTotal.toLocaleString('vi-VN', {
                 style: 'currency',
                 currency: 'VND'
             })}</th>
-                            </tr>`
+                                            </tr>`
 
         }
 
         //Hiển thị Modal Edit Hóa đơn
         function getEditDetail(orderS) {
             document.getElementById('EditOrderCardHead').innerHTML = `
-                         <h5 style="margin: 0;" class="card-title">Mã Hóa Đơn: #${orderS.orderId}</h5>
-                         <h6 style="margin: 0;" class="card-title">Ngày: ${convertToDateTime(orderS.orderDate)}</h6>
-                    `
-            if (orderS.userId !== user.userId&&orderS.userId!==1 &&  user.roleName !== 'Admin') {
+                                         <h5 style="margin: 0;" class="card-title">Mã Hóa Đơn: #${orderS.orderId}</h5>
+                                         <h6 style="margin: 0;" class="card-title">Ngày: ${convertToDateTime(orderS.orderDate)}</h6>
+                                    `
+            if (orderS.userId !== user.userId && orderS.userId !== 1 && user.roleName !== 'Admin') {
                 document.getElementById('EditOrderCardBody').innerHTML = `
-                          <p style="text-align: right;" class="card-text">Trạng Thái: ${orderS.paymentStatus}</p>
-                          <p style="text-align: right;" class="card-text">Phương Thức: ${orderS.paymentMethod}</p>
-                          <p style="text-align: right;" class="card-text">Số bàn: ${orderS.numberTable}</p>
-                          <p style="text-align: right;" class="card-text">Nhân Viên: ${orderS.userFullname}</p>
-                    `
+                                          <p style="text-align: right;" class="card-text">Trạng Thái: ${orderS.paymentStatus}</p>
+                                          <p style="text-align: right;" class="card-text">Phương Thức: ${orderS.paymentMethod}</p>
+                                          <p style="text-align: right;" class="card-text">Số bàn: ${orderS.numberTable}</p>
+                                          <p style="text-align: right;" class="card-text">Nhân Viên: ${orderS.userFullname}</p>
+                                    `
                 document.getElementById("EditOrderModelFooter").innerHTML = `
-                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                          `
+                                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                                          `
             } else {
                 let orderString = JSON.stringify(orderS).replace(/"/g, '&quot;');
 
                 document.getElementById("EditOrderModelFooter").innerHTML = `
-                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                             <button type="button" class="btn btn-primary" onclick="handleEditOrder(${orderString})">Sửa hóa đơn</button>
-                       `
+                                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                                             <button type="button" class="btn btn-primary" onclick="handleEditOrder(${orderString})">Sửa hóa đơn</button>
+                                       `
                 document.getElementById('EditOrderCardBody').innerHTML =
                     `<div style="display: flex;align-items: center;justify-content: flex-end;">
-                            <p style="text-align: right;margin: 0 6px;" class="card-text">Trạng Thái: </p>
-                                <select name="paymentStatus" id="selPaymentStatus">
-                                    <option  value="Đang chờ">Đang chờ</option>
-                                    <option value="Đã thanh toán">Đã thanh toán</option>
-                                    <option value="Đã hủy">Đã hủy</option>
-                                </select>
-                        </div>
-                        <div style="margin: 18px 0px 10px;display: flex;align-items: center;justify-content: flex-end;">
-                            <p style="text-align: right;margin: 0px 6px;" class="card-text">Phương Thức: </p>
-                                <select name="paymentMethod" id="selPaymentMethod">
-                                    <option value="Tiền mặt">Tiền mặt</option>
-                                    <option value="Momo">Momo</option>
-                                    <option value="Thẻ tín dụng">Thẻ tín dụng</option>
-                                </select>
-                        </div>
-                        <p style="text-align: right;" class="card-text">Số bàn: ${orderS.numberTable}</p>
-                        <p style="text-align: right;" class="card-text">Nhân Viên: ${user.userFullname}</p>`
+                                            <p style="text-align: right;margin: 0 6px;" class="card-text">Trạng Thái: </p>
+                                                <select name="paymentStatus" id="selPaymentStatus">
+                                                    <option  value="Đang chờ">Đang chờ</option>
+                                                    <option value="Đã thanh toán">Đã thanh toán</option>
+                                                    <option value="Đã hủy">Đã hủy</option>
+                                                </select>
+                                        </div>
+                                        <div style="margin: 18px 0px 10px;display: flex;align-items: center;justify-content: flex-end;">
+                                            <p style="text-align: right;margin: 0px 6px;" class="card-text">Phương Thức: </p>
+                                                <select name="paymentMethod" id="selPaymentMethod">
+                                                    <option value="Tiền mặt">Tiền mặt</option>
+                                                    <option value="Momo">Momo</option>
+                                                    <option value="Thẻ tín dụng">Thẻ tín dụng</option>
+                                                </select>
+                                        </div>
+                                        <p style="text-align: right;" class="card-text">Số bàn: ${orderS.numberTable}</p>
+                                        <p style="text-align: right;" class="card-text">Nhân Viên: ${user.userFullname}</p>`
 
             }
-            if (orderS.userId === user.userId ) {
+            if (orderS.userId === user.userId) {
                 document.getElementById('selPaymentStatus').value = orderS.paymentStatus;
                 document.getElementById('selPaymentMethod').value = orderS.paymentMethod;
             }
@@ -889,27 +891,27 @@
             tableBody.innerHTML = ''
             orderS.OrderDetails.forEach(order => {
                 let row = `
-                                                                                                <tr valign='middle' >
-                                                                                                    <td><img style="width:70px;height:70px;border-radius:20%;box-shadow:2px 2px 3px gray" src="${order.imgUrl}" alt="Product Image" class="product-img"></td>
-                                                                                                    <td class="product-name">${order.productName}</td>
-                                                                                                    <td>${order.quantity}</td>
-                                                                                                    <td>${order.subTotal.toLocaleString('vi-VN', {
+                                                                                                                <tr valign='middle' >
+                                                                                                                    <td><img style="width:70px;height:70px;border-radius:20%;box-shadow:2px 2px 3px gray" src="${order.imgUrl}" alt="Product Image" class="product-img"></td>
+                                                                                                                    <td class="product-name">${order.productName}</td>
+                                                                                                                    <td>${order.quantity}</td>
+                                                                                                                    <td>${order.subTotal.toLocaleString('vi-VN', {
                     style: 'currency',
                     currency: 'VND'
                 })}</td>
-                                                                                                </tr>`
+                                                                                                                </tr>`
                 tableBody.innerHTML += row;
             });
 
             document.getElementById('EditOrderTableFoot').innerHTML = `
-                                                                                            <tr>
-                                                                                                <th colspan="3" style="text-align: right;">Tổng Tiền</th>
-                                                                                                <th>${orderS.orderTotal.toLocaleString('vi-VN', {
+                                                                                                            <tr>
+                                                                                                                <th colspan="3" style="text-align: right;">Tổng Tiền</th>
+                                                                                                                <th>${orderS.orderTotal.toLocaleString('vi-VN', {
                 style: 'currency',
                 currency: 'VND'
             })}</th>
-                                                                                            </tr>
-                                                                                        `
+                                                                                                            </tr>
+                                                                                                        `
         }
 
         // Hàm lưu edit hóa đơn lên server
@@ -944,25 +946,25 @@
         //Hiển thị Modal Xóa Hóa đơn
         function openDelete(orderS) {
             document.getElementById('DeleteOrderCardHead').innerHTML = `
-                                                                                            <h5 style="margin: 0;" class="card-title">Mã Hóa Đơn: #${orderS.orderId}</h5>
-                                                                                            <h6 style="margin: 0;" class="card-title">Ngày: ${convertToDateTime(orderS.orderDate)}</h6>
-                                                                                        `
+                                                                                                            <h5 style="margin: 0;" class="card-title">Mã Hóa Đơn: #${orderS.orderId}</h5>
+                                                                                                            <h6 style="margin: 0;" class="card-title">Ngày: ${convertToDateTime(orderS.orderDate)}</h6>
+                                                                                                        `
             if (orderS.userId !== user.userId && orderS.userId !== "" && user.roleName !== 'Admin') {
                 document.getElementById('DeleteOrderCardBody').innerHTML = `
-                                                                                            <p style="text-align: right;" class="card-text">Chỉ có Admin có thể xóa hóa đơn của người khác</p>
-                                                                                        `
+                                                                                                            <p style="text-align: right;" class="card-text">Chỉ có Admin có thể xóa hóa đơn của người khác</p>
+                                                                                                        `
                 document.getElementById("DeleteOrderModelFooter").innerHTML = `
-                                                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                                                                                            `
+                                                                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                                                                                                            `
             } else {
                 let orderString = JSON.stringify(orderS).replace(/"/g, '&quot;');
 
                 document.getElementById("DeleteOrderModelFooter").innerHTML = `
-                                                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                                                                                                <button type="button" class="btn btn-danger" onclick="handleDeleteOrder(${orderString})">Xóa hóa đơn</button>
-                                                                                            `
+                                                                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                                                                                                                <button type="button" class="btn btn-danger" onclick="handleDeleteOrder(${orderString})">Xóa hóa đơn</button>
+                                                                                                            `
                 document.getElementById('DeleteOrderCardBody').innerHTML = `<div style="display: flex;align-items: center;justify-content: flex-end;">
-                                                                                                <p style="text-align: right;" class="card-text">Bạn có chắc chắn muốn xóa hóa đơn này không?</p>`
+                                                                                                                <p style="text-align: right;" class="card-text">Bạn có chắc chắn muốn xóa hóa đơn này không?</p>`
 
             }
 
@@ -990,10 +992,52 @@
                 .catch(error => console.error("An error occurred:", error));
         }</script>
 
+    <script>
+        function allImagesLoaded(element) {
+            console.log(element.getElementsByTagName('img'))
+            return Array.from(element.getElementsByTagName('img')).every(img => img.complete && img.naturalHeight !== 0);
+        }
 
+        function exportModalToPDF() {
+            const element = document.getElementById('pdfExport'); // Select the modal element
+            if (allImagesLoaded(element)) {
+                // If all images are loaded, proceed with html2canvas
+                html2canvas(element, {
+                    logging: true, // Enable logging for debugging
+                    useCORS: false, // Enable CORS for loading images from external sources
+                    onclone: function (documentClone) {
+                        // This is to handle any specific changes you need in the clone that html2canvas creates
+                    }
+                }).then(canvas => {
+                    // Code to generate PDF
+                    const imgData = canvas.toDataURL('image/png');
+                    const pdf = new jspdf.jsPDF({
+                        orientation: 'portrait',
+                    });
+
+                    // Adjust these values as necessary to fit your content
+                    const imgWidth = 210; // Example width in mm
+                    const pageHeight = 295;  // Example height in mm
+                    let heightLeft = imgWidth * canvas.height / canvas.width;
+                    let position = 0;
+
+                    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, heightLeft);
+                    pdf.save('order-details.pdf');
+                });
+            } else {
+                console.error("Images not fully loaded. Waiting for images to load and trying again...");
+                setTimeout(() => exportModalToPDF(), 5000); // Wait for 5 seconds and try again
+            }
+        }
+
+// You can call exportModalToPDF() when you need to export the PDF
+
+    </script>
     <!-- Javascript -->
     <script src="~/Content/assets/plugins/popper.min.js"></script>
     <script src="~/Content/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.3.2/html2canvas.min.js"></script>
 
 
     <!-- Page Specific JS -->
