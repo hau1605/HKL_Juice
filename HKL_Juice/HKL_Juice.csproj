@@ -243,6 +243,7 @@
     <Content Include="Content\assets\images\portal-logo.svg" />
     <Content Include="Content\assets\images\product\BlackCoffee.jpg" />
     <Content Include="Content\assets\images\product\cafemocha.jpg" />
+    <Content Include="Content\assets\images\product\capuchino.jpg" />
     <Content Include="Content\assets\images\product\MilkCoffee.jpg" />
     <Content Include="Content\assets\images\product\nuoc-ep-cam.png" />
     <Content Include="Content\assets\images\product\nuoc-ep-luu.jpg" />
@@ -2608,6 +2609,14 @@
     <Content Include="Content\assets\images\product\latte.webp" />
     <Content Include="Content\assets\images\product\nuoc-ep-thom.webp" />
     <Content Include="Content\assets\images\product\tra-gung.webp" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
+    <None Include="Properties\PublishProfiles\IISProfile.pubxml" />
+    <None Include="Properties\PublishProfiles\IISProfile1.pubxml" />
+    <None Include="Properties\PublishProfiles\IISProfile2.pubxml" />
+    <None Include="Properties\PublishProfiles\IISProfile3.pubxml" />
+    <None Include="Properties\PublishProfiles\IISProfile4.pubxml" />
+    <None Include="Properties\PublishProfiles\zzwanhhay666-001-site1 - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\zzwanhhay666-001-site1 - Web Deploy.pubxml" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
