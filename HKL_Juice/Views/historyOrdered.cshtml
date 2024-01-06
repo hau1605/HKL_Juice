@@ -1,0 +1,284 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <title>HKL Juice</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="stylesheet" href="~/Content/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/Content/css/style.css">
+    <link rel="stylesheet" href="~/Content/css/responsive.css">
+    <link rel="stylesheet" href="~/Content/css/jquery.mCustomScrollbar.min.css">
+    <link rel="icon" href="~/Content/images/con_top.png" type="image/gif" />
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nouislider/distribute/nouislider.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/nouislider/distribute/nouislider.min.js"></script>
+
+</head>
+<body class="main-layout inner_page">
+    <header>
+        <div class="header">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3 col logo_section">
+                        <div class="full">
+                            <div class="center-desk">
+                                <div class="logo">
+                                    <a href="/">
+                                        <img src="~/Content/images/logoHKLJuice.png" alt="logo"
+                                             style="height:60px" />
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-9 col-lg-9 col-md-9 col-sm-9">
+                        <nav class="navigation navbar navbar-expand-md navbar-dark" id="main-nav">
+                            <button class="navbar-toggler" type="button" data-toggle="collapse"
+                                    data-target="#navbarsExample04" aria-controls="navbarsExample04" aria-expanded="false"
+                                    aria-label="Toggle navigation">
+                                <span class="navbar-toggler-icon"></span>   
+                            </button>
+                            <div class="collapse navbar-collapse" id="navbarsExample04">
+                                <ul class="navbar-nav mr-auto">
+                                    @*<li class="nav-item ">
+                                            <a class="nav-link font-weight-bold" href="/">Trang chủ</a>
+                                        </li>*@
+                                    <li class="nav-item ">
+                                        <a class="nav-link font-weight-bold" href="/">Đặt hàng</a>
+                                    </li>
+                                    <li class="nav-item ">
+                                        <a class="nav-link font-weight-bold active" href="/history">Đơn hàng</a>
+                                    </li>
+                                    <li class="nav-item ">
+                                        <a class="nav-link font-weight-bold" href="/about">Về chúng tôi</a>
+                                    </li>
+                                    <li class="nav-item ">
+                                        <a class="cart-container nav-link font-weight-bold" href="/cart">
+                                            <i class="bi bi-cart" aria-hidden="true">
+                                                <span id="cart-count" class="cart-count">0</span>
+                                            </i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    @*================================================================================*@
+    @*================================================================================*@
+<div class="cart-page_container">
+    <div class="empty-product">
+        <h2 class="empty-product_title">Bạn chưa đặt hàng</h2>
+        <img src="~/Content/images/shoppingCart.png" alt="Shopping Cart" class="empty-product_image" />
+        <a href="/" class="empty-product_button">Chọn sản phẩm</a>
+    </div>
+
+    <div class="cart-page_container-products">
+        <div>
+            <h1 class="text-center pb-3 font-weight-bold">Đơn hàng đã đặt</h1>
+            <div id="infoOrder"></div>
+        </div>
+        <div class="cartForPC">
+            <div class="cart-heading grid grid-five-column">
+                <p class="cart-hide font-weight-bold">Sản phẩm</p>
+                <p class="cart-hide font-weight-bold">Giá</p>
+                <p class="cart-hide font-weight-bold">Số lượng</p>
+                <p class="cart-hide font-weight-bold">Tổng tiền</p>
+                @*<p class="cart-hide font-weight-bold"></p>*@
+            </div>
+            <hr class="m-0">
+            <div class="cart-item" id="cartItemsContainer"></div>
+        </div>
+    </div>
+</div>
+    @*================================================================================*@
+    @*================================================================================*@
+    <footer id="contact">
+        <div class="footer">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="titlepage">
+                            <h2>Liên hệ</h2>
+                        </div>
+                    </div>
+                    <div class="col-md-10 offset-md-1">
+                        <form id="request" class="main_form">
+                            <div class="row">
+                                <div class="col-md-12 ">
+                                    <input class="contactus" placeholder="Họ tên" type="text" name="Full Name">
+                                </div>
+                                <div class="col-md-7">
+                                    <input class="contactus" placeholder="Email" type="email" name="Email">
+                                </div>
+                                <div class="col-md-7">
+                                    <input class="contactus" placeholder="Số điện thoại" type="text" name="Phone Number">
+                                </div>
+                                <div class="col-xl-5 col-lg-5 col-md-5 col-sm-12">
+                                    <ul class="social_icon">
+                                        <h3>Theo dõi</h3>
+                                        <li><a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
+                                        <li><a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+                                        <li><a href="#"><i class="fa fa-linkedin-square" aria-hidden="true"></i></a></li>
+                                        <li><a href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a></li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-12">
+                                    <textarea class="contactus1" placeholder="Tin nhắn" type="type" Message="Name"></textarea>
+                                </div>
+                                <div class="col-md-12">
+                                    <button class="send_btn">Gửi</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-md-10 offset-md-1">
+                        <ul class="location_icon">
+                            <li><a href="#"><i class="fa fa-map-marker" aria-hidden="true"></i></a> UIT</li>
+                            <li><a href="#"><i class="fa fa-volume-control-phone" aria-hidden="true"></i></a> +84 987654321</li>
+                            <li><a href="#"><i class="fa fa-envelope" aria-hidden="true"></i></a>hkljuice@gmail.com</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="copyright">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p>Copyright 2023 All Right Reserved By HKL Juice</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <div id="toast-container" class="toast-container position-fixed end-0 p-3" style="z-index: 1000; top: 46px;"></div>
+    
+    <script type="text/javascript">
+        const numberTable = 6;
+        function updateCartCount() {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            let count = cart.reduce((total, item) => total + (item.quantity || 1), 0);
+            let cartCountElement = document.querySelector('.cart-count');
+            if (cartCountElement) {
+                cartCountElement.textContent = count;
+            }
+        }
+        function updateCartDisplay(historyOrdered) {
+            const emptyCartElement = document.querySelector('.empty-product');
+            const cartElement = document.querySelector('.cart-page_container-products');
+
+            if (historyOrdered == null) {
+                emptyCartElement.style.display = 'flex';
+                cartElement.style.display = 'none';
+            } else {
+                emptyCartElement.style.display = 'none';
+                cartElement.style.display = 'block';
+                renderProductOrdered(historyOrdered);
+            }
+        }
+        @*=============================================================================================
+        =========================================PRODUCT ORDERED========================================
+        =============================================================================================*@
+        function fetchProductsOrdered() {
+            try {
+                fetch(`/api/v1/orders/${numberTable}`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Data:', data[0]);
+                    updateCartDisplay(data[0]);
+                })
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        function renderProductOrdered(orderedHistory) {
+            console.log("orderedHistory: ", orderedHistory);
+
+            const paymentStatusClass = orderedHistory.paymentStatus === 'Đang chờ' ? 'text-warning' : (orderedHistory.paymentStatus === 'Đã thanh toán' ? 'text-success' : '');
+            const orderStatusClass = orderedHistory.orderStatus === 'Đơn mới' ? 'text-warning' : (orderedHistory.paymentStatus === 'Đã xác nhận' ? 'text-success' : '');
+            const orderStatus = orderedHistory.orderStatus === 'Đơn mới' ? 'Đã đặt' : (orderedHistory.paymentStatus === 'Đã xác nhận' ? 'Đã tiếp nhận' : '');
+            const infoOrder = document.getElementById('infoOrder');
+            infoOrder.innerHTML = "";
+
+            const infoDiv = document.createElement('div');
+            infoDiv.className = 'd-flex flex-column align-items-center justify-content-center';
+            infoDiv.innerHTML = `
+                <div>
+                    <span class="fw-bold">Tổng tiền: </span>
+                    <span>${Number(orderedHistory.orderTotal).toLocaleString("vi-VN")} đồng</span>
+                </div>
+                <div>
+                    <span class="fw-bold">Trạng thái thanh toán: </span>
+                    <span class="${paymentStatusClass}">${orderedHistory.paymentStatus}</span>
+                </div>
+                <div>
+                    <span class="fw-bold">Trạng thái đơn hàng: </span>
+                    <span class="${orderStatusClass}">${orderStatus}</span>
+                </div>
+            `
+            infoOrder.appendChild(infoDiv);
+
+            const container = document.getElementById('cartItemsContainer');
+            container.innerHTML = '';
+
+            orderedHistory.orderDetails.forEach(item => {
+                const totalPrice = item.price * item.quantity;
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'grid grid-five-column py-1';
+                itemDiv.innerHTML = `
+                    <div class="cart-image-name d-flex">
+                        <image src="${item.imgUrl}" alt="${item.productName}" class="m-0" />
+                        <p class="m-0">${item.productName}</p>
+                    </div>
+                    <div class="cart-hide">
+                        <p class="m-0">${Number(item.price).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</p>
+                    </div>
+                    <div class="cart-btn-quantity">
+                        <span>${item.quantity}</span>
+                    </div>
+                    <div class="cart-hide">
+                        ${Number(totalPrice).toLocaleString("vi-VN")} đ
+                    </div>
+                    @*<div>
+                        <button class="text-danger bg-transparent delete-btn" onclick="deleteCartItem(${item.productId})"><i class="bi bi-trash"></i></button>
+                    </div>*@
+                `;
+
+                container.appendChild(itemDiv);
+            });
+        }
+        document.addEventListener("DOMContentLoaded", function () {
+            fetchProductsOrdered();
+        });
+    </script>
+
+    <!-- Javascript files-->
+    <script src="~/Content/js/jquery.min.js"></script>
+    <script src="~/Content/js/popper.min.js"></script>
+    <script src="~/Content/js/bootstrap.bundle.min.js"></script>
+    <script src="~/Content/js/jquery-3.0.0.min.js"></script>
+    <!-- sidebar -->
+    <script src="~/Content/js/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script src="~/Content/js/custom.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+</body>
+</html>

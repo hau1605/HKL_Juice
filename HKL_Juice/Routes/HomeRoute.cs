@@ -12,12 +12,12 @@ namespace HKL_Juice.Routes
     {
         public HomeRoute(ApplicationDbContext dbContext)
         {
-            /*Get("/", parameters => {
+            Get("/history", parameters => {
 
 
-                return View["index.cshtml"];
+                return View["historyOrdered.cshtml"];
             }
-            );*/
+            );
             /*Get("/", parameters => {
 
                 var products = dbContext.Product

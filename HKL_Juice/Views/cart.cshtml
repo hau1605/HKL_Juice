@@ -49,10 +49,13 @@
                             <div class="collapse navbar-collapse" id="navbarsExample04">
                                 <ul class="navbar-nav mr-auto">
                                     @*<li class="nav-item ">
-                                        <a class="nav-link font-weight-bold" href="/">Trang chủ</a>
-                                    </li>*@
+            <a class="nav-link font-weight-bold" href="/">Trang chủ</a>
+        </li>*@
                                     <li class="nav-item ">
                                         <a class="nav-link font-weight-bold" href="/">Đặt hàng</a>
+                                    </li>
+                                    <li class="nav-item ">
+                                        <a class="nav-link font-weight-bold" href="/history">Đơn hàng</a>
                                     </li>
                                     <li class="nav-item ">
                                         <a class="nav-link font-weight-bold" href="/about">Về chúng tôi</a>
@@ -447,6 +450,7 @@
                 }
             }
             console.log("requestOrderDetails: ", requestOrderDetails);
+            console.log("requestOrderDetails.numberTable: ", requestOrderDetails.numberTable);
 
             fetch(`/api/v1/order/${requestOrderDetails.numberTable}`, {
                     method: "POST",
@@ -461,12 +465,11 @@
                     btnHandleOrderProducts.innerHTML = `Đồng ý`;
                     if (data.success == true) {
                         localStorage.removeItem("cart");
-                        localStorage.setItem("invoice", JSON.stringify(data.invoice));
                         alert(`(${data.message}) Order thành công!`);
                     } else {
                         alert("Order không thành công!");
                     }
-                    window.location.reload();
+                    window.location.href = '/history';
                 })
                 .catch((error) =>
                     console.error("An error occurred:", error)

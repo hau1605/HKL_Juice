@@ -2626,7 +2626,7 @@
     <None Include="Views\index.cshtml" />
     <Content Include="Views\juice.cshtml" />
     <Content Include="Content\Site.css" />
-    <Content Include="Views\home.cshtml" />
+    <Content Include="Views\historyOrdered.cshtml" />
     <Content Include="Views\loginAdmin.cshtml" />
     <Content Include="Views\productAdmin.cshtml" />
     <Content Include="Web.config" />

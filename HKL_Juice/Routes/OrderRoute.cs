@@ -29,22 +29,31 @@ namespace HKL_Juice.Routes
     {
         public OrderRoute(ApplicationDbContext dbContext)
         {
-            Get("/api/v1/orders", parameters =>
+            Get("/api/v1/orders/{numberTable}", parameters =>
             {
+                int numberTable = parameters.numberTable;
                 var orders = dbContext.Order
-                                  .Select(o => new
-                                  {
-                                      orderId = o.orderId,
-                                      orderDate = o.orderDate,
-                                      paymentStatus = o.paymentStatus,
-                                      userId = o.userId,
-                                      paymentMethod = o.paymentMethod,
-                                      orderTotal = o.orderTotal,
-                                      numberTable = o.numberTable
-                                  }).ToList();
+                    .Where(o => o.numberTable == numberTable && o.paymentStatus == "Đang chờ")
+                    .OrderByDescending(o => o.orderDate)
+                    .Select(o => new
+                    {
+                        paymentStatus = o.paymentStatus,
+                        orderTotal = o.orderTotal,
+                        orderStatus = o.orderStatus,
+                        OrderDetails = o.OrderDetails.Select(od => new
+                        {
+                            productName = od.Product.productName,
+                            price = od.Product.price,
+                            quantity = od.quantity,
+                            subTotal = od.subTotal,
+                            imgUrl = od.Product.imgUrl
+                        }).ToList()
+                    }).ToList();
+
                 var serializer = new JavaScriptSerializer();
                 string json = serializer.Serialize(orders);
                 return Response.AsJson(orders);
+                /*return View["orderAdmin.cshtml", json];*/
             });
             Get("/api/v1/order-details", parameters =>
             {
@@ -97,7 +106,6 @@ namespace HKL_Juice.Routes
             Post("/api/v1/order/{numberTable}", (parameters) =>
             {
                 int numberTable = parameters.numberTable;
-
                 var existingOrder = dbContext.Order
                     .Where(o => o.numberTable == numberTable && o.paymentStatus == "Đang chờ")
                     .OrderByDescending(o => o.orderDate)
@@ -105,41 +113,47 @@ namespace HKL_Juice.Routes
                 if (existingOrder != null) // Cập nhật
                 {
                     var updateOrder = this.Bind<CreateOrder>();
-                    existingOrder.orderTotal = updateOrder.orderTotal;
-                    var updatedOrder = dbContext.Order.Add(existingOrder);
+                    existingOrder.orderDate = DateTime.Now;
+                    existingOrder.orderTotal += updateOrder.orderTotal;
+                    existingOrder.orderStatus = "Đơn mới";
+
+                    /*var updatedOrder = dbContext.Order.Add(existingOrder);*/
+                    var updatedOrder = existingOrder;
                     dbContext.SaveChanges();
                     var orderId = existingOrder.orderId;
 
                     foreach (var detail in updateOrder.orderDetail)
                     {
-                        var newDetail = new OrderDetail
+                        var updateDetail = new OrderDetail
                         {
                             orderId = orderId,
                             productId = detail.productId,
                             quantity = detail.quantity,
-                            subTotal = detail.subTotal
+                            subTotal = detail.subTotal,
+                            isNew = true
                         };
-                        dbContext.OrderDetail.Add(newDetail);
+                        var updatedDetail = dbContext.OrderDetail.Add(updateDetail);
                         dbContext.SaveChanges();
                     }
+                    var sdas11 = updateOrder;
                     return Response.AsJson(new
                     {
                         Success = true,
-                        Message = "Cập nhật",
-                        invoice = updateOrder
+                        Message = "Cập nhật"
                     });
                 }
-                else
+                else // Update
                 {
                     var createOrder = this.Bind<CreateOrder>();
                     var order = new Order()
                     {
-                        orderDate = DateTime.Now,
-                        paymentStatus = createOrder.paymentStatus,
                         userId = 1,
+                        orderDate = DateTime.Now,
                         paymentMethod = "Tiền mặt",
+                        orderStatus = "Đơn mới",
+                        paymentStatus = createOrder.paymentStatus,
                         orderTotal = createOrder.orderTotal,
-                        numberTable = numberTable
+                        numberTable = numberTable,
                     };
                     var createdOrder = dbContext.Order.Add(order);
                     dbContext.SaveChanges();
@@ -153,7 +167,8 @@ namespace HKL_Juice.Routes
                             orderId = orderId,
                             productId = detail.productId,
                             quantity = detail.quantity,
-                            subTotal = detail.subTotal
+                            subTotal = detail.subTotal,
+                            isNew = true
                         };
                         var createdOrderDetail = dbContext.OrderDetail.Add(newDetail);
                         dbContext.SaveChanges();

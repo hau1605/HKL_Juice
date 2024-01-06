@@ -32,6 +32,17 @@ namespace HKL_Juice.Routes
                 return View["juice.cshtml", json];
             }
             );
+            Get("/{numberTable}", parameters =>
+            {
+                var numberTable = parameters.numberTable;
+                var script = $@"
+                    <script>
+                        localStorage.setItem('tableNumber', '{numberTable}');
+            
+                        window.location.href = '/';
+                    </script>";
+                return script;
+            });
         }
     }
 }
