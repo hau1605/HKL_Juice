@@ -12,6 +12,7 @@ namespace HKL_Juice.Models
         public int orderId { get; set; } // Auto-incremented by the database
         public DateTime orderDate { get; set; }
         public string paymentStatus { get; set; }
+        public string orderStatus { get; set; }
         public int userId { get; set; } // Foreign key reference to User
         public string paymentMethod { get; set; }
         public int orderTotal { get; set; }
