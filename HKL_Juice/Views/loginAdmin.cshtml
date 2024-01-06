@@ -39,7 +39,7 @@
 
                             </div><!--//form-group-->
                             <div class="text-center">
-                                <button type="submit" class="btn app-btn-primary w-100 theme-btn mx-auto">Đăng nhập</button>
+                                <button type="submit" id="btnLogin" class="btn app-btn-primary w-100 theme-btn mx-auto">Đăng nhập</button>
                             </div>
                         </form>
                     </div><!--//auth-form-container-->
@@ -64,6 +64,11 @@
     <script>
 	function handleLogin(event) {
 		event.preventDefault();
+        const btnLogin = document.getElementById("btnLogin");
+        btnLogin.innerHTML = `
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Đang xử lý...
+            `;
         const userName = document.getElementById("signin-email").value;
         const userPassword = document.getElementById("signin-password").value;
         fetch('/admin/loginUser', {
@@ -85,7 +90,9 @@
                 } else {
                     console.log(data); // 'data' là đối tượng đã được parse từ JSON
                     alert('Đăng nhập thất bại!');
+                    window.location.reload();
                 }
+                
             })
             .catch(error => {
                 console.error('Có lỗi xảy ra:', error);

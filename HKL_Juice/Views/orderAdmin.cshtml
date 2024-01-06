@@ -713,7 +713,6 @@
                 let tableNumberValue = document.getElementById('table-number').value.trim();
                 let orderDateValue = document.getElementById('order-date').value.trim();
                 // Search Filter
-                console.log(ordersData[0].orderDate, formatDateSort(ordersData[0].orderDate), orderDateValue)
                 ordersData = ordersData.filter(order => order.orderId.toLocaleString().includes(idValue)
                     && order.userFullname.toUpperCase().includes(employeeNameValue)
                     && order.numberTable.toLocaleString().toUpperCase().includes(tableNumberValue)
@@ -835,6 +834,7 @@
 
         //Hiển thị Modal Xem chi tiết
         function getDetail(orderS) {
+            console.log(orderS.orderDetails)
             document.getElementById('orderDetailCardHead').innerHTML = `
                                      <h5 style="margin: 0;" class="card-title">Mã Hóa Đơn: #${orderS.orderId} </h5>
                                      <h6 style="margin: 0;" class="card-title">Ngày: ${convertToDateTime(orderS.orderDate)}</h6>
@@ -845,19 +845,40 @@
                                       <p style="text-align: right;" class="card-text">Số bàn: ${orderS.numberTable}</p>
                                       <p style="text-align: right;" class="card-text">Nhân Viên: ${orderS.userFullname}</p>
                                 `
+            // Group OrderDetails by productId and sum their quantities and subTotals
+            const groupedDetails = orderS.orderDetails.reduce((acc, detail) => {
+                if (!acc[detail.productId]) {
+                    acc[detail.productId] = {
+                        productId: detail.productId,
+                        productName: detail.productName, // Assuming Product details are included
+                        imgUrl: detail.imgUrl, // Assuming Product details are included
+                        quantity: 0,
+                        subTotal: 0
+                    };
+                }
+                acc[detail.productId].quantity += detail.quantity;
+                acc[detail.productId].subTotal += detail.subTotal;
+                return acc;
+            }, {});
+
+            // Convert the groupedDetails object back into an array
+            const groupedOrderDetails = Object.values(groupedDetails);
+
+            // Now proceed with displaying the grouped details
             const tableBody = document.getElementById('orderTableBody');
-            tableBody.innerHTML = ''
-            orderS.OrderDetails.forEach(order => {
+            tableBody.innerHTML = '';
+
+            groupedOrderDetails.forEach(order => {
                 let row = `
-                                        <tr valign='middle' >
-                                            <td><img class="img-pdf" style="width:70px;height:70px;border-radius:20%;box-shadow:2px 2px 3px gray" src="${order.imgUrl}" alt="Product Image" class="product-img"></td>
-                                                <td class="product-name">${order.productName}</td>
-                                                <td>${order.quantity}</td>
-                                                <td>${order.subTotal.toLocaleString('vi-VN', {
+            <tr valign='middle'>
+                <td><img class="img-pdf" style="width:70px;height:70px;border-radius:20%;box-shadow:2px 2px 3px gray" src="${order.imgUrl}" alt="Product Image"></td>
+                <td class="product-name">${order.productName}</td>
+                <td>${order.quantity}</td>
+                <td>${order.subTotal.toLocaleString('vi-VN', {
                     style: 'currency',
                     currency: 'VND'
                 })}</td>
-                                        </tr>`
+            </tr>`;
                 tableBody.innerHTML += row;
             });
 
@@ -893,7 +914,7 @@
 
                 document.getElementById("EditOrderModelFooter").innerHTML = `
                                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                                             <button type="button" class="btn btn-primary" onclick="handleEditOrder(${orderString})">Cập nhật hóa đơn</button>
+                                             <button type="button" class="btn btn-primary" id="btnEditOrder" onclick="handleEditOrder(${orderString})">Cập nhật hóa đơn</button>
                                        `
                 document.getElementById('EditOrderCardBody').innerHTML =
                     `<div style="display: flex;align-items: center;justify-content: flex-end;">
@@ -928,9 +949,40 @@
                 document.getElementById('selOrderStatus').value = orderS.orderStatus;
                 document.getElementById('selPaymentMethod').value = orderS.paymentMethod;
             }
+
+            const detailsMap = new Map();
+
+    orderS.orderDetails.forEach(detail => {
+        // Create a unique key for each group or unique item
+        const key = detail.isNew ? `new-${detail.orderDetailId}` : detail.productId;
+
+        if (!detailsMap.has(key)) {
+            // Initialize a new group or unique entry
+            detailsMap.set(key, {
+                productId: detail.productId,
+                productName: detail.productName, // Assuming Product details are included
+                imgUrl: detail.imgUrl, // Assuming Product details are included
+                quantity: 0,
+                subTotal: 0,
+                isNew: detail.isNew
+            });
+        }
+
+        // Update the existing group or unique entry
+        const currentDetail = detailsMap.get(key);
+        currentDetail.quantity += detail.quantity;
+        currentDetail.subTotal += detail.subTotal;
+    });
+
+    // Convert the Map values to an array
+    const groupedOrderDetails = Array.from(detailsMap.values());
+
+   
+
+
             const tableBody = document.getElementById('EditOrderTableBody');
             tableBody.innerHTML = ''
-            orderS.OrderDetails.forEach(order => {
+            groupedOrderDetails.forEach(order => {
                 let row = `
                 <tr valign='middle' >
                      <td><img style="width:70px;height:70px;border-radius:20%;box-shadow:2px 2px 3px gray" src="${order.imgUrl}" alt="Product Image" class="product-img"></td>
@@ -960,6 +1012,11 @@
 
         // Hàm lưu edit hóa đơn lên server
         function handleEditOrder(params) {
+            const btnhandleEditOrder = document.getElementById("btnEditOrder");
+            btnhandleEditOrder.innerHTML = `
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Đang xử lý...
+            `;
             let editOrder = {
                 paymentStatus: document.getElementById('selPaymentStatus').value,
                 orderStatus: document.getElementById('selOrderStatus').value,
@@ -1005,7 +1062,7 @@
 
                 document.getElementById("DeleteOrderModelFooter").innerHTML = `
                                                                                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                                                                                                                <button type="button" class="btn btn-danger" onclick="handleDeleteOrder(${orderString})">Xóa hóa đơn</button>
+                                                                                                                <button type="button" class="btn btn-danger" id="btnDeleteOrder" onclick="handleDeleteOrder(${orderString})">Xóa hóa đơn</button>
                                                                                                             `
                 document.getElementById('DeleteOrderCardBody').innerHTML = `<div style="display: flex;align-items: center;justify-content: flex-end;">
                                                                                                                 <p style="text-align: right;" class="card-text">Bạn có chắc chắn muốn xóa hóa đơn này không?</p>`
@@ -1016,7 +1073,11 @@
 
         // Hàm lưu xóa hóa đơn lên server
         function handleDeleteOrder(params) {
-
+            const btnDeleteOrder = document.getElementById("btnDeleteOrder");
+            btnDeleteOrder.innerHTML = `
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Đang xử lý...
+            `;
             fetch(`/admin/order/${params.orderId}`, {
                 method: "DELETE",
                 headers: {

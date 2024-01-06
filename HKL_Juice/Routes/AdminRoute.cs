@@ -378,19 +378,20 @@ namespace HKL_Juice.Routes
             {
 
                 int orderId = parameters.id;
-                var orderDetails = dbContext.OrderDetail.Where(od => od.orderId == orderId).ToList();
-
-
-                // Xóa tất cả các chi tiết hóa đơn liên quan
-                foreach (var detail in orderDetails)
-                {
-                    dbContext.OrderDetail.Remove(detail);
-                }
                 var order = dbContext.Order.FirstOrDefault(o => o.orderId == orderId);
                 if (order == null)
                 {
                     return HttpStatusCode.NotFound;
                 }
+                if (order.paymentStatus != "Đã hủy")
+                    return HttpStatusCode.NotFound;
+                // Xóa tất cả các chi tiết hóa đơn liên quan
+                var orderDetails = dbContext.OrderDetail.Where(od => od.orderId == orderId).ToList();
+                foreach (var detail in orderDetails)
+                {
+                    dbContext.OrderDetail.Remove(detail);
+                }
+                
                 dbContext.Order.Remove(order);
 
                 dbContext.SaveChanges();
