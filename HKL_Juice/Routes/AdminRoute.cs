@@ -295,6 +295,7 @@ namespace HKL_Juice.Routes
                         orderId = o.orderId,
                         orderDate = o.orderDate,
                         paymentStatus = o.paymentStatus,
+                        orderStatus = o.orderStatus,
                         orderTotal = o.orderTotal,
                         userFullname = o.User.userFullname,
                         userId = o.User.userId,
@@ -307,7 +308,8 @@ namespace HKL_Juice.Routes
                             productId = od.productId,
                             quantity = od.quantity,
                             subTotal = od.subTotal,
-                            imgUrl = od.Product.imgUrl
+                            imgUrl = od.Product.imgUrl,
+                            isNew = od.isNew
                         }).ToList()
                     }).ToList();
 

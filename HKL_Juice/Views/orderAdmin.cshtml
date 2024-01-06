@@ -272,6 +272,7 @@
                                             <tr>
                                                 <th class="cell">STT</th>
                                                 <th class="cell">ID</th>
+                                                <th class="cell"></th>
                                                 <th class="cell">Hóa đơn</th>
                                                 <th class="cell">Số bàn</th>
                                                 <th class="cell">Nhân viên</th>
@@ -601,7 +602,10 @@
                         <tr>
                             <td class="cell">${index+1}</td>
                             <td class="cell">#${order.orderId}</td>
-                            <td class="cell" ><a class="btn-sm app-btn-secondary" style="cursor:pointer" data-bs-toggle="modal" data-bs-target="#orderDetailModal" onclick="getDetail(${orderString})">Xem / Xuất</a></td>
+                            <td class="cell">
+  ${order.orderStatus === 'Đơn mới' ? '<button>Đơn mới</button>' : ''}
+</td>
+                            <td class="cell"><a class="btn-sm app-btn-secondary" style="cursor:pointer" data-bs-toggle="modal" data-bs-target="#orderDetailModal" onclick="getDetail(${orderString})">Xem / Xuất</a></td>
                             <td class="cell">${order.numberTable}</td>
                             <td class="cell">${order.userFullname}</td>
                             <td class="cell"><span>${convertToDate(order.orderDate)}</span><span class="note">${convertToTime(order.orderDate)}</span></td>
