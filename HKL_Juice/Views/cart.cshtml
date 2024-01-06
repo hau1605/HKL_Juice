@@ -121,24 +121,24 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="titlepage">
-                            <h2>Contact Us</h2>
+                            <h2>Liên hệ</h2>
                         </div>
                     </div>
                     <div class="col-md-10 offset-md-1">
                         <form id="request" class="main_form">
                             <div class="row">
                                 <div class="col-md-12 ">
-                                    <input class="contactus" placeholder="Full Name" type="text" name="Full Name">
+                                    <input class="contactus" placeholder="Họ tên" type="text" name="Full Name">
                                 </div>
                                 <div class="col-md-7">
                                     <input class="contactus" placeholder="Email" type="email" name="Email">
                                 </div>
                                 <div class="col-md-7">
-                                    <input class="contactus" placeholder="Phone Number" type="text" name="Phone Number">
+                                    <input class="contactus" placeholder="Số điện thoại" type="text" name="Phone Number">
                                 </div>
                                 <div class="col-xl-5 col-lg-5 col-md-5 col-sm-12">
                                     <ul class="social_icon">
-                                        <h3>Follow Me</h3>
+                                        <h3>Theo dõi</h3>
                                         <li><a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
                                         <li><a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
                                         <li><a href="#"><i class="fa fa-linkedin-square" aria-hidden="true"></i></a></li>
@@ -146,10 +146,10 @@
                                     </ul>
                                 </div>
                                 <div class="col-md-12">
-                                    <textarea class="contactus1" placeholder="Message" type="type" Message="Name">Message </textarea>
+                                    <textarea class="contactus1" placeholder="Tin nhắn" type="type" Message="Name"></textarea>
                                 </div>
                                 <div class="col-md-12">
-                                    <button class="send_btn">Send</button>
+                                    <button class="send_btn">Gửi</button>
                                 </div>
                             </div>
                         </form>
@@ -298,6 +298,14 @@
                 return [];
             }
         }
+        function loadInvoiceFromLocalStorage() {
+            try {
+                return JSON.parse(localStorage.getItem("invoice")) || [];
+            } catch (error) {
+                console.error("Error reading invoice from localStorage:", error);
+                return [];
+            }
+        }
         function renderCartItems() {
             const cartItems = loadCartItemsFromLocalStorage();
 
@@ -417,6 +425,8 @@
         }
         //@* Xử lý nhấn nút đặt hàng*@
         function handleOrderProducts() {
+            let invoiceStorage = loadInvoiceFromLocalStorage();
+            console.log("invoiceStorage: ", invoiceStorage);
             const btnHandleOrderProducts = document.getElementById("btn-handleOrderProducts");
             btnHandleOrderProducts.innerHTML = `
                 <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
@@ -432,25 +442,27 @@
                 var requestOrderDetails = {
                     orderTotal: calculateOrderTotal(orderDetails),
                     numberTable: selectedNumberTable,
-                    orderDetail: getOrderDetail(orderDetails)
+                    orderDetail: getOrderDetail(orderDetails),
+                    paymentStatus: "Đang chờ"
                 }
             }
             console.log("requestOrderDetails: ", requestOrderDetails);
 
-
-            fetch(`/api/v1/order`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(requestOrderDetails),
-            })
-                .then((response) => {
+            fetch(`/api/v1/order/${requestOrderDetails.numberTable}`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(requestOrderDetails),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log("data: ", data);
                     btnHandleOrderProducts.innerHTML = `Đồng ý`;
-                    if (response.ok) {
+                    if (data.success == true) {
                         localStorage.removeItem("cart");
-                        localStorage.removeItem("NumberTable");
-                        alert("Order thành công!");
+                        localStorage.setItem("invoice", JSON.stringify(data.invoice));
+                        alert(`(${data.message}) Order thành công!`);
                     } else {
                         alert("Order không thành công!");
                     }
