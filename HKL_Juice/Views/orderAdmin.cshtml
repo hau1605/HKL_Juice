@@ -445,6 +445,7 @@
         document.getElementById("imgLoginUser").src = JSON.parse(localStorage.getItem('loginUser')).userAvatar;
         function convertToDate(datei) {
             var date = new Date(datei);
+            console.log(date)
                 var day = ("0" + date.getDate()).slice(-2); // Add leading zero if needed
                 var month = ("0" + (date.getMonth() + 1)).slice(-2); // Add leading zero if needed, month is 0-indexed
                 var year = date.getFullYear();

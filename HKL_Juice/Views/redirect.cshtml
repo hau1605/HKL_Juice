@@ -1,0 +1,39 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description" content="Admin">
+    <link rel="shortcut icon" href="~/Content/assets/images/HKL_logo.png">
+
+    <script defer src="~/Content/assets/plugins/fontawesome/js/all.min.js"></script>
+
+    <!-- App CSS -->
+    <link id="theme-style" rel="stylesheet" href="~/Content/assets/css/portal.css">
+    <style>
+		
+
+    </style>
+</head>
+<body>
+    <div class="loading-screen">
+        <div class="loading">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+    @{ var jsonHtml = Html.Raw(@Model); }
+    <script>
+        var numberTable =@jsonHtml;
+        console.log(numberTable);
+        //localStorage.setItem("numberTable", numberTable);
+        setTimeout(function () {
+            window.location.href = "/";
+        }, 1000);
+    </script>
+</body>
+</html>
