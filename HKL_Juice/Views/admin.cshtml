@@ -395,7 +395,6 @@
                             text: 'Biểu đồ tròn sản phẩm đã bán tháng này'
                         },
                         tooltips: {
-                            mode: 'index',
                             intersect: false,
                             titleMarginBottom: 10,
                             bodySpacing: 10,
@@ -407,15 +406,6 @@
                             bodyFontColor: window.chartColors.text,
                             titleFontColor: window.chartColors.text,
 
-                        }, callbacks: {
-                            label: function (tooltipItem, data) {
-                                var label = data.labels[tooltipItem.index] || '';
-                                if (label) {
-                                    label += ': ';
-                                }
-                                label += '123';
-                                return label;
-                            }
                         }
                     }
                 }
