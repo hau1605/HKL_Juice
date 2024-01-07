@@ -1160,7 +1160,7 @@
                 imgUrl: document.getElementById('displayImage').src,
             };
 
-            console.log(addProduct);
+          
 
             fetch(`/admin/products`, {
                 method: "POST",
@@ -1233,7 +1233,8 @@
             }
             document.getElementById("uploadExcelModalFooter").innerHTML = `
 					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-					<button type="button" class="btn btn-primary" onClick="handleAddMultiProducts()">Thêm sản phẩm</button>
+
+					<button type="button" class="btn btn-primary" id="uploadExcelButton" onClick="handleAddMultiProducts()">Thêm sản phẩm</button>
 				`;
             document
                 .getElementById("fileUpload")
@@ -1243,12 +1244,16 @@
         }
 
         async function handleAddMultiProducts() {
+            const uploadExcelButton = document.getElementById("uploadExcelButton");
+            uploadExcelButton.innerHTML = `
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Đang xử lý...
+            `;
             const XLSX = await import(
                 "https://cdn.sheetjs.com/xlsx-0.19.2/package/xlsx.mjs"
             );
             if (selectedFile) {
-                let jsonObject;
-                console.log("hi");
+                let jsonObject;                
                 var fileReader = new FileReader();
                 fileReader.onload = function (event) {
                     var data = event.target.result;
