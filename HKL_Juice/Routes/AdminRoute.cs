@@ -33,17 +33,23 @@ namespace HKL_Juice.Routes
         public  AdminRoute(ApplicationDbContext dbContext)
         {
             Get("/admin", parameters => {
+                
+                return View["admin.cshtml"];
+            }
+            );
+
+            Get("/adminData", parameters => {
                 var now = DateTime.Now;
                 var firstDayOfMonth = new DateTime(now.Year, now.Month, 1);
                 var totalRevenueThisMonth = dbContext.Order
-                    .Where(o => o.paymentStatus == "Đã thanh toán" && 
-                    o.orderDate >= firstDayOfMonth 
+                    .Where(o => o.paymentStatus == "Đã thanh toán" &&
+                    o.orderDate >= firstDayOfMonth
                     && o.orderDate <= now)
                     .Sum(o => o.orderTotal);
                 var numberOfProductsOnSale = dbContext.Product.Count();
 
                 var numberOfNewOrdersThisMonth = dbContext.Order
-                    .Count(o => o.paymentStatus == "Đã thanh toán" && 
+                    .Count(o => o.paymentStatus == "Đã thanh toán" &&
                     o.orderDate >= firstDayOfMonth && o.orderDate <= now);
                 var orderCountsLast7Days = new List<object>();
                 var revenueLast14Days = new List<object>();
@@ -86,7 +92,7 @@ namespace HKL_Juice.Routes
                                 o.orderDate <= now)
                     .SelectMany(o => o.OrderDetails)
                     .GroupBy(od => od.Product.productName)
-                    .Select(g => new 
+                    .Select(g => new
                     {
                         ProductName = g.Key,
                         QuantitySold = g.Sum(od => od.quantity)
@@ -103,9 +109,8 @@ namespace HKL_Juice.Routes
                     ProductsSoldThisMonth = productsSoldThisMonth
                 };
 
-                var serializer = new JavaScriptSerializer();
-                string json = serializer.Serialize(data);
-                return View["admin.cshtml", json];
+                
+                return Response.AsJson(data);
             }
             );
             Get("/admin/login", parameters => {
@@ -328,33 +333,7 @@ namespace HKL_Juice.Routes
 
             Get("/admin/order", parameters =>
             {
-                var orders = dbContext.Order
-                    .Select(o => new
-                    {
-                        orderId = o.orderId,
-                        orderDate = o.orderDate,
-                        paymentStatus = o.paymentStatus,
-                        orderStatus = o.orderStatus,
-                        orderTotal = o.orderTotal,
-                        userFullname = o.User.userFullname,
-                        userId = o.User.userId,
-                        paymentMethod = o.paymentMethod,
-                        numberTable = o.numberTable,
-                        OrderDetails = o.OrderDetails.Select(od => new
-                        {
-                            productName = od.Product.productName,
-                            price = od.Product.price,
-                            productId = od.productId,
-                            quantity = od.quantity,
-                            subTotal = od.subTotal,
-                            imgUrl = od.Product.imgUrl,
-                            isNew = od.isNew
-                        }).ToList()
-                    }).ToList();
-
-                var serializer = new JavaScriptSerializer();
-                string json = serializer.Serialize(orders);
-                return View["orderAdmin.cshtml", json];
+                return View["orderAdmin.cshtml"];
             });
             Get("/admin/orderData", parameters =>
             {
