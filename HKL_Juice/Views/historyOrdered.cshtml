@@ -173,7 +173,7 @@
     <div id="toast-container" class="toast-container position-fixed end-0 p-3" style="z-index: 1000; top: 46px;"></div>
     
     <script type="text/javascript">
-        const numberTable = 6;
+        const numberTable = JSON.parse(localStorage.getItem("numberTable")) || [];
         function fetchProductsOrdered() {
             try {
                 fetch(`/api/v1/orders/${numberTable}`, {

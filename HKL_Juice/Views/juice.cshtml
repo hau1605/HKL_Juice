@@ -201,11 +201,11 @@
     <script type="text/javascript">
         var products = @productsJson;
         console.log("products: ", products);
+        const numberTable = JSON.parse(localStorage.getItem("numberTable")) || [];
         // =============================================================================================
         // =========================================TABLE STATUS========================================
         // =============================================================================================
         function fetchProductsOrdered() {
-            const numberTable = 6;
             try {
                 fetch(`/api/v1/orders/${numberTable}`, {
                     method: "GET",

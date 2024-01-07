@@ -256,11 +256,11 @@
     <div id="toast-container" class="toast-container position-fixed end-0 p-3" style="z-index: 1000; top: 46px;"></div>
 
     <script type="text/javascript">
+        const numberTable = JSON.parse(localStorage.getItem("numberTable")) || [];
         // =============================================================================================
         // =========================================TABLE STATUS========================================
         // =============================================================================================
         function fetchProductsOrdered() {
-            const numberTable = 6;
             try {
                 fetch(`/api/v1/orders/${numberTable}`, {
                     method: "GET",

@@ -271,11 +271,11 @@
 
 
     <script type="text/javascript">
+        const numberTable = JSON.parse(localStorage.getItem("numberTable")) || [];
         // =============================================================================================
         // =========================================TABLE STATUS========================================
         // =============================================================================================
         function fetchProductsOrdered() {
-            const numberTable = 6;
             try {
                 fetch(`/api/v1/orders/${numberTable}`, {
                     method: "GET",
@@ -475,15 +475,12 @@
                 Loading...
             `;
             let orderDetails = loadCartItemsFromLocalStorage();
-            let selectedNumberTable = 6;
-            if (!selectedNumberTable) {
-                selectedNumberTable = 1;
-            }
+            
             console.log("orderDetails: ", orderDetails);
             if (orderDetails && orderDetails.length > 0) {
                 var requestOrderDetails = {
                     orderTotal: calculateOrderTotal(orderDetails),
-                    numberTable: selectedNumberTable,
+                    numberTable: numberTable,
                     orderDetail: getOrderDetail(orderDetails),
                     paymentStatus: "Đang chờ"
                 }

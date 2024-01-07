@@ -51,7 +51,7 @@
                             <div class="app-utility-item app-user-dropdown dropdown">
                                 <a class="dropdown-toggle" id="user-dropdown-toggle" data-bs-toggle="dropdown" href="#"
                                    role="button" aria-expanded="false">
-                                    <img style="border-radius: 50%; object-fit:contain; box-shadow: 0 0 2px gray"
+                                    <img style="border-radius: 50%; box-shadow: 0 0 2px gray"
                                          src="~/Content/assets/images/anhconcat.jpg" alt="user profile"
                                          class="user-profile" />
                                 </a>
@@ -279,40 +279,42 @@
     <script type="text/javascript">
         const user = JSON.parse(localStorage.getItem("loginUser"));
         console.log("user: ", user);
-        document.getElementsByClassName("user-profile")[0].src = user.userAvatar;
-        document.getElementsByClassName("account-avatar_container-image")[0].src = user.userAvatar;
-        document.getElementsByClassName("account-info_container-userId")[0].value = user.userId;
-        document.getElementsByClassName("account-info_container-userFullname")[0].value = user.userFullname;
-        document.getElementsByClassName("account-info_container-userName")[0].value = user.userName;
-        document.getElementsByClassName("account-info_container-userPhone")[0].value = user.userPhone;
-        document.getElementsByClassName("account-info_container-userRoleName")[0].value = user.roleName;
-
-        if (!localStorage.getItem("loginUser") || user == null)
+        //Authenticate
+        if (!localStorage.getItem("loginUser"))
             window.location.href = "/admin/login";
         else if (
-            JSON.parse(localStorage.getItem("loginUser")).roleName === "Admin") {
+            JSON.parse(localStorage.getItem("loginUser")).roleName ===
+            "Admin"
+        ) {
             document.getElementById("user_nav").innerHTML = `
-                            <a class="nav-link " href="/admin/users" >
-                                <span class="nav-icon">
-                                    <svg width="24px" height="24px" viewBox="0 0 24.00 24.00"  class="bi bi-card-list" fill="none"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                                        <g id="SVGRepo_iconCarrier">
-                                            <path d="M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z"
-                                                stroke="currentColor" stroke-width="1.392" stroke-linecap="round"
-                                                stroke-linejoin="round"></path>
-                                            <path d="M12 14C8.13401 14 5 17.134 5 21H19C19 17.134 15.866 14 12 14Z"
-                                                stroke="currentColor" stroke-width="1.392" stroke-linecap="round"
-                                                stroke-linejoin="round"></path>
-                                        </g>
-                                    /svg>
-                                </span>
-                                <span class="nav-link-text">Người dùng</span>
-                            </a><!--//nav-link-->	`;
+                    <a class="nav-link " href="/admin/users" >
+                        <span class="nav-icon">
+                            <svg width="24px" height="24px" viewBox="0 0 24.00 24.00"  class="bi bi-card-list" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                <g id="SVGRepo_iconCarrier">
+                                    <path d="M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z"
+                                        stroke="currentColor" stroke-width="1.392" stroke-linecap="round"
+                                        stroke-linejoin="round"></path>
+                                    <path d="M12 14C8.13401 14 5 17.134 5 21H19C19 17.134 15.866 14 12 14Z"
+                                        stroke="currentColor" stroke-width="1.392" stroke-linecap="round"
+                                        stroke-linejoin="round"></path>
+                                </g>
+                            /svg>
+                        </span>
+                        <span class="nav-link-text">Người dùng</span>
+                    </a><!--//nav-link-->	`;
         }
-
-        
+        if (user) {
+            document.getElementsByClassName("user-profile")[0].src = user.userAvatar;
+            document.getElementsByClassName("account-avatar_container-image")[0].src = user.userAvatar;
+            document.getElementsByClassName("account-info_container-userId")[0].value = user.userId;
+            document.getElementsByClassName("account-info_container-userFullname")[0].value = user.userFullname;
+            document.getElementsByClassName("account-info_container-userName")[0].value = user.userName;
+            document.getElementsByClassName("account-info_container-userPhone")[0].value = user.userPhone;
+            document.getElementsByClassName("account-info_container-userRoleName")[0].value = user.roleName;
+        }
 
         function editInfoAccount() {
             const user = JSON.parse(localStorage.getItem("loginUser"));
