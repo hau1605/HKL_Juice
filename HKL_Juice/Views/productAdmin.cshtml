@@ -1094,6 +1094,12 @@
 
 
                     `;
+                document.getElementById(
+                    "addProductModalFooter"
+                ).innerHTML = `
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                        <button type="button" class="btn btn-primary" onclick="handleAddProduct()">Thêm sản phẩm</button>
+                    `;
                 const selectElement =
                     document.getElementById("add_categoryId");
 
@@ -1104,6 +1110,31 @@
                     option.textContent = category.categoryName;
                     selectElement.appendChild(option);
                 });
+                document.getElementById('uploadAddButton').addEventListener('click', function () {
+                    const uploadAddButton = document.getElementById("uploadAddButton");
+                    uploadAddButton.innerHTML = `
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Đang xử lý...
+            `;
+                    var file = document.getElementById('add_imgUrl').files[0];
+                    var formData = new FormData();
+                    formData.append('file', file);
+                    formData.append('upload_preset', 'upanh555'); // Replace with your upload preset
+                    fetch(`https://api.cloudinary.com/v1_1/djwygccw2/image/upload`, { // Replace with your cloud name
+                        method: 'POST',
+                        body: formData
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            uploadAddButton.innerHTML = `
+                            Tải lên
+                        `;
+                            document.getElementById('displayImage').style = 'width: 100px; height: 100px;display:inline';
+                            document.getElementById('displayImage').src = data.secure_url;
+                        })
+                        .catch(err => console.error(err));
+                });
+
             }
             else {
                 document.getElementById("addProductBody").innerHTML = `
@@ -1119,36 +1150,7 @@
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
                     `;
             }
-            document.getElementById(
-                "addProductModalFooter"
-            ).innerHTML = `
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                        <button type="button" class="btn btn-primary" onclick="handleAddProduct()">Thêm sản phẩm</button>
-                    `;
-            document.getElementById('uploadAddButton').addEventListener('click', function () {
-                const uploadAddButton = document.getElementById("uploadAddButton");
-                uploadAddButton.innerHTML = `
-                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                Đang xử lý...
-            `;
-                var file = document.getElementById('add_imgUrl').files[0];
-                var formData = new FormData();
-                formData.append('file', file);
-                formData.append('upload_preset', 'upanh555'); // Replace with your upload preset
-                fetch(`https://api.cloudinary.com/v1_1/djwygccw2/image/upload`, { // Replace with your cloud name
-                    method: 'POST',
-                    body: formData
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        uploadAddButton.innerHTML = `
-                            Tải lên
-                        `;
-                        document.getElementById('displayImage').style = 'width: 100px; height: 100px;display:inline';
-                        document.getElementById('displayImage').src = data.secure_url;
-                    })
-                    .catch(err => console.error(err));
-            });
+            
         }
 
         function handleAddProduct() {

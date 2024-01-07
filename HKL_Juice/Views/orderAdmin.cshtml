@@ -507,56 +507,60 @@
         // Initial fetch
 
 
-
-        const paidOrders = orders.filter(order => order.paymentStatus === 'Đã thanh toán');
-        paidOrders.sort((a, b) => new Date(b.orderDate) - new Date(a.orderDate));
-        function formatDate(dateString) {
-            const date = new Date(dateString);
-            return [
-                ('0' + date.getDate()).slice(-2),
-                ('0' + (date.getMonth() + 1)).slice(-2),
-                date.getFullYear(),
-            ].join('-');
-        } const modifiedOrders = paidOrders.map(order => ({
-            orderId: order.orderId,
-            numberTable: order.numberTable,
-            userFullname: order.userFullname,
-            paymentMethod: order.paymentMethod,
-            orderDate: formatDate(order.orderDate), // Format date
-            orderTotal: order.orderTotal.toLocaleString(
-                "vi-VN",
-                {
-                    style: "currency",
-                    currency: "VND",
-                }) // Format currency
-            // Remove orderDetails
-        })).map(order => ({ // Translate to Vietnamese
-            "Mã Đơn": order.orderId,
-            "Số Bàn": order.numberTable,
-            "Nhân Viên": order.userFullname,
-            "Ngày Đặt": order.orderDate,
-            "Phương Thức Thanh Toán": order.paymentMethod,
-            "Tổng Tiền": order.orderTotal
-        }));
-        const totalOrders = modifiedOrders.length;
-        const totalAmount = paidOrders.reduce((sum, order) => sum + order.orderTotal, 0);
-
-        // Add a final row for the totals
-        modifiedOrders.push({
-            "Mã Đơn": '',
-            "Số Bàn": '',
-            "Nhân Viên": '',
-            "Ngày Đặt": '',
-            "Phương Thức Thanh Toán": 'Tổng hóa đơn',
-            "Tổng Tiền": `${totalAmount.toLocaleString(
-                "vi-VN",
-                {
-                    style: "currency",
-                    currency: "VND",
-                })}`
-        });
+        
         // Now, modifiedOrders is ready for export without the orderDetails field
         downloadExcel.addEventListener("click", async () => {
+            const paidOrders = filterOrder.filter(order => order.paymentStatus === 'Đã thanh toán');
+            paidOrders.sort((a, b) => new Date(b.orderDate) - new Date(a.orderDate));
+            function formatDate(dateString) {
+                const date = new Date(dateString);
+                return [
+                    ('0' + date.getDate()).slice(-2),
+                    ('0' + (date.getMonth() + 1)).slice(-2),
+                    date.getFullYear(),
+                ].join('-');
+            }
+            const modifiedOrders = paidOrders.map((order, key) => ({
+                seq: key+1,
+                orderId: order.orderId,
+                numberTable: order.numberTable,
+                userFullname: order.userFullname,
+                paymentMethod: order.paymentMethod,
+                orderDate: formatDate(order.orderDate), // Format date
+                orderTotal: order.orderTotal.toLocaleString(
+                    "vi-VN",
+                    {
+                        style: "currency",
+                        currency: "VND",
+                    }) // Format currency
+                // Remove orderDetails
+            })).map(order => ({ // Translate to Vietnamese
+                "STT": order.seq,
+                "Mã Đơn": order.orderId,
+                "Số Bàn": order.numberTable,
+                "Nhân Viên": order.userFullname,
+                "Ngày Đặt": order.orderDate,
+                "Phương Thức Thanh Toán": order.paymentMethod,
+                "Tổng Tiền": order.orderTotal
+            }));
+            const totalOrders = modifiedOrders.length;
+            const totalAmount = paidOrders.reduce((sum, order) => sum + order.orderTotal, 0);
+
+            // Add a final row for the totals
+            modifiedOrders.push({
+                "STT": '',
+                "Mã Đơn": '',
+                "Số Bàn": '',
+                "Nhân Viên": '',
+                "Ngày Đặt": '',
+                "Phương Thức Thanh Toán": 'Tổng doanh thu',
+                "Tổng Tiền": `${totalAmount.toLocaleString(
+                    "vi-VN",
+                    {
+                        style: "currency",
+                        currency: "VND",
+                    })}`
+            });
             const XLSX = await import("https://cdn.sheetjs.com/xlsx-0.19.2/package/xlsx.mjs");
             const worksheet = XLSX.utils.json_to_sheet(modifiedOrders);
 
