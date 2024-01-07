@@ -293,16 +293,20 @@
     <script src="~/Content/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
     <script>
         document.getElementById("imgLoginUser").src = JSON.parse(localStorage.getItem('loginUser')).userAvatar;
+        let adminDataHead = {}
+        let adminDataProduct = {}
+        let adminDataOrder = {}
+        let adminDataRevenue = {}
         let adminData = {}
-        function fetchAdmin() {
-            document.getElementById("adminDoanhThu").innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>`
-            document.getElementById("adminLoiNhuan").innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>`
-            document.getElementById("adminSanPham").innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>`
-            document.getElementById("adminHoaDon").innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>`
-            document.getElementById("chart-product").innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>`
-            document.getElementById("chart-revenue").innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>`
-            document.getElementById("chart-order").innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>`
-            fetch('/adminData') // Replace with your actual endpoint
+        document.getElementById("adminDoanhThu").innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>`
+        document.getElementById("adminLoiNhuan").innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>`
+        document.getElementById("adminSanPham").innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>`
+        document.getElementById("adminHoaDon").innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>`
+        document.getElementById("chart-product").innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>`
+        document.getElementById("chart-revenue").innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>`
+        document.getElementById("chart-order").innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>`
+        function fetchAdminHead() {
+            fetch('/adminDataHead') // Replace with your actual endpoint
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Network response was not ok ' + response.statusText);
@@ -310,28 +314,132 @@
                     return response.json();
                 })
                 .then(adminResData => {
-                    document.getElementById("chart-product").innerHTML = `<canvas id="canvas-customchart"></canvas>`
-                    document.getElementById("chart-revenue").innerHTML = `<canvas id="canvas-linechart"></canvas>`
-                    document.getElementById("chart-order").innerHTML = `<canvas id="canvas-barchart"></canvas>`
-
-                    adminData = adminResData;
-                    console.log(adminData);
+                    adminDataHead = adminResData;
                     let today = new Date()
-                    document.getElementById("adminDoanhThu").innerHTML = `${adminData.totalRevenueThisMonth.toLocaleString('vi-VN', {
+                    document.getElementById("adminDoanhThu").innerHTML = `${adminDataHead.totalRevenueThisMonth.toLocaleString('vi-VN', {
                         style: 'currency',
                         currency: 'VND'
                     })}`
 
                     document.getElementById("adminDoanhThuP").innerHTML = `Tháng ${today.getMonth() + 1}/${today.getFullYear()}`
-                    document.getElementById("adminLoiNhuan").innerHTML = `${(adminData.totalRevenueThisMonth * 3 / 20).toLocaleString('vi-VN', {
+                    document.getElementById("adminLoiNhuan").innerHTML = `${(adminDataHead.totalRevenueThisMonth * 3 / 20).toLocaleString('vi-VN', {
                         style: 'currency',
                         currency: 'VND'
                     })}`
 
                     document.getElementById("adminLoiNhuanP").innerHTML = `Tháng ${today.getMonth() + 1}/${today.getFullYear()}`
-                    document.getElementById("adminSanPham").innerHTML = `${adminData.numberOfProductsOnSale}`
+                    document.getElementById("adminSanPham").innerHTML = `${adminDataHead.numberOfProductsOnSale}`
                     document.getElementById("adminHoaDonNew").innerHTML = `Mới trong tháng ${today.getMonth() + 1}/${today.getFullYear()}`
-                    document.getElementById("adminHoaDon").innerHTML = `${adminData.numberOfNewOrdersThisMonth}`
+                    document.getElementById("adminHoaDon").innerHTML = `${adminDataHead.numberOfNewOrdersThisMonth}`
+                    
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                });
+        }
+        fetchAdminHead();
+
+        function fetchAdminProduct() {
+        fetch('/adminDataProduct') // Replace with your actual endpoint
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(adminResData => {
+                document.getElementById("chart-product").innerHTML = `<canvas id="canvas-customchart"></canvas>`
+                adminDataProduct = adminResData;
+                window.chartColors = {
+                    green: '#75c181',
+                    gray: '#a9b5c9',
+                    text: '#252930',
+                    border: '#e7e9ed'
+                };       
+
+                function getRandomColor() {
+                    var letters = '0123456789ABCDEF';
+                    var color = '#';
+                    for (var i = 0; i < 6; i++) {
+                        color += letters[Math.floor(Math.random() * 16)];
+                    }
+                    return color;
+                }
+                var colors = Array.from({ length: 18 }, () => getRandomColor())
+                let labelPieData = [];
+                let pieData = [];
+                adminDataProduct.productsSoldThisMonth.map((item) => {
+                    labelPieData.push(item.productName);
+                    pieData.push(item.quantitySold)
+                })
+                var pieChartConfig = {
+                    type: 'pie',
+
+                    data: {
+                        datasets: [{
+                            data: pieData,
+                            backgroundColor: colors,
+                        }],
+
+                        labels: labelPieData
+                    },
+                    options: {
+                        responsive: true,
+                        aspectRatio: 1.5,
+                        legend: {
+                            position: 'bottom',
+                            align: 'center',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Biểu đồ tròn sản phẩm đã bán tháng này'
+                        },
+                        tooltips: {
+                            mode: 'index',
+                            intersect: false,
+                            titleMarginBottom: 10,
+                            bodySpacing: 10,
+                            xPadding: 16,
+                            yPadding: 16,
+                            borderColor: window.chartColors.border,
+                            borderWidth: 1,
+                            backgroundColor: '#fff',
+                            bodyFontColor: window.chartColors.text,
+                            titleFontColor: window.chartColors.text,
+
+                        }, callbacks: {
+                            label: function (tooltipItem, data) {
+                                var label = data.labels[tooltipItem.index] || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                label += '123';
+                                return label;
+                            }
+                        }
+                    }
+                }
+                var pieChart = document.getElementById('canvas-customchart').getContext('2d');
+                window.myPie = new Chart(pieChart, pieChartConfig);
+
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+        }
+        fetchAdminProduct();
+
+        function fetchAdminOrder() {
+            fetch('/adminDataOrder') // Replace with your actual endpoint
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok ' + response.statusText);
+                    }
+                    return response.json();
+                })
+                .then(adminResData => {
+                    document.getElementById("chart-order").innerHTML = `<canvas id="canvas-barchart"></canvas>`
+                    adminDataOrder = adminResData;
                     window.chartColors = {
                         green: '#75c181',
                         gray: '#a9b5c9',
@@ -339,6 +447,113 @@
                         border: '#e7e9ed'
                     };
 
+                    var barChartConfig = {
+                        type: 'bar',
+
+                        data: {
+                            labels: [
+                                adminDataOrder.orderCountsLast7Days[6].date,
+                                adminDataOrder.orderCountsLast7Days[5].date,
+                                adminDataOrder.orderCountsLast7Days[4].date,
+                                adminDataOrder.orderCountsLast7Days[3].date,
+                                adminDataOrder.orderCountsLast7Days[2].date,
+                                adminDataOrder.orderCountsLast7Days[1].date,
+                                adminDataOrder.orderCountsLast7Days[0].date,
+                            ],
+                            datasets: [{
+                                label: 'Hóa đơn',
+                                backgroundColor: window.chartColors.green,
+                                borderColor: window.chartColors.green,
+                                borderWidth: 1,
+                                maxBarThickness: 16,
+                                data: [
+                                    adminDataOrder.orderCountsLast7Days[6].orderCount,
+                                    adminDataOrder.orderCountsLast7Days[5].orderCount,
+                                    adminDataOrder.orderCountsLast7Days[4].orderCount,
+                                    adminDataOrder.orderCountsLast7Days[3].orderCount,
+                                    adminDataOrder.orderCountsLast7Days[2].orderCount,
+                                    adminDataOrder.orderCountsLast7Days[1].orderCount,
+                                    adminDataOrder.orderCountsLast7Days[0].orderCount,
+                                ]
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            aspectRatio: 1.5,
+                            legend: {
+                                position: 'bottom',
+                                align: 'end',
+                            },
+                            title: {
+                                display: true,
+                                text: 'Biểu đồ cột hóa đơn 7 ngày qua'
+                            },
+                            tooltips: {
+                                mode: 'index',
+                                intersect: false,
+                                titleMarginBottom: 10,
+                                bodySpacing: 10,
+                                xPadding: 16,
+                                yPadding: 16,
+                                borderColor: window.chartColors.border,
+                                borderWidth: 1,
+                                backgroundColor: '#fff',
+                                bodyFontColor: window.chartColors.text,
+                                titleFontColor: window.chartColors.text,
+
+                            },
+                            scales: {
+                                xAxes: [{
+                                    display: true,
+                                    gridLines: {
+                                        drawBorder: false,
+                                        color: window.chartColors.border,
+                                    },
+
+                                }],
+                                yAxes: [{
+                                    display: true,
+                                    gridLines: {
+                                        drawBorder: false,
+                                        color: window.chartColors.borders,
+                                    },
+                                    ticks: {
+                                        beginAtZero: true
+                                    },
+
+                                }]
+                            }
+
+                        }
+                    }
+
+                    var barChart = document.getElementById('canvas-barchart').getContext('2d');
+                    window.myBar = new Chart(barChart, barChartConfig);
+
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                });
+        }
+        fetchAdminOrder();
+
+        function fetchAdminRevenue() {
+            fetch('/adminDataRevenue') // Replace with your actual endpoint
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok ' + response.statusText);
+                    }
+                    return response.json();
+                })
+                .then(adminResData => {
+                    document.getElementById("chart-revenue").innerHTML = `<canvas id="canvas-linechart"></canvas>`
+                    adminDataRevenue = adminResData;
+                    window.chartColors = {
+                        green: '#75c181',
+                        gray: '#a9b5c9',
+                        text: '#252930',
+                        border: '#e7e9ed'
+                    };
                     var lineChartConfig = {
                         type: 'line',
 
@@ -351,13 +566,13 @@
                                 backgroundColor: window.chartColors.green,
                                 borderColor: window.chartColors.green,
                                 data: [
-                                    adminData.revenueLast14Days[6].dailyRevenue,
-                                    adminData.revenueLast14Days[5].dailyRevenue,
-                                    adminData.revenueLast14Days[4].dailyRevenue,
-                                    adminData.revenueLast14Days[3].dailyRevenue,
-                                    adminData.revenueLast14Days[2].dailyRevenue,
-                                    adminData.revenueLast14Days[1].dailyRevenue,
-                                    adminData.revenueLast14Days[0].dailyRevenue,
+                                    adminDataRevenue.revenueLast14Days[6].dailyRevenue,
+                                    adminDataRevenue.revenueLast14Days[5].dailyRevenue,
+                                    adminDataRevenue.revenueLast14Days[4].dailyRevenue,
+                                    adminDataRevenue.revenueLast14Days[3].dailyRevenue,
+                                    adminDataRevenue.revenueLast14Days[2].dailyRevenue,
+                                    adminDataRevenue.revenueLast14Days[1].dailyRevenue,
+                                    adminDataRevenue.revenueLast14Days[0].dailyRevenue,
 
                                 ],
                             },
@@ -367,13 +582,13 @@
                                 backgroundColor: window.chartColors.gray,
                                 borderColor: window.chartColors.gray,
                                 data: [
-                                    adminData.revenueLast14Days[13].dailyRevenue,
-                                    adminData.revenueLast14Days[12].dailyRevenue,
-                                    adminData.revenueLast14Days[11].dailyRevenue,
-                                    adminData.revenueLast14Days[10].dailyRevenue,
-                                    adminData.revenueLast14Days[9].dailyRevenue,
-                                    adminData.revenueLast14Days[8].dailyRevenue,
-                                    adminData.revenueLast14Days[7].dailyRevenue,
+                                    adminDataRevenue.revenueLast14Days[13].dailyRevenue,
+                                    adminDataRevenue.revenueLast14Days[12].dailyRevenue,
+                                    adminDataRevenue.revenueLast14Days[11].dailyRevenue,
+                                    adminDataRevenue.revenueLast14Days[10].dailyRevenue,
+                                    adminDataRevenue.revenueLast14Days[9].dailyRevenue,
+                                    adminDataRevenue.revenueLast14Days[8].dailyRevenue,
+                                    adminDataRevenue.revenueLast14Days[7].dailyRevenue,
                                 ],
                                 fill: false,
                             }]
@@ -453,166 +668,16 @@
                             }
                         }
                     };
-
-
-                    var barChartConfig = {
-                        type: 'bar',
-
-                        data: {
-                            labels: [
-                                adminData.orderCountsLast7Days[6].date,
-                                adminData.orderCountsLast7Days[5].date,
-                                adminData.orderCountsLast7Days[4].date,
-                                adminData.orderCountsLast7Days[3].date,
-                                adminData.orderCountsLast7Days[2].date,
-                                adminData.orderCountsLast7Days[1].date,
-                                adminData.orderCountsLast7Days[0].date,
-                            ],
-                            datasets: [{
-                                label: 'Hóa đơn',
-                                backgroundColor: window.chartColors.green,
-                                borderColor: window.chartColors.green,
-                                borderWidth: 1,
-                                maxBarThickness: 16,
-                                data: [
-                                    adminData.orderCountsLast7Days[6].orderCount,
-                                    adminData.orderCountsLast7Days[5].orderCount,
-                                    adminData.orderCountsLast7Days[4].orderCount,
-                                    adminData.orderCountsLast7Days[3].orderCount,
-                                    adminData.orderCountsLast7Days[2].orderCount,
-                                    adminData.orderCountsLast7Days[1].orderCount,
-                                    adminData.orderCountsLast7Days[0].orderCount,
-                                ]
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            aspectRatio: 1.5,
-                            legend: {
-                                position: 'bottom',
-                                align: 'end',
-                            },
-                            title: {
-                                display: true,
-                                text: 'Biểu đồ cột hóa đơn 7 ngày qua'
-                            },
-                            tooltips: {
-                                mode: 'index',
-                                intersect: false,
-                                titleMarginBottom: 10,
-                                bodySpacing: 10,
-                                xPadding: 16,
-                                yPadding: 16,
-                                borderColor: window.chartColors.border,
-                                borderWidth: 1,
-                                backgroundColor: '#fff',
-                                bodyFontColor: window.chartColors.text,
-                                titleFontColor: window.chartColors.text,
-
-                            },
-                            scales: {
-                                xAxes: [{
-                                    display: true,
-                                    gridLines: {
-                                        drawBorder: false,
-                                        color: window.chartColors.border,
-                                    },
-
-                                }],
-                                yAxes: [{
-                                    display: true,
-                                    gridLines: {
-                                        drawBorder: false,
-                                        color: window.chartColors.borders,
-                                    },
-                                    ticks: {
-                                        beginAtZero: true
-                                    },
-
-                                }]
-                            }
-
-                        }
-                    }
-
-                    function getRandomColor() {
-                        var letters = '0123456789ABCDEF';
-                        var color = '#';
-                        for (var i = 0; i < 6; i++) {
-                            color += letters[Math.floor(Math.random() * 16)];
-                        }
-                        return color;
-                    }
-                    var colors = Array.from({ length: 18 }, () => getRandomColor())
-                    let labelPieData = [];
-                    let pieData = [];
-                    adminData.productsSoldThisMonth.map((item) => {
-                        labelPieData.push(item.productName);
-                        pieData.push(item.quantitySold)
-                    })
-                    var pieChartConfig = {
-                        type: 'pie',
-
-                        data: {
-                            datasets: [{
-                                data: pieData,
-                                backgroundColor: colors,
-                            }],
-
-                            labels: labelPieData
-                        },
-                        options: {
-                            responsive: true,
-                            aspectRatio: 1.5,
-                            legend: {
-                                position: 'bottom',
-                                align: 'center',
-                            },
-                            title: {
-                                display: true,
-                                text: 'Biểu đồ tròn sản phẩm đã bán tháng này'
-                            },
-                            tooltips: {
-                                mode: 'index',
-                                intersect: false,
-                                titleMarginBottom: 10,
-                                bodySpacing: 10,
-                                xPadding: 16,
-                                yPadding: 16,
-                                borderColor: window.chartColors.border,
-                                borderWidth: 1,
-                                backgroundColor: '#fff',
-                                bodyFontColor: window.chartColors.text,
-                                titleFontColor: window.chartColors.text,
-
-                            }, callbacks: {
-                                label: function (tooltipItem, data) {
-                                    var label = data.labels[tooltipItem.index] || '';
-                                    if (label) {
-                                        label += ': ';
-                                    }
-                                    label += '123';
-                                    return label;
-                                }
-                            }
-                        }
-                    }
-                    
                     // Generate charts on load
-                        var lineChart = document.getElementById('canvas-linechart').getContext('2d');
-                        window.myLine = new Chart(lineChart, lineChartConfig);
-                        var barChart = document.getElementById('canvas-barchart').getContext('2d');
-                        window.myBar = new Chart(barChart, barChartConfig);
-                        var pieChart = document.getElementById('canvas-customchart').getContext('2d');
-                        window.myPie = new Chart(pieChart, pieChartConfig);
-                    
-                    
+                    var lineChart = document.getElementById('canvas-linechart').getContext('2d');
+                    window.myLine = new Chart(lineChart, lineChartConfig);
                 })
                 .catch(error => {
                     console.error('Error fetching data:', error);
                 });
         }
-        fetchAdmin();
+        fetchAdminRevenue();
+
 
     </script>
     <!-- Charts JS -->

@@ -108,11 +108,115 @@ namespace HKL_Juice.Routes
                     RevenueLast14Days = revenueLast14Days,
                     ProductsSoldThisMonth = productsSoldThisMonth
                 };
-
                 
                 return Response.AsJson(data);
             }
             );
+
+
+            Get("/adminDataHead", parameters => {
+                var now = DateTime.Now;
+                var firstDayOfMonth = new DateTime(now.Year, now.Month, 1);
+                var totalRevenueThisMonth = dbContext.Order
+                    .Where(o => o.paymentStatus == "Đã thanh toán" &&
+                    o.orderDate >= firstDayOfMonth
+                    && o.orderDate <= now)
+                    .Sum(o => o.orderTotal);
+                var numberOfProductsOnSale = dbContext.Product.Count();
+
+                var numberOfNewOrdersThisMonth = dbContext.Order
+                    .Count(o => o.paymentStatus == "Đã thanh toán" &&
+                    o.orderDate >= firstDayOfMonth && o.orderDate <= now);
+                var data = new
+                {
+                    TotalRevenueThisMonth = totalRevenueThisMonth,
+                    NumberOfProductsOnSale = numberOfProductsOnSale,
+                    NumberOfNewOrdersThisMonth = numberOfNewOrdersThisMonth,
+                };
+                return Response.AsJson(data);
+            }
+           );
+            Get("/adminDataProduct", parameters => {
+                var now = DateTime.Now;
+                var firstDayOfMonth = new DateTime(now.Year, now.Month, 1);
+                var productsSoldThisMonth = dbContext.Order
+                    .Where(o => o.paymentStatus == "Đã thanh toán" &&
+                                o.orderDate >= firstDayOfMonth &&
+                                o.orderDate <= now)
+                    .SelectMany(o => o.OrderDetails)
+                    .GroupBy(od => od.Product.productName)
+                    .Select(g => new
+                    {
+                        ProductName = g.Key,
+                        QuantitySold = g.Sum(od => od.quantity)
+                    })
+                    .OrderByDescending(item => item.QuantitySold)
+                    .ToList();
+                var data = new
+                {
+                    ProductsSoldThisMonth = productsSoldThisMonth
+                };
+                return Response.AsJson(data);
+            }
+           );
+            Get("/adminDataRevenue", parameters => {
+                var now = DateTime.Now;
+                var revenueLast14Days = new List<object>();
+                // Prepare the data to be sent to the view
+                for (int i = 0; i <= 13; i++)
+                {
+                    var date = now.AddDays(-i).Date;
+                    var dateString = date.ToString("dd-MM-yyyy");
+                    // Calculating revenue
+                    var dailyRevenue = dbContext.Order
+                        .Where(o => o.paymentStatus == "Đã thanh toán" &&
+                                    o.orderDate.Year == date.Year &&
+                                    o.orderDate.Month == date.Month &&
+                                    o.orderDate.Day == date.Day)
+                        .Sum(o => (decimal?)o.orderTotal) ?? 0;
+                    revenueLast14Days.Add(new
+                    {
+                        Date = dateString,
+                        DailyRevenue = dailyRevenue
+                    });
+                }
+                var data = new
+                {
+                    RevenueLast14Days = revenueLast14Days,
+                };
+
+                return Response.AsJson(data);
+            }
+            );
+
+            Get("/adminDataOrder", parameters => {
+                var now = DateTime.Now;
+                var orderCountsLast7Days = new List<object>();
+                for (int i = 0; i <= 6; i++)
+                {
+                    var date = now.AddDays(-i).Date;
+                    var dateString = date.ToString("dd-MM-yyyy");
+                    var orderCount = dbContext.Order
+                        .Count(o => o.paymentStatus == "Đã thanh toán" &&
+                                    o.orderDate.Year == date.Year &&
+                                    o.orderDate.Month == date.Month &&
+                                    o.orderDate.Day == date.Day);
+                    orderCountsLast7Days.Add(new
+                    {
+                        Date = dateString,
+                        OrderCount = orderCount
+                    });
+                }
+                var data = new
+                {
+                    OrderCountsLast7Days = orderCountsLast7Days,
+                };
+
+                return Response.AsJson(data);
+            }
+            );
+
+
             Get("/admin/login", parameters => {
                 return View["loginAdmin.cshtml"];
             }
