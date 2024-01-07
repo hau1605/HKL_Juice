@@ -2654,7 +2654,7 @@
     <Compile Include="Routes\CartRoute.cs" />
     <Compile Include="Routes\JuiceRoute.cs" />
     <Compile Include="Routes\AboutRoute.cs" />
-    <Compile Include="Routes\HomeRoute.cs" />
+    <Compile Include="Routes\HistoryRoute.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

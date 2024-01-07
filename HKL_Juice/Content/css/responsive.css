@@ -281,7 +281,9 @@
     .navigation.navbar {
         padding-top: 21px !important;
     }
-
+    .filter-navbar_container .filter-type button {
+        margin: 8px;
+    }
     .banner_Carousel {
         margin: 20px 0px 0px 0px;
     }
@@ -364,7 +366,7 @@
     }
 
     .navigation.navbar-dark .navbar-nav .nav-link {
-        padding: 10px 0;
+        padding: 8px 24px;
         color: #fff;
     }
 

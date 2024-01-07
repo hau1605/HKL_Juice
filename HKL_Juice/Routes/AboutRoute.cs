@@ -13,10 +13,8 @@ namespace HKL_Juice.Routes
             Get("/about", parameters =>
             {
 
-
                 return View["about.cshtml"];
-            }
-            );
+            });
         }
     }
 }

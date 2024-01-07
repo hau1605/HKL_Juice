@@ -527,7 +527,7 @@ button {
     }
 
 .juices .filter-search .filter-search_input {
-    width: 344px;
+    /*width: 344px;*/
 }
 
 .juices .filter-search .filter-search_button {
@@ -1018,7 +1018,7 @@ ul.location_icon {
     height: 20px;
     line-height: 0;
     margin: 0 4px;
-    padding-bottom: 2px
+    padding-bottom: 4px;
 }
 
 .cart-btn-quantity .btn-quantity-reduce {

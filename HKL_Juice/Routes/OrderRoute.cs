@@ -33,7 +33,8 @@ namespace HKL_Juice.Routes
             {
                 int numberTable = parameters.numberTable;
                 var orders = dbContext.Order
-                    .Where(o => o.numberTable == numberTable && o.paymentStatus == "Đang chờ")
+                    .Where(o => o.numberTable == numberTable && 
+                                (o.paymentStatus == "Đang chờ" || o.paymentStatus == "Đã thanh toán"))
                     .OrderByDescending(o => o.orderDate)
                     .Select(o => new
                     {
