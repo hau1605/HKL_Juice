@@ -336,7 +336,7 @@
                       <tr style="border: none">
                             <td style="border: none;"></td>
                             <td style="border: none">
-                                 <button class="p-2 rounded" style="border:1px solid black" id="uploadButton">Upload</button>
+                                 <button class="btn btn-info" id="uploadButton">Tải lên</button>
                                  <img id="displayImageEdit" src=${user.userAvatar} style="width: 100px; height: 100px;display:inline; object-fit:contain">
                             </td>
                       </tr>
@@ -370,6 +370,11 @@
                  `;
             // Xử lý upload ảnh
             document.getElementById('uploadButton').addEventListener('click', function () {
+                const uploadButton = document.getElementById("uploadButton");
+                uploadButton.innerHTML = `
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Đang xử lý...
+            `;
                 var file = document.getElementById('add_imgUrl').files[0];
                 var formData = new FormData();
                 formData.append('file', file);
@@ -380,7 +385,9 @@
                 })
                     .then(response => response.json())
                     .then(data => {
-                        console.log(data);
+                        uploadButton.innerHTML = `
+                        Tải lên
+                        `;
                         document.getElementById('displayImageEdit').style = 'width: 100px; height: 100px;display:inline';
                         document.getElementById('displayImageEdit').src = data.secure_url;
                     })

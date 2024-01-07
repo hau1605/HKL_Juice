@@ -838,14 +838,14 @@
                                 <label for="imgUrl">File hình ảnh:</label>
                             </td>
                             <td style="border: none">
-                                <input type="file" id="add_imgUrl" name="imgUrl"  >
+                                <input type="file" id="edit_imgUrl" name="imgUrl"  >
                             </td>
                         </tr>
                         <tr style="border: none">
                             <td style="border: none;">
                             </td>
                             <td style="border: none">
-                                <button style="border:1px solid black" id="uploadButton">Upload</button>
+                                <button class="btn btn-info" id="uploadButton">Tải lên</button>
                                 <img id="displayImageEdit" src=${product.imgUrl} style="width: 100px; height: 100px;display:inline">
                             </td>
                         </tr>
@@ -925,8 +925,14 @@
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
                         <button type="button" class="btn btn-primary" onclick="handleAddProduct()">Thêm sản phẩm</button>
                     `;
+
             document.getElementById('uploadButton').addEventListener('click', function () {
-                var file = document.getElementById('add_imgUrl').files[0];
+                const uploadButton = document.getElementById("uploadButton");
+                uploadButton.innerHTML = `
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Đang xử lý...
+            `;
+                var file = document.getElementById('edit_imgUrl').files[0];
                 var formData = new FormData();
                 formData.append('file', file);
                 formData.append('upload_preset', 'upanh555'); // Replace with your upload preset
@@ -936,10 +942,12 @@
                 })
                     .then(response => response.json())
                     .then(data => {
-                        console.log(data);
 
                         document.getElementById('displayImageEdit').style = 'width: 100px; height: 100px;display:inline';
                         document.getElementById('displayImageEdit').src = data.secure_url;
+                        uploadButton.innerHTML = `
+                            Tải lên
+                        `;
                     })
                     .catch(err => console.error(err));
             });
@@ -1052,7 +1060,7 @@
                             <td style="border: none">
                             </td>
                             <td style="border: none">
-                                <button style="border:1px solid black" id="uploadButton">Upload</button>
+                                <button class="btn btn-info" id="uploadAddButton">Tải lên</button>
                                 <img id="displayImage" style="width: 100px; height: 100px;display:none">
                             </td>
                         </tr>
@@ -1117,7 +1125,12 @@
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
                         <button type="button" class="btn btn-primary" onclick="handleAddProduct()">Thêm sản phẩm</button>
                     `;
-            document.getElementById('uploadButton').addEventListener('click', function () {
+            document.getElementById('uploadAddButton').addEventListener('click', function () {
+                const uploadAddButton = document.getElementById("uploadAddButton");
+                uploadAddButton.innerHTML = `
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Đang xử lý...
+            `;
                 var file = document.getElementById('add_imgUrl').files[0];
                 var formData = new FormData();
                 formData.append('file', file);
@@ -1128,8 +1141,9 @@
                 })
                     .then(response => response.json())
                     .then(data => {
-                        console.log(data);
-
+                        uploadAddButton.innerHTML = `
+                            Tải lên
+                        `;
                         document.getElementById('displayImage').style = 'width: 100px; height: 100px;display:inline';
                         document.getElementById('displayImage').src = data.secure_url;
                     })
@@ -1146,7 +1160,7 @@
                 imgUrl: document.getElementById('displayImage').src,
             };
 
-            console.log(addProduct);
+          
 
             fetch(`/admin/products`, {
                 method: "POST",
@@ -1219,7 +1233,8 @@
             }
             document.getElementById("uploadExcelModalFooter").innerHTML = `
 					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-					<button type="button" class="btn btn-primary" onClick="handleAddMultiProducts()">Thêm sản phẩm</button>
+
+					<button type="button" class="btn btn-primary" id="uploadExcelButton" onClick="handleAddMultiProducts()">Thêm sản phẩm</button>
 				`;
             document
                 .getElementById("fileUpload")
@@ -1229,12 +1244,16 @@
         }
 
         async function handleAddMultiProducts() {
+            const uploadExcelButton = document.getElementById("uploadExcelButton");
+            uploadExcelButton.innerHTML = `
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Đang xử lý...
+            `;
             const XLSX = await import(
                 "https://cdn.sheetjs.com/xlsx-0.19.2/package/xlsx.mjs"
             );
             if (selectedFile) {
-                let jsonObject;
-                console.log("hi");
+                let jsonObject;                
                 var fileReader = new FileReader();
                 fileReader.onload = function (event) {
                     var data = event.target.result;

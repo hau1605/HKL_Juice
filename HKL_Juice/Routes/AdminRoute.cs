@@ -133,35 +133,51 @@ namespace HKL_Juice.Routes
            );
             Post("/admin/users", parameters =>
             {
-                var postUser = this.Bind<User>();
-                postUser.userAvatar = "/Content/assets/images/user.png";
-                var existingUser = dbContext.User.FirstOrDefault(u => u.userName == postUser.userName);
-                if (existingUser != null)
+                try
                 {
-                    // Username already exists, return bad request
-                    return HttpStatusCode.BadRequest;
+                    var postUser = this.Bind<User>();
+                    postUser.userAvatar = "/Content/assets/images/user.png";
+                    var existingUser = dbContext.User.FirstOrDefault(u => u.userName == postUser.userName);
+                    if (existingUser != null)
+                    {
+                        // Username already exists, return bad request
+                        return HttpStatusCode.BadRequest;
+                    }
+                    dbContext.User.Add(postUser);
+                    dbContext.SaveChanges();
+                    return HttpStatusCode.OK;
                 }
-                dbContext.User.Add(postUser);
-                dbContext.SaveChanges();
-                return HttpStatusCode.OK;
+                catch
+                {
+                    return HttpStatusCode.BadRequest;
+
+                }
             });
             Put("/admin/users/{id}", parameters =>
             {
-                int userId = parameters.id;
-                var user = dbContext.User.FirstOrDefault(u => u.userId == userId);
-                if (user == null)
+                try
                 {
-                    return HttpStatusCode.NotFound;
+                    int userId = parameters.id;
+                    var user = dbContext.User.FirstOrDefault(u => u.userId == userId);
+                    if (user == null)
+                    {
+                        return HttpStatusCode.NotFound;
+                    }
+                    var putUser = this.Bind<User>();
+
+
+                    user.roleId = putUser.roleId;
+                    user.userFullname = putUser.userFullname;
+                    user.userPhone = putUser.userPhone;
+                    dbContext.SaveChanges();
+
+                    return HttpStatusCode.OK;
                 }
-                var putUser = this.Bind<User>();
-              
+                catch
+                {
+                    return HttpStatusCode.BadRequest;
 
-                user.roleId = putUser.roleId;
-                user.userFullname = putUser.userFullname;
-                user.userPhone = putUser.userPhone;
-                dbContext.SaveChanges();
-
-                return HttpStatusCode.OK;
+                }
             });
             Delete("/admin/users/{id}", parameters =>
             {
@@ -214,13 +230,20 @@ namespace HKL_Juice.Routes
             );
             Post("/admin/products", parameters =>
             {
-                
-                var postProduct = this.Bind<Product>();
+                try
+                {
+                    var postProduct = this.Bind<Product>();
 
-                dbContext.Product.Add(postProduct);
-                dbContext.SaveChanges();
+                    dbContext.Product.Add(postProduct);
+                    dbContext.SaveChanges();
 
-                return HttpStatusCode.OK;
+                    return HttpStatusCode.OK;
+                }
+                catch
+                {
+                    return HttpStatusCode.BadRequest;
+
+                }
             });
             Post("/admin/excelproducts", parameters =>
             {
@@ -252,39 +275,54 @@ namespace HKL_Juice.Routes
             });
             Put("/admin/products/{id}", parameters =>
             {
-                int productId = parameters.id;
-                var product = dbContext.Product.FirstOrDefault(p => p.productId == productId);
-                if (product == null)
+                try
                 {
-                    return HttpStatusCode.NotFound;
-                }
-                var putProduct = this.Bind<Product>();
-                product.categoryId = putProduct.categoryId;
-                product.productName = putProduct.productName;
-                product.price = putProduct.price;
-                product.descript = putProduct.descript;
-                product.imgUrl = putProduct.imgUrl;
-                dbContext.SaveChanges();
+                    int productId = parameters.id;
+                    var product = dbContext.Product.FirstOrDefault(p => p.productId == productId);
+                    if (product == null)
+                    {
+                        return HttpStatusCode.NotFound;
+                    }
+                    var putProduct = this.Bind<Product>();
+                    product.categoryId = putProduct.categoryId;
+                    product.productName = putProduct.productName;
+                    product.price = putProduct.price;
+                    product.descript = putProduct.descript;
+                    product.imgUrl = putProduct.imgUrl;
+                    dbContext.SaveChanges();
 
-                return HttpStatusCode.OK;
+                    return HttpStatusCode.OK;
+                }
+                catch
+                {
+                    return HttpStatusCode.BadRequest;
+
+                }
             });
             Delete("/admin/products/{id}", parameters =>
             {
-
-                int productId = parameters.id;
-                var orderDetails = dbContext.OrderDetail.Where(od => od.productId == productId).ToList();
-                if (orderDetails.Count>0)
-                    return HttpStatusCode.BadRequest;
-                var product = dbContext.Product.FirstOrDefault(p => p.productId == productId);
-                if (product == null)
+                try
                 {
-                    return HttpStatusCode.NotFound;
+                    int productId = parameters.id;
+                    var orderDetails = dbContext.OrderDetail.Where(od => od.productId == productId).ToList();
+                    if (orderDetails.Count > 0)
+                        return HttpStatusCode.BadRequest;
+                    var product = dbContext.Product.FirstOrDefault(p => p.productId == productId);
+                    if (product == null)
+                    {
+                        return HttpStatusCode.NotFound;
+                    }
+                    dbContext.Product.Remove(product);
+
+                    dbContext.SaveChanges();
+
+                    return HttpStatusCode.OK;
                 }
-                dbContext.Product.Remove(product);
+                catch
+                {
+                    return HttpStatusCode.BadRequest;
 
-                dbContext.SaveChanges();
-
-                return HttpStatusCode.OK;
+                }
             });
 
 
@@ -348,31 +386,39 @@ namespace HKL_Juice.Routes
             }); 
             Put("/admin/order/{id}", parameters =>
             {
-                int orderId = parameters.id;
-                var order = dbContext.Order.FirstOrDefault(o => o.orderId == orderId);
-                if (order == null)
+                try
                 {
-                    return HttpStatusCode.NotFound;
-                }
-                var putOrder = this.Bind<PutOrder>();
-                order.paymentMethod = putOrder.paymentMethod;
-                order.paymentStatus = putOrder.paymentStatus;
-                order.orderStatus = putOrder.orderStatus;
-                order.userId = putOrder.userId;
-                if (order.orderStatus.Equals("Đã xác nhận", StringComparison.OrdinalIgnoreCase))
-                {
-                    // Retrieve all order details related to this order
-                    var orderDetails = dbContext.OrderDetail.Where(od => od.orderId == orderId);
-
-                    // Update isNew property of each order detail
-                    foreach (var orderDetail in orderDetails)
+                    int orderId = parameters.id;
+                    var order = dbContext.Order.FirstOrDefault(o => o.orderId == orderId);
+                    if (order == null)
                     {
-                        orderDetail.isNew = false;
+                        return HttpStatusCode.NotFound;
                     }
-                }
-                dbContext.SaveChanges();
+                    var putOrder = this.Bind<PutOrder>();
+                    order.paymentMethod = putOrder.paymentMethod;
+                    order.paymentStatus = putOrder.paymentStatus;
+                    order.orderStatus = putOrder.orderStatus;
+                    order.userId = putOrder.userId;
+                    if (order.orderStatus.Equals("Đã xác nhận", StringComparison.OrdinalIgnoreCase))
+                    {
+                        // Retrieve all order details related to this order
+                        var orderDetails = dbContext.OrderDetail.Where(od => od.orderId == orderId);
 
-                return HttpStatusCode.OK;
+                        // Update isNew property of each order detail
+                        foreach (var orderDetail in orderDetails)
+                        {
+                            orderDetail.isNew = false;
+                        }
+                    }
+                    dbContext.SaveChanges();
+
+                    return HttpStatusCode.OK;
+                }
+                catch
+                {
+                    return HttpStatusCode.BadRequest;
+
+                }
             });
             Delete("/admin/order/{id}", parameters =>
             {
@@ -440,24 +486,32 @@ namespace HKL_Juice.Routes
             });
             Put("/admin/account/{userId}", parameters =>
             {
-                int userId = parameters.userId;
-                var user = dbContext.User.FirstOrDefault(u => u.userId == userId);
-                if (user == null)
+                try
                 {
-                    return HttpStatusCode.NotFound;
+                    int userId = parameters.userId;
+                    var user = dbContext.User.FirstOrDefault(u => u.userId == userId);
+                    if (user == null)
+                    {
+                        return HttpStatusCode.NotFound;
+                    }
+                    var putUser = this.Bind<User>();
+                    user.userFullname = putUser.userFullname;
+                    user.userPhone = putUser.userPhone;
+                    user.userAvatar = putUser.userAvatar;
+                    if (!string.IsNullOrEmpty(putUser.userPassword))
+                    {
+                        user.userPassword = putUser.userPassword;
+                    }
+
+                    dbContext.SaveChanges();
+
+                    return HttpStatusCode.OK;
                 }
-                var putUser = this.Bind<User>();
-                user.userFullname = putUser.userFullname;
-                user.userPhone = putUser.userPhone;
-                user.userAvatar = putUser.userAvatar;
-                if (!string.IsNullOrEmpty(putUser.userPassword))
+                catch
                 {
-                    user.userPassword = putUser.userPassword;
+                    return HttpStatusCode.BadRequest;
+
                 }
-
-                dbContext.SaveChanges();
-
-                return HttpStatusCode.OK;
             });
 
             // Settings === Category
@@ -477,26 +531,42 @@ namespace HKL_Juice.Routes
             });
             Post("/admin/categories", parameters =>
             {
-                var postCategory = this.Bind<Category>();
+                try
+                {
+                    var postCategory = this.Bind<Category>();
 
-                dbContext.Category.Add(postCategory);
-                dbContext.SaveChanges();
+                    dbContext.Category.Add(postCategory);
+                    dbContext.SaveChanges();
 
-                return HttpStatusCode.OK;
+                    return HttpStatusCode.OK;
+                }
+                catch
+                {
+                    return HttpStatusCode.BadRequest;
+
+                }
             });
             Put("/admin/categories/{id}", parameters =>
             {
-                int categoryId = parameters.id;
-                var catrgory = dbContext.Category.FirstOrDefault(c => c.categoryId == categoryId);
-                if (catrgory == null)
+                try
                 {
-                    return HttpStatusCode.NotFound;
-                }
-                var putCategory = this.Bind<Category>();
-                catrgory.categoryName = putCategory.categoryName;
-                dbContext.SaveChanges();
+                    int categoryId = parameters.id;
+                    var catrgory = dbContext.Category.FirstOrDefault(c => c.categoryId == categoryId);
+                    if (catrgory == null)
+                    {
+                        return HttpStatusCode.NotFound;
+                    }
+                    var putCategory = this.Bind<Category>();
+                    catrgory.categoryName = putCategory.categoryName;
+                    dbContext.SaveChanges();
 
-                return HttpStatusCode.OK;
+                    return HttpStatusCode.OK;
+                }
+                catch
+                {
+                    return HttpStatusCode.BadRequest;
+
+                }
             });
             Delete("/admin/categories/{id}", parameters =>
             {

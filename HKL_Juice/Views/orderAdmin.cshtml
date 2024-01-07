@@ -332,8 +332,9 @@
                                 <table style="text-align:center" class="table" id="orderTbody">
                                     <thead>
                                         <tr>
-                                            <th>Ảnh</th>
+                                            <th>STT</th>
                                             <th>Tên Sản Phẩm</th>
+                                            <th>Đơn giá</th>
                                             <th>Số Lượng</th>
                                             <th>Thành Tiền</th>
                                         </tr>
@@ -381,9 +382,10 @@
                                 <table style="text-align:center" class="table" id="orderTbody">
                                     <thead>
                                         <tr>
-                                            <th>Ảnh</th>
+                                            <th>STT</th>
                                             <th></th>
                                             <th>Tên Sản Phẩm</th>
+                                            <th>Đơn giá</th>
                                             <th>Số Lượng</th>
                                             <th>Thành Tiền</th>
                                         </tr>
@@ -493,7 +495,6 @@
                         orders = newOrders;
                         setupPagination(orders, document.getElementById('pagination'))
                         currentPage = 1;
-                        console.log('132')
                         document.getElementById('orders-all-tab').click() // Function to update your view
                     }
                 })
@@ -834,7 +835,6 @@
 
         //Hiển thị Modal Xem chi tiết
         function getDetail(orderS) {
-            console.log(orderS.orderDetails)
             document.getElementById('orderDetailCardHead').innerHTML = `
                                      <h5 style="margin: 0;" class="card-title">Mã Hóa Đơn: #${orderS.orderId} </h5>
                                      <h6 style="margin: 0;" class="card-title">Ngày: ${convertToDateTime(orderS.orderDate)}</h6>
@@ -851,7 +851,7 @@
                     acc[detail.productId] = {
                         productId: detail.productId,
                         productName: detail.productName, // Assuming Product details are included
-                        imgUrl: detail.imgUrl, // Assuming Product details are included
+                        price: detail.price, // Assuming Product details are included
                         quantity: 0,
                         subTotal: 0
                     };
@@ -868,11 +868,15 @@
             const tableBody = document.getElementById('orderTableBody');
             tableBody.innerHTML = '';
 
-            groupedOrderDetails.forEach(order => {
+            groupedOrderDetails.forEach((order,key) => {
                 let row = `
             <tr valign='middle'>
-                <td><img class="img-pdf" style="width:70px;height:70px;border-radius:20%;box-shadow:2px 2px 3px gray" src="${order.imgUrl}" alt="Product Image"></td>
+                <td >${key+1}</td>
                 <td class="product-name">${order.productName}</td>
+                <td >${order.price.toLocaleString('vi-VN', {
+                    style: 'currency',
+                    currency: 'VND'
+                })}</td>
                 <td>${order.quantity}</td>
                 <td>${order.subTotal.toLocaleString('vi-VN', {
                     style: 'currency',
@@ -884,7 +888,7 @@
 
             document.getElementById('orderTableFoot').innerHTML = `
                                             <tr>
-                                                <th colspan="3" style="text-align: right;">Tổng Tiền</th>
+                                                <th colspan="4" style="text-align: right;">Tổng Tiền</th>
                                                 <th>${orderS.orderTotal.toLocaleString('vi-VN', {
                 style: 'currency',
                 currency: 'VND'
@@ -895,6 +899,7 @@
 
         //Hiển thị Modal Edit Hóa đơn
         function getEditDetail(orderS) {
+            console.log(orderS)
             document.getElementById('EditOrderCardHead').innerHTML = `
                                          <h5 style="margin: 0;" class="card-title">Mã Hóa Đơn: #${orderS.orderId}</h5>
                                          <h6 style="margin: 0;" class="card-title">Ngày: ${convertToDateTime(orderS.orderDate)}</h6>
@@ -954,13 +959,14 @@
 
     orderS.orderDetails.forEach(detail => {
         // Create a unique key for each group or unique item
-        const key = detail.isNew ? `new-${detail.orderDetailId}` : detail.productId;
+        const key = detail.isNew ? `new-${detail.productId}` : detail.productId;
 
         if (!detailsMap.has(key)) {
             // Initialize a new group or unique entry
             detailsMap.set(key, {
                 productId: detail.productId,
                 productName: detail.productName, // Assuming Product details are included
+                price: detail.price, // Assuming Product details are included
                 imgUrl: detail.imgUrl, // Assuming Product details are included
                 quantity: 0,
                 subTotal: 0,
@@ -977,19 +983,21 @@
     // Convert the Map values to an array
     const groupedOrderDetails = Array.from(detailsMap.values());
 
-   
-
 
             const tableBody = document.getElementById('EditOrderTableBody');
             tableBody.innerHTML = ''
-            groupedOrderDetails.forEach(order => {
+            groupedOrderDetails.forEach((order, key) => {
                 let row = `
                 <tr valign='middle' >
-                     <td><img style="width:70px;height:70px;border-radius:20%;box-shadow:2px 2px 3px gray" src="${order.imgUrl}" alt="Product Image" class="product-img"></td>
-                     <td class="product-name">
+                <td >${key + 1}</td>
+                     <td >
         ${order.isNew ? '<span class="badge gradient-button">Mới</span>' : ''}
                     </td>
                      <td class="product-name">${order.productName}</td>
+                       <td >${order.price.toLocaleString('vi-VN', {
+                         style: 'currency',
+                             currency: 'VND'
+                           })}</td>
                      <td>${order.quantity}</td>
                      <td>${order.subTotal.toLocaleString('vi-VN', {
                     style: 'currency',
@@ -1001,7 +1009,7 @@
 
             document.getElementById('EditOrderTableFoot').innerHTML = `
             <tr>
-                 <th colspan="4" style="text-align: right;">Tổng Tiền</th>
+                 <th colspan="5" style="text-align: right;">Tổng Tiền</th>
                  <th>${orderS.orderTotal.toLocaleString('vi-VN', {
                 style: 'currency',
                 currency: 'VND'
@@ -1099,7 +1107,6 @@
 
     <script>
         function allImagesLoaded(element) {
-            console.log(element.getElementsByTagName('img'))
             return Array.from(element.getElementsByTagName('img')).every(img => img.complete && img.naturalHeight !== 0);
         }
 
