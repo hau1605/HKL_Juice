@@ -16,6 +16,12 @@ namespace HKL_Juice.Routes
 
                 return View["historyOrdered.cshtml"];
             });
+            Get("/redirect/{id}", parameters => {
+                int numberTable = parameters.id;
+                var serializer = new JavaScriptSerializer();
+                string json = serializer.Serialize(numberTable);
+                return View["redirect.cshtml", json];
+            });
         }
     }
 }
