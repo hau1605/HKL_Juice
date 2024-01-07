@@ -273,7 +273,11 @@
     .cart-container {
         display: block;
     }
-
+    .cart-btn-quantity {
+        display: flex;
+        flex-direction: column-reverse;
+        align-items: center;
+    }
     .logo {
         width: 178px;
     }
