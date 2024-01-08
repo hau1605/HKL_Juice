@@ -982,7 +982,9 @@ ul.location_icon {
             box-shadow: 0 0 8px 1px rgba(72, 180, 97);
             cursor: pointer;
         }
-
+.add-product-to-card {
+    font-weight: bolder;
+}
 .cartForPC {
     margin: 0 20px;
     border-radius: 5px;

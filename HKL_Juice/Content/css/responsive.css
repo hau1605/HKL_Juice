@@ -272,6 +272,7 @@
     .our_img .our_text a.add-product-to-card,
     .our_img .our_text button.add-product-to-card {
         font-size: 12px !important;
+        font-weight: bolder;
     }
     .cartForPC {
         margin: 0 6px;
