@@ -502,7 +502,7 @@
                 });
         }
         fetchOrders();
-        setInterval(fetchOrders, 10000); // 120000 milliseconds = 2 minutes
+        setInterval(fetchOrders, 6000); // 120000 milliseconds = 2 minutes
 
         // Initial fetch
 
@@ -917,6 +917,7 @@
                 document.getElementById("EditOrderModelFooter").innerHTML = `
                                               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
                                           `
+                
             } else {
                 let orderString = JSON.stringify(orderS).replace(/"/g, '&quot;');
 
@@ -950,14 +951,12 @@
                                         </div>
                                         <p style="text-align: right;margin:0" class="card-text">Số bàn: ${orderS.numberTable}</p>
                                         <p style="text-align: right;" class="card-text">Nhân Viên: ${user.userFullname}</p>`
-
-            }
-            if (orderS.userId === user.userId) {
                 document.getElementById('selPaymentStatus').value = orderS.paymentStatus;
                 document.getElementById('selOrderStatus').value = orderS.orderStatus;
                 document.getElementById('selPaymentMethod').value = orderS.paymentMethod;
-            }
 
+            }
+            
             const detailsMap = new Map();
 
     orderS.orderDetails.forEach(detail => {
