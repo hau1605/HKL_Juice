@@ -45,6 +45,7 @@ namespace HKL_Juice.Routes
                             orderStatus = o.orderStatus,
                             OrderDetails = o.OrderDetails.Select(od => new
                             {
+                                productId = od.productId,
                                 productName = od.Product.productName,
                                 price = od.Product.price,
                                 quantity = od.quantity,

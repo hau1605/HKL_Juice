@@ -284,9 +284,6 @@
                             if (JSON.stringify(data) !== JSON.stringify(historyOrdered)) {
                                 historyOrdered = data;
                                 renderTableStatus(data[0].paymentStatus);
-                                if (data[0].paymentStatus == "Đang chờ") {
-                                    renderProductOrdered(data[0]);
-                                }
                             }
                         } else {
                             renderTableStatus("Đang trống");

@@ -177,6 +177,7 @@
         const numberTableSpan = document.getElementById('numberTable');
         numberTableSpan.innerHTML = `Bàn ${numberTable}: `;
         let historyOrdered = [];
+
         function fetchProductsOrdered() {
             try {
                 fetch(`/api/v1/orders/${numberTable}`, {
@@ -247,6 +248,22 @@
         =============================================================================================*@
         function renderProductOrdered(orderedHistory) {
             console.log("orderedHistory: ", orderedHistory);
+            const groupedDetails = orderedHistory.orderDetails.reduce((acc, detail) => {
+                if (!acc[detail.productId]) {
+                    acc[detail.productId] = {
+                        productId: detail.productId,
+                        productName: detail.productName,
+                        imgUrl: detail.imgUrl,
+                        price: detail.price,
+                        quantity: 0,
+                        subTotal: 0
+                    };
+                }
+                acc[detail.productId].quantity += detail.quantity;
+                acc[detail.productId].subTotal += detail.subTotal;
+                return acc;
+            }, {});
+            const groupedOrderDetails = Object.values(groupedDetails);
 
             const paymentStatusClass = orderedHistory.paymentStatus === 'Đang chờ' ? 'text-warning' : (orderedHistory.paymentStatus === 'Đã thanh toán' ? 'text-success' : 'text-danger');
             const orderStatusClass = orderedHistory.orderStatus === 'Đơn mới' ? 'text-warning' : 'text-success';
@@ -275,7 +292,7 @@
             const container = document.getElementById('cartItemsContainer');
             container.innerHTML = '';
 
-            orderedHistory.orderDetails.forEach(item => {
+            groupedOrderDetails.forEach(item => {
                 const totalPrice = item.price * item.quantity;
                 const itemDiv = document.createElement('div');
                 itemDiv.className = 'grid grid-five-column py-1';

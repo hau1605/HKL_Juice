@@ -55,8 +55,8 @@
                             <div class="collapse navbar-collapse" id="navbarsExample04">
                                 <ul class="navbar-nav mr-auto">
                                     @*<li class="nav-item ">
-                                        <a class="nav-link font-weight-bold" href="/">Trang chủ</a>
-                                    </li>*@
+                                            <a class="nav-link font-weight-bold" href="/">Trang chủ</a>
+                                        </li>*@
                                     <li class="nav-item ">
                                         <a class="nav-link font-weight-bold active" href="/">Đặt hàng</a>
                                     </li>
@@ -229,9 +229,6 @@
                             if (JSON.stringify(data) !== JSON.stringify(historyOrdered)) {
                                 historyOrdered = data;
                                 renderTableStatus(data[0].paymentStatus);
-                                if (data[0].paymentStatus == "Đang chờ") {
-                                    renderProductOrdered(data[0]);
-                                }
                             }
                         } else {
                             renderTableStatus("Đang trống");
@@ -340,7 +337,17 @@
                                 </figure>
                                 <div class="our_text">
                                     <div class="text-center px-4">
-                                        <h3> ${product.productName} </h3>
+                                        <div class="d-flex">
+                                            <h3>${product.productName}</h3>
+                                            <a tabindex="${product.productId}"
+                                                class="btn btn-sm"
+                                                role="button"
+                                                data-bs-toggle="popover"
+                                                data-bs-trigger="focus"
+                                                data-bs-content="${product.descript}">
+                                                    <i class="bi bi-info-circle"></i>
+                                            </a>
+                                        </div>
                                         <h6 class="mb-4 text-secondary"> ${product.price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</h6>
                                     </div>
                                     <a class="add-product-to-card order-now read_more rounded" href="#" data-product-id="${product.productId}">Đặt ngay</a>
@@ -438,5 +445,12 @@
     <script src="~/Content/js/custom.js"></script>
     <script src="~/Content/js/index.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script>
+        var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
+        var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+            return new bootstrap.Popover(popoverTriggerEl);
+        });
+    </script>
+
 </body>
 </html>
