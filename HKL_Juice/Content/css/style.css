@@ -586,6 +586,7 @@ button {
     background: #fff;
     border-radius: 30px;
     padding: 20px 0;
+    overflow: hidden;
 }
 
     .our_img figure {

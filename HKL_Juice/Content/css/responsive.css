@@ -251,6 +251,40 @@
 
 @media (max-width: 575px) {
     /* ========================================Juices======================================== */
+    #product-container > div {
+        padding: 0 4px;
+        margin-bottom: 8px !important;
+    }
+    .our_img img {
+        height: 120px;
+    }
+    .our_img .our_text {
+        padding: 0;
+    }
+    .our_img .our_text > div {
+        padding: 0 !important;
+    }
+    .our_img .our_text h3,
+    .our_img .our_text h6,
+    .our_img .our_text a {
+            font-size: 16px;
+    }
+    .our_img .our_text a.add-product-to-card,
+    .our_img .our_text button.add-product-to-card {
+        font-size: 12px !important;
+    }
+    .cartForPC {
+        margin: 0 6px;
+    }
+    .cartForPC .cart-heading {
+        padding-top: 16px;
+    }
+    .cartForPC p {
+            font-size: 12px;
+    }
+    .container-products_btn {
+        justify-content: center !important;
+    }
     .juices .filter-navbar {
         flex-direction: column-reverse;
     }

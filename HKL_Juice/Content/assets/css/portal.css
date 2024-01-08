@@ -33,7 +33,15 @@
     background-size: 400% 400%;
     animation: gradient 5s ease infinite; /* Reduced duration for faster transition */
 }
-
+.gradient2-button {
+    padding: 6px !important;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    background: linear-gradient(45deg, #f72585, #7209b7, #3a0ca3, #4361ee);
+    background-size: 400% 400%;
+    animation: gradient 5s ease infinite;
+}
 
 
 .loading-screen {

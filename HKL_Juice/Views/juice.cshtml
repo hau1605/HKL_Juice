@@ -42,7 +42,10 @@
                     </div>
                     <div class="col-xl-4 col-lg-5 col-md-4 col-sm-5 col-6 d-flex justify-content-center align-items-center">
                         <div class="table-status">
-                            <p class="m-0 fs-4"><span id="numberTable"></span><button disabled id="tableStatus" style="margin:4px 0"></button></p>
+                            <div class="m-0 fs-4 d-flex align-items-center">
+                                <div id="numberTable"></div>
+                                <div id="tableStatus" style="margin:4px"></div>
+                            </div>
                         </div>
                     </div>
                     <div class="col-xl-7 col-lg-6 col-md-6 col-sm-5">
@@ -255,10 +258,10 @@
             tableStatus.innerHTML = "";
             console.log("paymentStatus: ", paymentStatus);
             if (paymentStatus == "Đang chờ") {
-                tableStatus.className = "text-danger bg-light bg-gradient rounded px-1 pb-1";
+                tableStatus.className = "text-light badge gradient2-button rounded p-2";
                 tableStatus.innerHTML = "Đang phục vụ";
             } else {
-                tableStatus.className = "text-success bg-light bg-gradient rounded px-1 pb-1";
+                tableStatus.className = "text-success badge bg-light bg-gradient rounded p-2";
                 tableStatus.innerHTML = "Đang trống";
             }
         }
@@ -342,7 +345,7 @@
                     );
 
             productsToDisplay.forEach(function (product) {
-                html += `<div class="col-md-4 mb-4">
+                html += `<div class="col-lg-3 col-lg-4 col-md-6 col-sm-6 col-6 mb-4">
                         <div class="our_main_box">
                             <div class="our_img">
                                 <figure>
