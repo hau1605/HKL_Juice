@@ -185,14 +185,27 @@
                         "Content-Type": "application/json",
                     }
                 })
-                    .then(response => response.json())
+                    .then(response => {
+                        console.log("response: ", response);
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok ' + response.statusText);
+                        }
+                        return response.json();
+                    })
                     .then(data => {
-                        if (data) {
+                        console.log("data: ", data);
+                        if (data.length > 0) {
                             if (JSON.stringify(data) !== JSON.stringify(historyOrdered)) {
                                 historyOrdered = data;
                                 renderTableStatus(data[0].paymentStatus);
-                                updateCartDisplay(data[0]);
+                                updateCartDisplay(data[0].paymentStatus);
+                                if (data[0].paymentStatus == "Đang chờ") {
+                                    renderProductOrdered(data[0]);
+                                }
                             }
+                        } else {
+                            updateCartDisplay("Đang trống");
+                            renderTableStatus("Đang trống");
                         }
                     })
             } catch (error) {
@@ -216,15 +229,14 @@
         @*=============================================================================================
         ==================================== UPDATE CART DISPLAY ======================================
         =============================================================================================*@
-        function updateCartDisplay(historyOrdered) {
+        function updateCartDisplay(paymentStatus) {
             const emptyCartElement = document.querySelector('.empty-product');
             const cartElement = document.querySelector('.cart-page_container-products');
-            console.log("historyOrdered.paymentStatus: ", historyOrdered.paymentStatus);
+            console.log("historyOrdered.paymentStatus: ", paymentStatus);
 
-            if (historyOrdered.paymentStatus == "Đang chờ") {
+            if (paymentStatus == "Đang chờ") {
                 emptyCartElement.style.display = 'none';
                 cartElement.style.display = 'block';
-                renderProductOrdered(historyOrdered);
             } else {
                 emptyCartElement.style.display = 'flex';
                 cartElement.style.display = 'none';

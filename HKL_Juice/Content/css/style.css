@@ -608,6 +608,8 @@ button {
         white-space: nowrap;
         text-overflow: ellipsis;
         overflow: hidden;
+        margin: 0;
+        padding-bottom: 4px;
     }
 
     .our_text p {
